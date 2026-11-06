@@ -1,0 +1,60 @@
+@import "tailwindcss";
+@config "../tailwind.config.ts";
+
+@theme {
+  --color-kertas-dingin: #F1F4F2;
+  --color-hijau-ledger: #0D3B33;
+  --color-kuning-stabilo: #F2B705;
+  --color-abu-hijau: #52625E;
+  --color-teal-tautan: #1F7A68;
+  --color-garis-embun: #CBD5D1;
+
+  --font-display: var(--font-archivo), sans-serif;
+  --font-body: var(--font-newsreader), serif;
+
+  --spacing-content: 1200px;
+}
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    background-color: #F1F4F2;
+    color: #0D3B33;
+    font-variant-numeric: tabular-nums;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  span,
+  td,
+  th,
+  li,
+  a,
+  button {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0ms !important;
+    scroll-behavior: auto !important;
+  }
+}
