@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   DEFAULT_EXPANDED_EXPERIENCE_IDS,
-  PIPELINE_CAREER_ROLES,
+  pipelineStages,
   toggleAccordionIds,
 } from "./portfolio-data";
 
@@ -18,8 +18,12 @@ test("toggleAccordionIds collapses an open item and expands a closed item", () =
   assert.deepEqual(afterOpeningThird, [2, 3]);
 });
 
-test("pipeline career roles preserve 7 chronological stages from Surveyor to Account Manager", () => {
-  assert.equal(PIPELINE_CAREER_ROLES.length, 7);
-  assert.equal(PIPELINE_CAREER_ROLES[0], "Surveyor");
-  assert.equal(PIPELINE_CAREER_ROLES[6], "Account Manager");
+test("pipelineStages preserve 7 chronological stages with month weights and saasStart marker", () => {
+  assert.equal(pipelineStages.length, 7);
+  assert.equal(pipelineStages[0].label, "Surveyor");
+  assert.equal(pipelineStages[0].months, 19);
+  assert.equal(pipelineStages[5].label, "BDM");
+  assert.equal(pipelineStages[5].saasStart, true);
+  assert.equal(pipelineStages[6].label, "Account Mgr");
+  assert.equal(pipelineStages[6].latest, true);
 });

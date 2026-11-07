@@ -1,160 +1,150 @@
-"use client";
-
-import React, { useState, useEffect, useRef } from "react";
-import { Mail, MessageSquare, X, ArrowUpRight } from "lucide-react";
+import React from "react";
+import {
+  ArrowUpRight,
+  Briefcase,
+  Mail,
+  MapPin,
+  MessageSquare,
+  Users,
+} from "lucide-react";
+import { contact } from "@/lib/content";
 
 export default function ContactFooter() {
-  const [isContactOpen, setIsContactOpen] = useState(false);
-  const popoverRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setIsContactOpen(false);
-      }
-    };
-
-    if (isContactOpen) {
-      window.addEventListener("keydown", handleKeyDown);
-    }
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [isContactOpen]);
-
   return (
     <footer
       id="kontak"
       aria-labelledby="contact-heading"
-      className="bg-hijau-ledger text-kertas-dingin py-20 px-6 sm:px-12 rounded-[6px] my-12 border border-garis-embun"
+      className="scroll-mt-20 w-full bg-hijau-ledger text-kertas-dingin py-16 sm:py-24 border-t border-garis-embun"
     >
-      <div className="max-w-3xl">
-        <p className="font-display text-xs sm:text-sm font-semibold text-kertas-dingin/80 mb-3 tracking-tight">
-          Kolaborasi &amp; Kemitraan B2B
-        </p>
+      <div className="mx-auto w-full max-w-[1200px] px-5 sm:px-10">
+        {/* Top Executive Header */}
+        <div className="max-w-[68ch]">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md border border-kuning-stabilo/40 bg-kuning-stabilo/10">
+            <span
+              className="w-2 h-2 rounded-full bg-kuning-stabilo shrink-0"
+              aria-hidden="true"
+            />
+            <span className="font-display text-xs font-bold uppercase tracking-wider text-kuning-stabilo">
+              {contact.eyebrow}
+            </span>
+          </div>
 
-        <h2
-          id="contact-heading"
-          className="font-display font-bold text-[clamp(1.75rem,3.5vw,2.75rem)] leading-[1.1] tracking-[-0.02em] text-kertas-dingin mb-8 text-balance"
-        >
-          Ada kebutuhan penjualan B2B, kemitraan, atau posisi yang cocok? Mari bicara.
-        </h2>
-
-        {/* Area Tombol Aksi Utama & Popover / Bottom Action Sheet */}
-        <div className="relative inline-block w-full sm:w-auto" ref={popoverRef}>
-          <button
-            type="button"
-            aria-expanded={isContactOpen}
-            aria-controls="contact-action-sheet"
-            onClick={() => setIsContactOpen((prev) => !prev)}
-            className="w-full sm:w-auto inline-flex items-center justify-center bg-kuning-stabilo text-hijau-ledger font-display font-bold px-8 py-4 rounded-[6px] text-base hover:brightness-105 transition-all cursor-pointer whitespace-nowrap shrink-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-kuning-stabilo"
+          <h2
+            id="contact-heading"
+            className="mt-4 font-display text-2xl sm:text-4xl font-extrabold tracking-tight text-kertas-dingin leading-[1.15] text-balance"
           >
-            Hubungi Saya
-          </button>
+            {contact.heading}
+          </h2>
 
-          {isContactOpen && (
-            <div
-              id="contact-action-sheet"
-              role="dialog"
-              aria-label="Pilihan kontak langsung"
-              className="mt-4 sm:w-[360px] bg-kertas-dingin text-hijau-ledger border border-garis-embun rounded-[6px] p-4"
-            >
-              <div className="flex items-center justify-between pb-3 mb-3 border-b border-garis-embun">
-                <span className="font-display font-bold text-sm text-hijau-ledger">
-                  Pilih Jalur Komunikasi
+          <p className="mt-4 font-body text-base sm:text-lg leading-[1.7] text-kertas-dingin/85">
+            {contact.sub}
+          </p>
+        </div>
+
+        {/* Dual-Conversion Path Bento Grid */}
+        <div className="mt-10 grid grid-cols-1 lg:grid-cols-12 gap-6">
+          {/* Path 1 (7 Cols): For HRD, Recruiters & VP of Sales */}
+          <div className="lg:col-span-7 rounded-xl border-2 border-kuning-stabilo/75 bg-[#092923] p-6 sm:p-8 flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between gap-2">
+                <span className="inline-flex items-center gap-1.5 font-display text-xs font-extrabold px-2.5 py-1 rounded bg-kuning-stabilo text-hijau-ledger">
+                  <Briefcase className="w-3.5 h-3.5" aria-hidden="true" />
+                  <span>{contact.recruiterCard.badge}</span>
                 </span>
-                <button
-                  type="button"
-                  onClick={() => setIsContactOpen(false)}
-                  aria-label="Tutup menu kontak"
-                  className="inline-flex items-center justify-center w-7 h-7 rounded-[4px] border border-garis-embun text-hijau-ledger hover:bg-hijau-ledger/10 transition-colors focus-visible:outline-2 focus-visible:outline-hijau-ledger"
-                >
-                  <X className="w-4 h-4" aria-hidden="true" />
-                </button>
+                <span className="font-display text-xs font-semibold text-kertas-dingin/75">
+                  Respon Cepat &lt; 24 Jam
+                </span>
               </div>
 
-              <div className="space-y-2.5">
-                <a
-                  href="mailto:anggaramadhan538@gmail.com"
-                  className="flex items-center justify-between gap-3 p-3 rounded-[6px] border border-garis-embun bg-kertas-dingin hover:border-hijau-ledger transition-colors focus-visible:outline-2 focus-visible:outline-hijau-ledger"
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="inline-flex items-center justify-center w-9 h-9 rounded-[6px] bg-hijau-ledger text-kertas-dingin shrink-0">
-                      <Mail className="w-4 h-4" aria-hidden="true" />
-                    </span>
-                    <div>
-                      <span className="font-display font-bold text-sm text-hijau-ledger block">
-                        Kirim Email
-                      </span>
-                      <span className="font-body text-xs text-abu-hijau block">
-                        anggaramadhan538@gmail.com
-                      </span>
-                    </div>
-                  </div>
-                  <ArrowUpRight className="w-4 h-4 text-teal-tautan shrink-0" aria-hidden="true" />
-                </a>
+              <h3 className="mt-4 font-display text-xl sm:text-2xl font-extrabold text-kertas-dingin">
+                {contact.recruiterCard.title}
+              </h3>
+              <p className="mt-2 font-body text-base leading-[1.7] text-kertas-dingin/85">
+                {contact.recruiterCard.desc}
+              </p>
+            </div>
 
+            <div className="mt-6 pt-5 border-t border-kertas-dingin/15 flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5">
+              <a
+                href={`mailto:${contact.email}`}
+                className="inline-flex items-center justify-center gap-2 h-12 px-5 rounded-lg bg-kuning-stabilo text-hijau-ledger font-display font-extrabold text-xs sm:text-sm hover:brightness-105 transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-kuning-stabilo"
+              >
+                <Mail className="w-4 h-4 shrink-0" aria-hidden="true" />
+                <span>{contact.email}</span>
+              </a>
+
+              <a
+                href={contact.whatsappHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 h-12 px-5 rounded-lg border border-kertas-dingin/35 bg-white/10 text-kertas-dingin font-display font-bold text-xs sm:text-sm hover:bg-white/15 transition-all tabular-nums focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-kuning-stabilo"
+              >
+                <MessageSquare
+                  className="w-4 h-4 text-kuning-stabilo shrink-0"
+                  aria-hidden="true"
+                />
+                <span>WhatsApp ({contact.whatsappText})</span>
+              </a>
+            </div>
+          </div>
+
+          {/* Path 2 (5 Cols): For B2B Partnerships & Professional Network */}
+          <div className="lg:col-span-5 rounded-xl border border-kertas-dingin/20 bg-white/[0.05] p-6 sm:p-8 flex flex-col justify-between">
+            <div>
+              <span className="inline-flex items-center gap-1.5 font-display text-xs font-bold px-2.5 py-1 rounded bg-white/10 text-kuning-stabilo border border-kertas-dingin/15">
+                <Users className="w-3.5 h-3.5" aria-hidden="true" />
+                <span>{contact.partnerCard.badge}</span>
+              </span>
+
+              <h3 className="mt-4 font-display text-xl sm:text-2xl font-extrabold text-kertas-dingin">
+                {contact.partnerCard.title}
+              </h3>
+              <p className="mt-2 font-body text-base leading-[1.7] text-kertas-dingin/85">
+                {contact.partnerCard.desc}
+              </p>
+            </div>
+
+            <div className="mt-6 space-y-3">
+              {contact.links.map((link) => (
                 <a
-                  href="https://wa.me/6285206602391"
+                  key={link.label}
+                  href={link.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-between gap-3 p-3 rounded-[6px] border border-garis-embun bg-kertas-dingin hover:border-hijau-ledger transition-colors focus-visible:outline-2 focus-visible:outline-hijau-ledger"
+                  className="group flex items-center justify-between gap-3 rounded-lg border border-kertas-dingin/15 bg-[#092923]/70 p-3.5 hover:border-kuning-stabilo/60 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-kuning-stabilo"
                 >
-                  <div className="flex items-center gap-3">
-                    <span className="inline-flex items-center justify-center w-9 h-9 rounded-[6px] bg-kuning-stabilo text-hijau-ledger border border-hijau-ledger shrink-0">
-                      <MessageSquare className="w-4 h-4" aria-hidden="true" />
-                    </span>
-                    <div>
-                      <span className="font-display font-bold text-sm text-hijau-ledger block">
-                        WhatsApp Langsung
+                  <div className="min-w-0">
+                    <p className="font-display text-sm font-extrabold text-kertas-dingin group-hover:text-kuning-stabilo transition-colors">
+                      {link.label} ·{" "}
+                      <span className="font-semibold text-kertas-dingin/80">
+                        {link.text}
                       </span>
-                      <span className="font-display text-xs text-abu-hijau tabular-nums block">
-                        +62 852-0660-2391
-                      </span>
-                    </div>
+                    </p>
+                    <p className="font-body text-xs text-kertas-dingin/70 truncate mt-0.5">
+                      {link.desc}
+                    </p>
                   </div>
-                  <ArrowUpRight className="w-4 h-4 text-teal-tautan shrink-0" aria-hidden="true" />
+                  <ArrowUpRight
+                    className="w-4 h-4 text-kuning-stabilo shrink-0 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"
+                    aria-hidden="true"
+                  />
                 </a>
-              </div>
+              ))}
             </div>
-          )}
+          </div>
         </div>
-      </div>
 
-      {/* Jalur Tautan Profesional (Horizontal Links) */}
-      <div className="mt-14 pt-8 border-t border-garis-embun/20 flex flex-col md:flex-row md:items-center justify-between gap-6">
-        <div className="flex flex-wrap items-center gap-6 sm:gap-8">
-          <a
-            href="mailto:anggaramadhan538@gmail.com"
-            className="font-display text-sm font-semibold text-kertas-dingin hover:text-kuning-stabilo underline decoration-2 underline-offset-4 transition-colors whitespace-nowrap shrink-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-kuning-stabilo"
-          >
-            anggaramadhan538@gmail.com
-          </a>
-          <a
-            href="https://linkedin.com/in/anggarmd"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-display text-sm font-semibold text-kertas-dingin hover:text-kuning-stabilo underline decoration-2 underline-offset-4 transition-colors whitespace-nowrap shrink-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-kuning-stabilo"
-          >
-            linkedin.com/in/anggarmd
-          </a>
-          <a
-            href="https://github.com/anggarmd51"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-display text-sm font-semibold text-kertas-dingin hover:text-kuning-stabilo underline decoration-2 underline-offset-4 transition-colors whitespace-nowrap shrink-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-kuning-stabilo"
-          >
-            github.com/anggarmd51
-          </a>
+        {/* Bottom Executive Status & Copyright Bar */}
+        <div className="mt-14 pt-6 border-t border-kertas-dingin/15 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-2 font-display text-xs font-semibold text-kertas-dingin/85">
+            <MapPin className="w-4 h-4 text-kuning-stabilo shrink-0" aria-hidden="true" />
+            <span>{contact.location} · Tersedia untuk On-Site, Hybrid &amp; Remote</span>
+          </div>
+
+          <p className="font-display text-xs text-kertas-dingin/75 tabular-nums">
+            {contact.footer}
+          </p>
         </div>
-      </div>
-
-      {/* Footer Hak Cipta & Lokasi */}
-      <div className="mt-8 pt-6 border-t border-garis-embun/20">
-        <p className="font-display text-sm text-kertas-dingin/70">
-          © 2026 Muhammad Angga Ramadhan. Medan, Sumatera Utara, Indonesia. Dirancang dengan estetika Modern Financial Editorial.
-        </p>
       </div>
     </footer>
   );

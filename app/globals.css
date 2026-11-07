@@ -41,10 +41,54 @@
   span,
   td,
   th,
+  dt,
+  dd,
   li,
   a,
   button {
     font-variant-numeric: tabular-nums;
+  }
+}
+
+@layer components {
+  .bento-card {
+    background-color: #FFFFFF;
+    border-radius: 0.75rem;
+    border: 1px solid rgba(203, 213, 209, 0.85);
+    box-shadow: 0 1px 3px rgba(13, 59, 51, 0.04);
+    transition: border-color 200ms cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 200ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .bento-card:hover {
+    border-color: rgba(13, 59, 51, 0.4);
+    box-shadow: 0 10px 30px rgba(13, 59, 51, 0.07);
+  }
+
+  .bento-card-dark {
+    background-color: #0D3B33;
+    color: #F1F4F2;
+    border-radius: 0.75rem;
+    border: 1px solid rgba(241, 244, 242, 0.14);
+    box-shadow: 0 10px 30px rgba(13, 59, 51, 0.14);
+  }
+}
+
+@keyframes line-up {
+  from {
+    transform: translateY(105%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .reveal-line > span {
+    display: inline-block;
+    animation: line-up 600ms cubic-bezier(0.23, 1, 0.32, 1) both;
+    animation-delay: calc(var(--i, 0) * 90ms);
   }
 }
 

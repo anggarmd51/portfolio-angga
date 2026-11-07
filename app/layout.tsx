@@ -17,21 +17,23 @@ const newsreader = Newsreader({
   weight: ["400", "500", "600"],
 });
 
+const title =
+  "Muhammad Angga Ramadhan — B2B Sales, Business Development & Account Management";
+const description =
+  "Portofolio Eksekutif Muhammad Angga Ramadhan (Medan). 7+ tahun mendorong pertumbuhan revenue dari analisis risiko kredit, perbankan, hingga SaaS HRIS & POS B2B.";
+
 export const metadata: Metadata = {
-  title: "Muhammad Angga Ramadhan | Sales, Business Development & Account Management",
-  description:
-    "Portofolio profesional Muhammad Angga Ramadhan di bidang B2B Sales, Business Development, Fintech, dan ICT Infrastructure berbasis di Medan.",
+  title,
+  description,
   openGraph: {
-    title: "Muhammad Angga Ramadhan | Sales, Business Development & Account Management",
-    description:
-      "Portofolio profesional Muhammad Angga Ramadhan di bidang B2B Sales, Business Development, Fintech, dan ICT Infrastructure berbasis di Medan.",
+    title,
+    description,
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Muhammad Angga Ramadhan | Sales, Business Development & Account Management",
-    description:
-      "Portofolio profesional Muhammad Angga Ramadhan di bidang B2B Sales, Business Development, Fintech, dan ICT Infrastructure berbasis di Medan.",
+    title,
+    description,
   },
 };
 
@@ -50,9 +52,7 @@ export default function RootLayout({
         suppressHydrationWarning
         className="bg-kertas-dingin text-hijau-ledger font-body antialiased selection:bg-kuning-stabilo selection:text-hijau-ledger min-h-screen"
       >
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 border-x border-garis-embun min-h-screen">
-          {children}
-        </div>
+        {children}
       </body>
     </html>
   );

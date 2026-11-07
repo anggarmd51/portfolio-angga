@@ -2,280 +2,334 @@
 
 import React, { useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { ChevronDown } from "lucide-react";
+import {
+  Briefcase,
+  CheckCircle2,
+  ChevronDown,
+  GraduationCap,
+  TrendingUp,
+} from "lucide-react";
+import {
+  roles,
+  experienceIntro,
+  education,
+  type CompanyLogoKey,
+} from "@/lib/content";
+import {
+  DEFAULT_EXPANDED_EXPERIENCE_IDS,
+  toggleAccordionIds,
+} from "@/lib/portfolio-data";
 
-interface ExperienceItem {
-  id: number;
-  years: string;
-  period: string;
-  role: string;
-  company: string;
-  location: string;
-  summary: string;
-  achievements: string[];
+function CompanyLogo({
+  logoKey,
+  companyName,
+}: {
+  logoKey: CompanyLogoKey;
+  companyName: string;
+}) {
+  switch (logoKey) {
+    case "nusawork":
+      return (
+        <svg
+          viewBox="0 0 40 40"
+          className="h-8 w-8"
+          role="img"
+          aria-label={`Logo ${companyName}`}
+        >
+          <rect x="2" y="2" width="36" height="36" rx="8" fill="#007A5E" />
+          <path
+            d="M11 28V12h4.2l8.6 10.6V12H28v16h-4.2L15.2 17.4V28H11Z"
+            fill="#FFFFFF"
+          />
+          <circle cx="29" cy="11" r="2.5" fill="#F2B705" />
+        </svg>
+      );
+    case "dretail":
+      return (
+        <svg
+          viewBox="0 0 40 40"
+          className="h-8 w-8"
+          role="img"
+          aria-label={`Logo ${companyName}`}
+        >
+          <rect x="2" y="2" width="36" height="36" rx="8" fill="#1E3A8A" />
+          <path
+            d="M11 11h7.5c5.2 0 8.5 3.4 8.5 9s-3.3 9-8.5 9H11V11Zm4.4 3.8v10.4h3.1c2.8 0 4.3-1.9 4.3-5.2s-1.5-5.2-4.3-5.2h-3.1Z"
+            fill="#FFFFFF"
+          />
+          <rect x="28" y="11" width="3" height="18" rx="1.5" fill="#38BDF8" />
+        </svg>
+      );
+    case "clipan":
+      return (
+        <svg
+          viewBox="0 0 40 40"
+          className="h-8 w-8"
+          role="img"
+          aria-label={`Logo ${companyName}`}
+        >
+          <rect x="2" y="2" width="36" height="36" rx="8" fill="#004B87" />
+          <path
+            d="M25.5 14.5A7.5 7.5 0 1 0 25.5 25.5"
+            stroke="#FFFFFF"
+            strokeWidth="3.5"
+            strokeLinecap="round"
+            fill="none"
+          />
+          <path
+            d="M21 17.5h7.5M21 22.5h5.5"
+            stroke="#F2B705"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+          />
+        </svg>
+      );
+    case "acc":
+      return (
+        <svg
+          viewBox="0 0 40 40"
+          className="h-8 w-8"
+          role="img"
+          aria-label={`Logo ${companyName}`}
+        >
+          <rect x="2" y="2" width="36" height="36" rx="8" fill="#005BAA" />
+          <path
+            d="M20 9.5 10.5 29h4.3l1.7-3.8h7l1.7 3.8h4.3L20 9.5Zm0 6.3 2.2 5.4h-4.4L20 15.8Z"
+            fill="#FFFFFF"
+          />
+        </svg>
+      );
+    case "bankmega":
+      return (
+        <svg
+          viewBox="0 0 40 40"
+          className="h-8 w-8"
+          role="img"
+          aria-label={`Logo ${companyName}`}
+        >
+          <rect x="2" y="2" width="36" height="36" rx="8" fill="#F37021" />
+          <path
+            d="M9.5 27V12h4.4l6.1 8.8L26.1 12h4.4v15h-4.1V18.2L20 26.8l-6.4-8.6V27H9.5Z"
+            fill="#FFFFFF"
+          />
+          <rect x="9.5" y="29" width="21" height="2.5" rx="1" fill="#00549A" />
+        </svg>
+      );
+    case "cnaf":
+      return (
+        <svg
+          viewBox="0 0 40 40"
+          className="h-8 w-8"
+          role="img"
+          aria-label={`Logo ${companyName}`}
+        >
+          <rect x="2" y="2" width="36" height="36" rx="8" fill="#B91C1C" />
+          <path d="M20 9 31 20 20 31 9 20 20 9Z" fill="#FFFFFF" />
+          <path d="M20 14 26 20 20 26 14 20 20 14Z" fill="#B91C1C" />
+        </svg>
+      );
+  }
 }
 
-const EXPERIENCES: ExperienceItem[] = [
-  {
-    id: 1,
-    years: "2025 – 2026",
-    period: "Okt 2025 – Jun 2026",
-    role: "Account Manager (SaaS HRIS Nusawork)",
-    company: "PT Media Antar Nusa",
-    location: "Medan, Indonesia",
-    summary:
-      "Mengelola end-to-end sales cycle, presentasi ke jajaran C-Level/HR, mencapai 100% target sales (Rp 50 Juta), dan mengawal onboarding untuk menekan churn.",
-    achievements: [
-      "Mengembangkan pipeline prospek B2B secara proaktif dan memimpin demonstrasi produk SaaS HRIS Nusawork kepada jajaran HR dan C-Level perusahaan.",
-      "Mengelola seluruh siklus penjualan (end-to-end sales cycle) mulai dari kualifikasi kebutuhan, negosiasi kontrak, hingga penutupan kesepakatan (closing), berhasil mencapai 100% dari target penjualan atau senilai Rp 50 Juta.",
-      "Memastikan proses onboarding dan adopsi produk berjalan lancar bagi klien baru untuk meminimalkan tingkat churn dan membangun hubungan jangka panjang.",
-    ],
-  },
-  {
-    id: 2,
-    years: "2025",
-    period: "Mar 2025 – Okt 2025",
-    role: "Business Development Manager (SaaS POS Dretail)",
-    company: "PT Sarana Digital Retail",
-    location: "Medan, Indonesia",
-    summary:
-      "Penetrasi pasar B2B Retail & F&B di Medan, memimpin 3 BDO, sukses mengakuisisi 20+ merchant aktif baru per bulan, menyusun bundling paket software-hardware.",
-    achievements: [
-      "Merancang dan mengeksekusi strategi penetrasi pasar B2B untuk memperluas jangkauan sistem Point of Sale (POS) Dretail di sektor Retail dan F&B wilayah Medan dan sekitarnya.",
-      "Memimpin tim yang terdiri dari 3 Business Development Officer (BDO) serta membangun kemitraan strategis dengan pemilik usaha, berhasil meng-onboard 20+ merchant baru per bulan.",
-      "Menganalisis tren pasar serta kebutuhan operasional merchant untuk memberikan rekomendasi fitur dan solusi bundling perangkat POS yang tepat guna.",
-    ],
-  },
-  {
-    id: 3,
-    years: "2024 – 2025",
-    period: "Mei 2024 – Feb 2025",
-    role: "Credit Marketing Officer",
-    company: "PT Clipan Finance Indonesia",
-    location: "Medan, Indonesia",
-    summary:
-      "Analisis kelayakan pembiayaan aset/kendaraan, kemitraan dealer, menjaga rasio NPL di bawah ambang batas melalui mitigasi risiko survei presisi.",
-    achievements: [
-      "Melakukan pencarian, penyaringan, dan analisis kelayakan kredit calon debitur untuk pembiayaan kendaraan/aset guna menjaga kualitas portofolio kredit perusahaan.",
-      "Membangun dan memelihara hubungan kerja sama dengan dealer dan mitra penjualan untuk meningkatkan volume aplikasi pembiayaan masuk.",
-      "Menjaga tingkat Non-Performing Loan (NPL) tetap di bawah batas maksimal dengan melakukan verifikasi lapangan (survey) dan analisis risiko secara presisi.",
-    ],
-  },
-  {
-    id: 4,
-    years: "2023 – 2024",
-    period: "Mei 2023 – Apr 2024",
-    role: "Customer Retention Processing Syariah (Talangan Haji)",
-    company: "PT Astra Sedaya Finance",
-    location: "Medan, Indonesia",
-    summary:
-      "Retensi nasabah syariah eksisting, repeat order/refinancing sesuai kepatuhan administratif, konsisten melampaui target retensi bulanan 90%+.",
-    achievements: [
-      "Mengelola program retensi pelanggan existing untuk produk pembiayaan syariah (seperti Talangan Haji) melalui pendekatan konsultatif berbasis prinsip syariah.",
-      "Memproses pengajuan pembiayaan ulang (refinancing/repeat order) serta memastikan kelengkapan dokumen administratif sesuai dengan standar kepatuhan (compliance).",
-      "Mencapai target retensi bulanan sebesar 90%+ dengan menjaga kepuasan dan loyalitas nasabah.",
-    ],
-  },
-  {
-    id: 5,
-    years: "2022 – 2023",
-    period: "Nov 2022 – Mei 2023",
-    role: "Card Funding Officer",
-    company: "PT Bank Mega Tbk",
-    location: "Medan, Indonesia",
-    summary:
-      "Akuisisi nasabah kartu kredit dan DPK melalui direct sales, edukasi portofolio promo, dan pendampingan verifikasi data hingga disetujui.",
-    achievements: [
-      "Melakukan akuisisi nasabah baru untuk produk kartu kredit dan dana pihak ketiga melalui kegiatan direct sales, canvassing, dan booth event.",
-      "Mengedukasi calon nasabah mengenai keunggulan produk, fitur promo, serta membantu proses pemberkasan hingga persetujuan aplikasi.",
-    ],
-  },
-  {
-    id: 6,
-    years: "2021 – 2022",
-    period: "Sep 2021 – Okt 2022",
-    role: "Sales Officer",
-    company: "PT CIMB Niaga Auto Finance",
-    location: "Medan, Indonesia",
-    summary:
-      "Pemasaran pembiayaan otomotif, perluasan jejaring showroom dealer rekanan di Medan, dan pencapaian target pembiayaan bulanan.",
-    achievements: [
-      "Memasarkan produk pembiayaan otomotif (auto loan) dan membangun jaringan kemitraan dengan showroom serta dealer kendaraan di wilayah operasional Medan.",
-      "Mencapai target pembiayaan bulanan yang ditetapkan perusahaan serta mendampingi nasabah dalam proses pengajuan kredit.",
-    ],
-  },
-  {
-    id: 7,
-    years: "2019 – 2021",
-    period: "Okt 2019 – Apr 2021",
-    role: "Surveyor",
-    company: "PT Astra Sedaya Finance",
-    location: "Medan, Indonesia",
-    summary:
-      "Investigasi lapangan, verifikasi data pemohon, analisis kapasitas tempat tinggal dan usaha, serta penyusunan rekomendasi mitigasi risiko kredit.",
-    achievements: [
-      "Melakukan survei lapangan, verifikasi data pemohon, serta analisis kelayakan tempat tinggal dan usaha calon debitur untuk meminimalkan risiko pembiayaan.",
-      "Menyusun laporan hasil survei dan rekomendasi keputusan kredit secara objektif sesuai pedoman tata kelola risiko perusahaan.",
-    ],
-  },
-];
-
 export default function WorkExperience() {
-  // 2 Posisi Teratas (ID 1 dan ID 2) terbuka secara default, 5 lainnya tertutup
-  const [openIds, setOpenIds] = useState<number[]>([1, 2]);
+  const [openIds, setOpenIds] = useState<number[]>([
+    ...DEFAULT_EXPANDED_EXPERIENCE_IDS,
+  ]);
   const prefersReducedMotion = useReducedMotion();
 
-  const toggleItem = (id: number) => {
-    setOpenIds((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
-    );
+  const handleToggle = (id: number) => {
+    setOpenIds((prev) => toggleAccordionIds(prev, id));
   };
 
   return (
     <section
       id="pengalaman"
       aria-labelledby="work-experience-heading"
-      className="border-b border-garis-embun py-16"
+      className="scroll-mt-20 w-full border-t border-garis-embun py-16 sm:py-24"
     >
-      <div className="grid grid-cols-12 gap-8">
-        {/* Kolom Kiri: Judul Seksi */}
-        <div className="col-span-12 lg:col-span-3">
-          <h2
-            id="work-experience-heading"
-            className="font-display font-bold text-2xl tracking-tight text-hijau-ledger mb-2"
-          >
-            Pengalaman Kerja
-          </h2>
-          <p className="font-body text-base text-abu-hijau leading-relaxed mb-6">
-            Tujuh peran berurutan dari analisis risiko pembiayaan di lapangan hingga kepemimpinan penjualan B2B SaaS.
+      <div className="mx-auto w-full max-w-[1200px] px-5 sm:px-10">
+        {/* Section Header */}
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 mb-10">
+          <div>
+            <div className="inline-flex items-center gap-2 text-teal-tautan mb-2">
+              <Briefcase className="w-4 h-4 shrink-0" aria-hidden="true" />
+              <span className="font-display text-xs font-extrabold uppercase tracking-wider">
+                Verified Career Ledger · 2019 – 2026
+              </span>
+            </div>
+            <h2
+              id="work-experience-heading"
+              className="font-display text-2xl sm:text-3xl font-extrabold tracking-tight text-hijau-ledger"
+            >
+              7 Posisi Karir &amp; Pencapaian Komersial
+            </h2>
+          </div>
+          <p className="font-body text-base sm:text-lg leading-[1.7] text-abu-hijau max-w-[58ch]">
+            {experienceIntro}
           </p>
         </div>
 
-        {/* Kolom Kanan: Daftar Accordion 7 Riwayat Karir */}
-        <div className="col-span-12 lg:col-span-9">
-          <div className="border-t border-garis-embun">
-            {EXPERIENCES.map((exp) => {
-              const isOpen = openIds.includes(exp.id);
-              const contentId = `exp-panel-${exp.id}`;
-              const buttonId = `exp-button-${exp.id}`;
+        {/* 7 Role Bento Cards */}
+        <div className="space-y-4">
+          {roles.map((role) => {
+            const isOpen = openIds.includes(role.id);
+            const panelId = `exp-panel-${role.id}`;
+            const buttonId = `exp-button-${role.id}`;
+            const isHighlightedImpact =
+              role.id === 1 || role.id === 2 || role.id === 4;
 
-              return (
-                <div
-                  key={exp.id}
-                  className="border-b border-garis-embun bg-kertas-dingin"
-                >
-                  <button
-                    id={buttonId}
-                    type="button"
-                    aria-expanded={isOpen}
-                    aria-controls={contentId}
-                    onClick={() => toggleItem(exp.id)}
-                    className="w-full text-left py-6 px-2 sm:px-4 grid grid-cols-12 gap-4 items-start hover:bg-hijau-ledger/[0.03] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-hijau-ledger"
-                  >
-                    {/* Kolom Tahun */}
-                    <div className="col-span-12 sm:col-span-3">
-                      <span className="font-display font-bold text-base sm:text-lg text-hijau-ledger tabular-nums block">
-                        {exp.years}
+            return (
+              <article
+                key={role.id}
+                className={`bento-card p-5 sm:p-7 ${
+                  isOpen ? "border-hijau-ledger/40" : ""
+                }`}
+              >
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6 items-start">
+                  {/* Left Column (3 Cols): Period, Year & Sector */}
+                  <div className="lg:col-span-3 flex flex-row lg:flex-col items-center lg:items-start justify-between gap-2 pb-3 lg:pb-0 border-b lg:border-b-0 border-garis-embun/70">
+                    <div>
+                      <span className="font-display text-base sm:text-lg font-extrabold text-hijau-ledger tabular-nums">
+                        {role.year}
                       </span>
-                      <span className="font-display text-xs text-abu-hijau tabular-nums">
-                        {exp.period}
-                      </span>
-                    </div>
-
-                    {/* Kolom Jabatan & Perusahaan */}
-                    <div className="col-span-10 sm:col-span-8">
-                      <h3 className="font-display font-bold text-lg sm:text-xl text-hijau-ledger tracking-tight">
-                        {exp.role}
-                      </h3>
-                      <p className="font-display text-sm font-medium text-abu-hijau mt-0.5">
-                        {exp.company} · {exp.location}
+                      <p className="font-display text-xs font-semibold text-abu-hijau tabular-nums mt-0.5">
+                        {role.period}
                       </p>
-                      {!isOpen && (
-                        <p className="font-body text-base text-abu-hijau mt-2 line-clamp-1">
-                          {exp.summary}
-                        </p>
-                      )}
                     </div>
+                    <span className="inline-block lg:mt-2.5 font-display text-[11px] font-bold px-2.5 py-1 rounded bg-kertas-dingin text-hijau-ledger border border-garis-embun">
+                      {role.sector}
+                    </span>
+                  </div>
 
-                    {/* Ikon Panah/Chevron */}
-                    <div className="col-span-2 sm:col-span-1 flex justify-end items-center pt-1">
-                      <span
-                        className={`inline-flex items-center justify-center w-8 h-8 rounded-[6px] border border-garis-embun text-hijau-ledger transition-transform duration-200 ${
-                          isOpen ? "rotate-180 bg-kuning-stabilo" : "bg-kertas-dingin"
-                        }`}
-                        aria-hidden="true"
-                      >
-                        <ChevronDown className="w-4 h-4" />
-                      </span>
-                    </div>
-                  </button>
+                  {/* Right Column (9 Cols): Full-Color Corporate Logo, Role Header, Impact Badge & Accordion */}
+                  <div className="lg:col-span-9">
+                    <button
+                      id={buttonId}
+                      type="button"
+                      aria-expanded={isOpen}
+                      aria-controls={panelId}
+                      onClick={() => handleToggle(role.id)}
+                      className="w-full text-left flex flex-col sm:flex-row sm:items-start justify-between gap-4 cursor-pointer group focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-hijau-ledger"
+                    >
+                      <div className="flex items-start gap-3.5 sm:gap-4 min-w-0">
+                        <div className="w-12 h-12 rounded-xl border border-garis-embun bg-kertas-dingin/60 flex items-center justify-center shrink-0">
+                          <CompanyLogo
+                            logoKey={role.companyLogo}
+                            companyName={role.company}
+                          />
+                        </div>
 
-                  {/* Panel Isi Accordion */}
-                  <AnimatePresence initial={false}>
-                    {isOpen && (
-                      <motion.div
-                        id={contentId}
-                        role="region"
-                        aria-labelledby={buttonId}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={
-                          prefersReducedMotion
-                            ? { duration: 0 }
-                            : { duration: 0.18, ease: [0.16, 1, 0.3, 1] }
-                        }
-                        className="px-2 sm:px-4 pb-6 grid grid-cols-12 gap-4"
-                      >
-                        <div className="hidden sm:block sm:col-span-3" />
-                        <div className="col-span-12 sm:col-span-9 border-t border-garis-embun pt-4">
-                          <p className="font-body text-[18px] leading-[1.7] text-hijau-ledger max-w-[62ch] mb-4">
-                            {exp.summary}
+                        <div className="min-w-0">
+                          <h3 className="font-display text-lg sm:text-xl font-extrabold tracking-tight text-hijau-ledger group-hover:text-teal-tautan transition-colors">
+                            {role.title}
+                          </h3>
+                          <p className="mt-0.5 font-display text-xs sm:text-sm font-bold text-abu-hijau">
+                            {role.company}
                           </p>
-                          <ul className="space-y-2.5">
-                            {exp.achievements.map((point) => (
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-between sm:justify-end gap-2.5 shrink-0 self-stretch sm:self-start pt-1 sm:pt-0">
+                        <span
+                          className={`inline-flex items-center gap-1.5 font-display text-xs font-extrabold px-3 py-1.5 rounded-lg tabular-nums ${
+                            isHighlightedImpact
+                              ? "bg-kuning-stabilo text-hijau-ledger"
+                              : "bg-kertas-dingin text-hijau-ledger border border-garis-embun"
+                          }`}
+                        >
+                          <TrendingUp className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                          <span>{role.impactBadge}</span>
+                        </span>
+
+                        <span
+                          aria-hidden="true"
+                          className={`w-8 h-8 rounded-lg border flex items-center justify-center transition-transform duration-200 ${
+                            isOpen
+                              ? "bg-hijau-ledger text-kertas-dingin border-hijau-ledger rotate-180"
+                              : "bg-kertas-dingin text-hijau-ledger border-garis-embun group-hover:border-hijau-ledger"
+                          }`}
+                        >
+                          <ChevronDown className="w-4 h-4" />
+                        </span>
+                      </div>
+                    </button>
+
+                    {/* Executive Summary (Always Visible) */}
+                    <p className="mt-4 font-body text-base sm:text-lg leading-[1.7] text-hijau-ledger max-w-[66ch]">
+                      {role.summary}
+                    </p>
+
+                    {/* Expandable Detailed Breakdown */}
+                    <AnimatePresence initial={false}>
+                      {isOpen && (
+                        <motion.div
+                          id={panelId}
+                          role="region"
+                          aria-labelledby={buttonId}
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          transition={
+                            prefersReducedMotion
+                              ? { duration: 0 }
+                              : { duration: 0.2, ease: [0.23, 1, 0.32, 1] }
+                          }
+                          className="mt-4 pt-4 border-t border-garis-embun/80"
+                        >
+                          <p className="font-body text-base leading-[1.7] text-abu-hijau max-w-[66ch]">
+                            {role.detail}
+                          </p>
+
+                          <ul className="mt-3.5 space-y-2">
+                            {role.highlights.map((item) => (
                               <li
-                                key={point}
-                                className="font-body text-base sm:text-[17px] leading-[1.7] text-abu-hijau flex items-start gap-3 max-w-[62ch]"
+                                key={item}
+                                className="flex items-start gap-2.5 font-display text-xs sm:text-sm font-semibold text-hijau-ledger"
                               >
-                                <span
-                                  className="inline-block w-1.5 h-1.5 bg-hijau-ledger mt-2.5 shrink-0"
+                                <CheckCircle2
+                                  className="w-4 h-4 text-teal-tautan shrink-0 mt-0.5"
                                   aria-hidden="true"
                                 />
-                                <span>{point}</span>
+                                <span>{item}</span>
                               </li>
                             ))}
                           </ul>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
                 </div>
-              );
-            })}
-          </div>
+              </article>
+            );
+          })}
+        </div>
 
-          {/* Baris Pendidikan Formal (Master CV) */}
-          <div className="mt-8 p-6 border border-garis-embun rounded-[6px] bg-kertas-dingin flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        {/* Formal Education Bento Card */}
+        <div className="bento-card p-6 sm:p-7 mt-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="flex items-start sm:items-center gap-4">
+            <span className="w-12 h-12 rounded-xl bg-hijau-ledger text-kuning-stabilo flex items-center justify-center shrink-0">
+              <GraduationCap className="w-6 h-6" aria-hidden="true" />
+            </span>
             <div>
-              <span className="font-display text-xs font-semibold text-abu-hijau block mb-1">
-                Pendidikan Formal
-              </span>
-              <h3 className="font-display font-bold text-lg text-hijau-ledger tracking-tight">
-                Diploma 3 (D3) Perbankan Syariah
+              <p className="font-display text-xs font-extrabold uppercase tracking-wider text-teal-tautan">
+                {education.label}
+              </p>
+              <h3 className="mt-0.5 font-display text-lg sm:text-xl font-extrabold text-hijau-ledger">
+                {education.degree}
               </h3>
-              <p className="font-body text-base text-abu-hijau">
-                Universitas Islam Negeri Sumatera Utara (UIN SU)
+              <p className="font-body text-sm sm:text-base text-abu-hijau">
+                {education.institution}
               </p>
             </div>
-            <div className="sm:text-right">
-              <span className="font-display font-bold text-base text-hijau-ledger tabular-nums block">
-                Lulus 2019
-              </span>
-              <span className="font-display text-sm font-medium text-abu-hijau tabular-nums">
-                IPK 3.26 / 4.00
-              </span>
-            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2.5 self-start md:self-center">
+            <span className="font-display text-xs font-bold px-3 py-1.5 rounded-lg bg-kertas-dingin border border-garis-embun text-hijau-ledger tabular-nums">
+              {education.year}
+            </span>
+            <span className="font-display text-xs font-extrabold px-3 py-1.5 rounded-lg bg-kuning-stabilo text-hijau-ledger tabular-nums">
+              {education.gpa}
+            </span>
           </div>
         </div>
       </div>

@@ -1,19 +1,21 @@
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import SkillsCertifications from "@/components/SkillsCertifications";
-import WorkExperience from "@/components/WorkExperience";
 import FeaturedProjects from "@/components/FeaturedProjects";
+import WorkExperience from "@/components/WorkExperience";
 import ContactFooter from "@/components/ContactFooter";
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen">
+    <div className="min-h-screen flex flex-col bg-kertas-dingin text-hijau-ledger">
       <Navbar />
-      <HeroSection />
-      <SkillsCertifications />
-      <WorkExperience />
-      <FeaturedProjects />
+      <main className="flex-1">
+        <HeroSection />
+        <SkillsCertifications />
+        <FeaturedProjects />
+        <WorkExperience />
+      </main>
       <ContactFooter />
-    </main>
+    </div>
   );
 }
