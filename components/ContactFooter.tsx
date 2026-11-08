@@ -2,6 +2,7 @@ import React from "react";
 import {
   ArrowUpRight,
   Briefcase,
+  FileDown,
   Mail,
   MapPin,
   MessageSquare,
@@ -84,6 +85,19 @@ export default function ContactFooter() {
                   aria-hidden="true"
                 />
                 <span>WhatsApp ({contact.whatsappText})</span>
+              </a>
+
+              <a
+                href="/assets/CV_Angga.pdf"
+                download="CV_Angga.pdf"
+                aria-label="Unduh CV Angga Ramadhan (PDF)"
+                className="inline-flex items-center justify-center gap-2 h-12 px-5 rounded-lg border border-kertas-dingin/35 bg-white/10 text-kertas-dingin font-display font-bold text-xs sm:text-sm hover:bg-white/15 transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-kuning-stabilo"
+              >
+                <FileDown
+                  className="w-4 h-4 text-kuning-stabilo shrink-0"
+                  aria-hidden="true"
+                />
+                <span>Unduh CV (PDF)</span>
               </a>
             </div>
           </div>

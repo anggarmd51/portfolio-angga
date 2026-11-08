@@ -2,7 +2,31 @@ node_modules/
 .next/
 .next-dev/
 coverage/
+playwright-report/
+test-results/
+*.tsbuildinfo
 .DS_Store
 *.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+*.tmp
+*.temp
+*.bak
+*.orig
+*.rej
+*.swp
 .env*
 !.env.example
+
+# Private AI-builder artifacts and QA captures
+.aistudio/
+public/assets/aistudio/
+
+# Internal source and handoff documents; keep these out of the public repo
+/data_personal_master.md
+/data_project_keseluruhan.md
+/data_ui_ux.md
+/DEVELOPER_HANDOFF.md
+/MASTER_PROMPT_UI_IMPLEMENTATION_EN.md
+/SLIDE_PRESENTATION_HANDOFF.md
