@@ -1,39 +1,52 @@
-import type { Metadata } from "next";
-import { Archivo, Newsreader } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 
-const archivo = Archivo({
+const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
-  variable: "--font-archivo",
+  variable: "--font-sans",
   display: "swap",
-  weight: ["600", "700", "800"],
+  weight: ["400", "500", "600", "700", "800"],
 });
 
-const newsreader = Newsreader({
-  subsets: ["latin"],
-  variable: "--font-newsreader",
-  style: ["normal", "italic"],
-  display: "swap",
-  weight: ["400", "500", "600"],
-});
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#0B0F19",
+};
 
-const title =
-  "Muhammad Angga Ramadhan — B2B Sales, Business Development & Account Management";
+const title = "Muhammad Angga Ramadhan — Executive Portfolio";
 const description =
-  "Portofolio Eksekutif Muhammad Angga Ramadhan (Medan). 7+ tahun mendorong pertumbuhan revenue dari analisis risiko kredit, perbankan, hingga SaaS HRIS & POS B2B.";
+  "Executive Portfolio: Sales, Business Development, and Branch Management. Menyatukan Disiplin Eksekusi Penjualan, Mitigasi Risiko Pembiayaan, dan Teknologi CRM.";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://angga-ramadhan.vercel.app"),
   title,
   description,
+  icons: {
+    icon: "/assets/Favicon%20AR.png",
+    shortcut: "/assets/Favicon%20AR.png",
+    apple: "/assets/Favicon%20AR.png",
+  },
   openGraph: {
     title,
     description,
     type: "website",
+    locale: "id_ID",
+    images: [
+      {
+        url: "/assets/OG%20Image%20AR.png",
+        width: 1034,
+        height: 1034,
+        alt: "Muhammad Angga Ramadhan Executive Portfolio",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title,
     description,
+    images: ["/assets/OG%20Image%20AR.png"],
   },
 };
 
@@ -46,11 +59,11 @@ export default function RootLayout({
     <html
       lang="id"
       suppressHydrationWarning
-      className={`${archivo.variable} ${newsreader.variable} scroll-smooth`}
+      className={`${plusJakartaSans.variable} font-sans scroll-smooth`}
     >
       <body
         suppressHydrationWarning
-        className="bg-kertas-dingin text-hijau-ledger font-body antialiased selection:bg-kuning-stabilo selection:text-hijau-ledger min-h-screen"
+        className="min-h-screen bg-[#0B0F19] text-slate-100 antialiased selection:bg-emerald-500/20 selection:text-emerald-300"
       >
         {children}
       </body>

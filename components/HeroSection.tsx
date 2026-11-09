@@ -1,229 +1,160 @@
-import React from "react";
-import {
-  ArrowDownRight,
-  Compass,
-  Layers,
-  MessageSquare,
-  ShieldCheck,
-  TrendingUp,
-  Users,
-} from "lucide-react";
-import PipelineStrip from "@/components/PipelineStrip";
-import { hero, type ArchitectureStep } from "@/lib/content";
+"use client";
 
-function ArchitectureIcon({ name }: { name: ArchitectureStep["icon"] }) {
-  switch (name) {
-    case "ShieldCheck":
-      return <ShieldCheck className="w-4 h-4 text-kuning-stabilo" aria-hidden="true" />;
-    case "Compass":
-      return <Compass className="w-4 h-4 text-kuning-stabilo" aria-hidden="true" />;
-    case "TrendingUp":
-      return <TrendingUp className="w-4 h-4 text-kuning-stabilo" aria-hidden="true" />;
-    case "Users":
-      return <Users className="w-4 h-4 text-kuning-stabilo" aria-hidden="true" />;
-  }
-}
+import Image from "next/image";
+import { HERO_DATA } from "@/data/portfolio";
+import { ArrowDown, MessageSquare, ShieldCheck, TrendingUp } from "lucide-react";
+import { motion } from "motion/react";
+import { usePrefersReducedMotion } from "@/hooks/useMediaQuery";
+import { Reveal } from "./MotionReveal";
 
 export default function HeroSection() {
+  const shouldReduceMotion = usePrefersReducedMotion();
+
   return (
     <section
-      aria-labelledby="hero-heading"
-      className="relative w-full bg-hijau-ledger text-kertas-dingin pt-12 pb-16 sm:pt-16 sm:pb-24 border-b border-garis-embun overflow-hidden"
+      id="home"
+      aria-labelledby="hero-name"
+      className="relative min-h-screen flex items-center justify-center pt-24 pb-16 md:pt-28 md:pb-24 px-4 sm:px-6 lg:px-8 overflow-hidden bg-radial-gradient"
     >
-      {/* Aksen Ilustrasi Garis Grid / Koordinat Arsitektural Tipis (SVG Inline) */}
-      <svg
-        aria-hidden="true"
-        className="pointer-events-none absolute right-0 top-0 h-full w-full max-w-[680px] stroke-kertas-dingin/[0.07]"
-        viewBox="0 0 680 600"
-        fill="none"
-        preserveAspectRatio="xMaxYMid slice"
-      >
-        <line x1="170" y1="0" x2="170" y2="600" strokeWidth="1" />
-        <line x1="340" y1="0" x2="340" y2="600" strokeWidth="1" />
-        <line x1="510" y1="0" x2="510" y2="600" strokeWidth="1" />
-        <line x1="640" y1="0" x2="640" y2="600" strokeWidth="1" />
-        <line x1="60" y1="120" x2="680" y2="120" strokeWidth="1" />
-        <line x1="60" y1="240" x2="680" y2="240" strokeWidth="1" />
-        <line x1="60" y1="360" x2="680" y2="360" strokeWidth="1" />
-        <line x1="60" y1="480" x2="680" y2="480" strokeWidth="1" />
-        <polyline
-          points="170,430 340,320 510,200 640,90"
-          strokeWidth="1.5"
-          strokeDasharray="5 5"
-        />
-        <circle cx="170" cy="430" r="4" strokeWidth="1.5" />
-        <circle cx="340" cy="320" r="4" strokeWidth="1.5" />
-        <circle cx="510" cy="200" r="4" strokeWidth="1.5" />
-        <circle cx="640" cy="90" r="4" strokeWidth="1.5" />
-      </svg>
+      {/* Background ambient accents */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-emerald-500/5 blur-[120px] rounded-full pointer-events-none -z-10" />
+      <div className="absolute bottom-10 right-10 w-96 h-96 bg-blue-500/5 blur-[100px] rounded-full pointer-events-none -z-10" />
 
-      <div className="relative z-10 mx-auto w-full max-w-[1200px] px-5 sm:px-10">
-        {/* Split 12-Column Executive Hero */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
-          {/* Left Column (7 Cols): Value Proposition & Dual CTAs */}
-          <div className="lg:col-span-7">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md border border-kuning-stabilo/40 bg-kuning-stabilo/10">
-              <span
-                className="w-2 h-2 rounded-full bg-kuning-stabilo shrink-0"
-                aria-hidden="true"
-              />
-              <span className="font-display text-xs font-bold uppercase tracking-wider text-kuning-stabilo">
-                {hero.eyebrow}
-              </span>
+      <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+        {/* Left Column: Headlines & CTAs */}
+        <div className="lg:col-span-7 flex flex-col justify-center text-left">
+          {/* Eyebrow badge */}
+          <Reveal delay={0.05} y={16}>
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold tracking-wider uppercase mb-6 w-fit shadow-sm">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              {HERO_DATA.eyebrow}
             </div>
+          </Reveal>
 
-            <h1
-              id="hero-heading"
-              className="mt-5 font-display font-extrabold leading-[1.06] tracking-[-0.02em] text-[clamp(2.25rem,4.8vw,3.85rem)] text-kertas-dingin"
-            >
-              <span className="reveal-line block overflow-hidden pb-[0.1em] -mb-[0.1em]">
-                <span
-                  style={{ "--i": 0 } as React.CSSProperties}
-                  className="text-balance"
-                >
-                  {hero.headline[0]}
+          {/* Name & Title */}
+          <Reveal delay={0.12} y={20}>
+            <div className="space-y-1 mb-5">
+              <h1
+                id="hero-name"
+                className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight"
+              >
+                {HERO_DATA.name}{" "}
+                <span className="text-emerald-400 font-semibold text-2xl sm:text-3xl md:text-4xl">
+                  {HERO_DATA.secondaryName}
                 </span>
-              </span>
-              <span className="reveal-line block overflow-hidden pb-[0.1em] -mb-[0.1em]">
-                <span
-                  style={{ "--i": 1 } as React.CSSProperties}
-                  className="text-balance text-kuning-stabilo"
-                >
-                  {hero.headline[1]}
-                </span>
-              </span>
-            </h1>
+              </h1>
+              <p className="text-sm font-semibold tracking-wide text-slate-400 uppercase">
+                Sales • Business Development • Branch Management
+              </p>
+            </div>
+          </Reveal>
 
-            <p className="mt-6 max-w-[60ch] font-body text-lg sm:text-xl leading-[1.7] text-kertas-dingin/90">
-              {hero.sub}
+          {/* Tagline */}
+          <Reveal delay={0.18} y={22}>
+            <p className="text-lg sm:text-xl md:text-2xl font-bold text-slate-100 leading-snug mb-5 border-l-2 border-emerald-500/60 pl-4">
+              {HERO_DATA.tagline}
             </p>
+          </Reveal>
 
-            {/* Dual Action CTA Bar */}
-            <div className="mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5">
+          {/* Sub-tagline */}
+          <Reveal delay={0.24} y={22}>
+            <p className="text-sm sm:text-base text-slate-400 leading-relaxed max-w-2xl mb-8">
+              {HERO_DATA.subTagline}
+            </p>
+          </Reveal>
+
+          {/* CTAs */}
+          <Reveal delay={0.3} y={20}>
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 pt-2">
               <a
-                href="#proyek"
-                className="inline-flex items-center justify-center gap-2 h-12 px-6 rounded-lg bg-kuning-stabilo text-hijau-ledger font-display font-bold text-sm sm:text-base hover:brightness-105 active:scale-[0.98] transition-all duration-150 whitespace-nowrap shrink-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-kuning-stabilo"
+                href={HERO_DATA.ctaPrimary.href}
+                className="inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl bg-emerald-500 text-slate-950 font-bold text-sm hover:bg-emerald-400 transition-all shadow-lg shadow-emerald-500/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
               >
-                <span>{hero.ctaPrimary}</span>
-                <ArrowDownRight className="w-4 h-4" aria-hidden="true" />
+                <span>{HERO_DATA.ctaPrimary.label}</span>
+                <ArrowDown className="w-4 h-4 stroke-[2.5]" />
               </a>
+
               <a
-                href="#kontak"
-                className="inline-flex items-center justify-center gap-2 h-12 px-6 rounded-lg border border-kertas-dingin/35 bg-white/5 text-kertas-dingin font-display font-semibold text-sm sm:text-base hover:bg-white/10 active:scale-[0.98] transition-all duration-150 whitespace-nowrap shrink-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-kuning-stabilo"
+                href={HERO_DATA.ctaSecondary.href}
+                className="inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl bg-white/5 border border-white/10 text-slate-200 font-medium text-sm hover:bg-white/10 hover:text-white transition-all backdrop-blur-md focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
               >
-                <MessageSquare className="w-4 h-4 text-kuning-stabilo" aria-hidden="true" />
-                <span>{hero.ctaSecondary}</span>
+                <MessageSquare className="w-4 h-4 text-emerald-400" />
+                <span>{HERO_DATA.ctaSecondary.label}</span>
               </a>
             </div>
-          </div>
+          </Reveal>
 
-          {/* Right Column (5 Cols): Executive Sales & Risk Architecture Card */}
-          <aside
-            aria-label="Arsitektur Eksekusi Penjualan dan Risiko"
-            className="lg:col-span-5 rounded-xl border border-kertas-dingin/15 bg-[#092923] p-5 sm:p-6 shadow-[0_14px_34px_rgba(0,0,0,0.22)]"
-          >
-            <div className="flex items-center justify-between gap-2 pb-4 border-b border-kertas-dingin/15">
-              <div className="flex items-center gap-2.5">
-                <span className="w-8 h-8 rounded-lg bg-kuning-stabilo/15 border border-kuning-stabilo/40 flex items-center justify-center shrink-0">
-                  <Layers className="w-4 h-4 text-kuning-stabilo" aria-hidden="true" />
-                </span>
-                <div>
-                  <h2 className="font-display text-xs sm:text-sm font-bold uppercase tracking-wider text-kertas-dingin">
-                    Sales &amp; Risk Architecture
-                  </h2>
-                  <p className="font-display text-[11px] text-kertas-dingin/70">
-                    Kerangka Kerja Akuisisi &amp; Retensi B2B
-                  </p>
-                </div>
+          {/* Key Metric Highlights */}
+          <Reveal delay={0.36} y={20}>
+            <div className="grid grid-cols-2 gap-6 pt-10 border-t border-white/5 mt-10 max-w-md">
+              <div>
+                <div className="text-2xl sm:text-3xl font-extrabold text-white">7+ Thn</div>
+                <div className="text-xs text-slate-400 font-medium mt-0.5">Pengalaman Karir</div>
               </div>
-              <span className="font-display text-[11px] font-bold px-2.5 py-1 rounded bg-kuning-stabilo text-hijau-ledger tabular-nums shrink-0">
-                4 Tahap Inti
-              </span>
+              <div>
+                <div className="text-2xl sm:text-3xl font-extrabold text-emerald-400">6 Peran</div>
+                <div className="text-xs text-slate-400 font-medium mt-0.5">Rekam Jejak Korporat & B2B</div>
+              </div>
+            </div>
+          </Reveal>
+        </div>
+
+        {/* Right Column: Layered Real Portrait Composition */}
+        <div className="lg:col-span-5 flex justify-center items-center relative">
+          <motion.div
+            initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, delay: 0.15, ease: [0.21, 0.47, 0.32, 0.98] }}
+            className="motion-reveal relative w-full max-w-[380px] sm:max-w-[420px] lg:max-w-none aspect-[4/5] rounded-3xl overflow-hidden glass-card p-2 border border-white/10 shadow-2xl"
+          >
+            {/* Inner background glow */}
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent z-10 pointer-events-none" />
+
+            {/* Real Portrait image */}
+            <div className="relative w-full h-full rounded-2xl overflow-hidden bg-slate-900/80">
+              <Image
+                src={HERO_DATA.portraitUrl}
+                alt="Muhammad Angga Ramadhan - Professional Executive Portrait"
+                fill
+                priority
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 45vw, 420px"
+                className="object-cover object-top"
+                referrerPolicy="no-referrer"
+              />
             </div>
 
-            <ol className="mt-4 space-y-3">
-              {hero.architectureSteps.map((item) => (
-                <li
-                  key={item.step}
-                  className="rounded-lg border border-kertas-dingin/10 bg-white/[0.03] p-3.5 hover:border-kuning-stabilo/40 transition-colors"
-                >
-                  <div className="flex flex-wrap items-center justify-between gap-2">
-                    <div className="flex items-center gap-2 min-w-0">
-                      <ArchitectureIcon name={item.icon} />
-                      <span className="font-display text-xs font-extrabold text-kuning-stabilo tabular-nums shrink-0">
-                        {item.step}.
-                      </span>
-                      <span className="font-display text-sm font-bold text-kertas-dingin">
-                        {item.title}
-                      </span>
-                    </div>
-                    <span className="font-display text-[11px] font-bold px-2 py-0.5 rounded bg-kertas-dingin/10 text-kuning-stabilo tabular-nums whitespace-nowrap shrink-0">
-                      {item.metric}
-                    </span>
-                  </div>
-                  <p className="mt-1.5 font-body text-xs sm:text-sm leading-relaxed text-kertas-dingin/80">
-                    {item.desc}
-                  </p>
-                </li>
-              ))}
-            </ol>
-          </aside>
+            {/* Floating Glass Badges with subtle staggered entrance */}
+            {/* Badge 1: Top Right */}
+            <motion.div
+              initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.4, ease: "easeOut" }}
+              className="motion-reveal absolute top-6 right-6 z-20 max-w-[210px] glass-pill px-3.5 py-2.5 rounded-xl shadow-xl flex items-center gap-2.5"
+            >
+              <div className="w-8 h-8 rounded-lg bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center shrink-0">
+                <TrendingUp className="w-4 h-4 text-emerald-400" />
+              </div>
+              <span className="text-xs font-semibold text-slate-100 leading-tight">
+                {HERO_DATA.floatingBadges[0].text}
+              </span>
+            </motion.div>
+
+            {/* Badge 2: Bottom Left */}
+            <motion.div
+              initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.5, ease: "easeOut" }}
+              className="motion-reveal absolute bottom-6 left-6 z-20 max-w-[240px] glass-pill px-3.5 py-2.5 rounded-xl shadow-xl flex items-center gap-2.5"
+            >
+              <div className="w-8 h-8 rounded-lg bg-blue-500/20 border border-blue-500/40 flex items-center justify-center shrink-0">
+                <ShieldCheck className="w-4 h-4 text-blue-400" />
+              </div>
+              <span className="text-xs font-semibold text-slate-100 leading-tight">
+                {HERO_DATA.floatingBadges[1].text}
+              </span>
+            </motion.div>
+          </motion.div>
         </div>
-
-        {/* Giant KPI Bento Grid (#pencapaian) */}
-        <div id="pencapaian" className="mt-12 sm:mt-14 scroll-mt-24">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 mb-4">
-            <p className="font-display text-xs font-bold uppercase tracking-wider text-kuning-stabilo">
-              Verified Commercial Impact · Metrik Kinerja Faktual
-            </p>
-            <p className="font-display text-xs text-kertas-dingin/75 tabular-nums">
-              Rekam Jejak Kuantitatif Lintas Perbankan, Multifinance &amp; SaaS B2B
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
-            {hero.kpiBento.map((kpi) => (
-              <article
-                key={kpi.label}
-                className={`rounded-xl p-5 sm:p-6 flex flex-col justify-between transition-colors ${
-                  kpi.featured
-                    ? "border-2 border-kuning-stabilo/80 bg-[#092923]"
-                    : "border border-kertas-dingin/15 bg-white/[0.06] hover:border-kuning-stabilo/45"
-                }`}
-              >
-                <div>
-                  <div className="flex flex-wrap items-center justify-between gap-1.5">
-                    <span className="font-display text-[11px] font-bold px-2.5 py-0.5 rounded bg-kuning-stabilo text-hijau-ledger tabular-nums whitespace-nowrap">
-                      {kpi.badge}
-                    </span>
-                    <span className="font-display text-[11px] font-semibold text-kertas-dingin/70 tabular-nums whitespace-nowrap">
-                      {kpi.period}
-                    </span>
-                  </div>
-
-                  <p className="mt-4 font-display text-4xl sm:text-5xl font-extrabold tracking-tight text-kuning-stabilo tabular-nums">
-                    {kpi.metric}
-                  </p>
-                  <h3 className="mt-2 font-display text-base font-bold text-kertas-dingin">
-                    {kpi.label}
-                  </h3>
-                </div>
-
-                <div className="mt-4 pt-3 border-t border-kertas-dingin/15">
-                  <p className="font-display text-xs font-semibold text-kertas-dingin/95">
-                    {kpi.role}
-                  </p>
-                  <p className="font-body text-xs text-kertas-dingin/75 mt-0.5">
-                    {kpi.company}
-                  </p>
-                </div>
-              </article>
-            ))}
-          </div>
-        </div>
-
-        {/* Interactive Career Progression Dashboard Panel */}
-        <PipelineStrip />
       </div>
     </section>
   );
