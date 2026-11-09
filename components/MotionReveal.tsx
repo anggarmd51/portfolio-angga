@@ -1,8 +1,7 @@
 "use client";
 
-import React, { ReactNode } from "react";
-import { motion, Variants } from "motion/react";
-import { usePrefersReducedMotion } from "@/hooks/useMediaQuery";
+import type { MouseEventHandler, ReactNode } from "react";
+import { motion, type Variants } from "motion/react";
 
 interface RevealProps {
   children: ReactNode;
@@ -11,6 +10,8 @@ interface RevealProps {
   y?: number;
   duration?: number;
   amount?: number;
+  onMouseMove?: MouseEventHandler<HTMLDivElement>;
+  onMouseLeave?: MouseEventHandler<HTMLDivElement>;
 }
 
 export function Reveal({
@@ -20,13 +21,9 @@ export function Reveal({
   y = 22,
   duration = 0.55,
   amount = 0.15,
+  onMouseMove,
+  onMouseLeave,
 }: RevealProps) {
-  const shouldReduceMotion = usePrefersReducedMotion();
-
-  if (shouldReduceMotion) {
-    return <div className={`motion-reveal ${className}`.trim()}>{children}</div>;
-  }
-
   return (
     <motion.div
       initial={{ opacity: 0, y }}
@@ -38,6 +35,8 @@ export function Reveal({
         ease: [0.21, 0.47, 0.32, 0.98],
       }}
       className={`motion-reveal ${className}`.trim()}
+      onMouseMove={onMouseMove}
+      onMouseLeave={onMouseLeave}
     >
       {children}
     </motion.div>
@@ -73,12 +72,6 @@ export function StaggerContainer({
   staggerChildren = 0.08,
   amount = 0.15,
 }: StaggerContainerProps) {
-  const shouldReduceMotion = usePrefersReducedMotion();
-
-  if (shouldReduceMotion) {
-    return <div className={`motion-reveal ${className}`.trim()}>{children}</div>;
-  }
-
   return (
     <motion.div
       initial="hidden"
@@ -110,12 +103,6 @@ interface StaggerItemProps {
 }
 
 export function StaggerItem({ children, className = "" }: StaggerItemProps) {
-  const shouldReduceMotion = usePrefersReducedMotion();
-
-  if (shouldReduceMotion) {
-    return <div className={`motion-reveal ${className}`.trim()}>{children}</div>;
-  }
-
   return (
     <motion.div variants={itemVariants} className={`motion-reveal ${className}`.trim()}>
       {children}

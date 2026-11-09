@@ -10,12 +10,27 @@ import {
   Sparkles,
   CheckCircle2,
 } from "lucide-react";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
+import type { MouseEvent } from "react";
 import { Reveal, StaggerContainer, StaggerItem } from "./MotionReveal";
 
 const PILLAR_ICONS = [TrendingUp, Users, ShieldAlert];
 
 export default function BentoGrid() {
   const marqueeItems = BENTO_DATA.box4.marqueeText.split(" • ");
+  const pointerFine = useMediaQuery("(pointer: fine)");
+
+  const handleSpotlightMove = (event: MouseEvent<HTMLDivElement>) => {
+    if (!pointerFine) return;
+    const bounds = event.currentTarget.getBoundingClientRect();
+    event.currentTarget.style.setProperty("--spotlight-x", `${event.clientX - bounds.left}px`);
+    event.currentTarget.style.setProperty("--spotlight-y", `${event.clientY - bounds.top}px`);
+  };
+
+  const resetSpotlight = (event: MouseEvent<HTMLDivElement>) => {
+    event.currentTarget.style.setProperty("--spotlight-x", "-1000px");
+    event.currentTarget.style.setProperty("--spotlight-y", "-1000px");
+  };
 
   return (
     <section
@@ -50,7 +65,9 @@ export default function BentoGrid() {
             <Reveal
               y={24}
               duration={0.6}
-              className="h-full glass-card p-6 sm:p-8 rounded-2xl flex flex-col justify-between border border-white/10 hover:border-white/20 transition-all shadow-xl relative overflow-hidden group"
+              className={`h-full glass-card p-6 sm:p-8 rounded-2xl flex flex-col justify-between border border-white/10 hover:border-white/20 transition-all shadow-xl relative overflow-hidden group ${pointerFine ? "bento-spotlight" : ""}`}
+              onMouseMove={pointerFine ? handleSpotlightMove : undefined}
+              onMouseLeave={pointerFine ? resetSpotlight : undefined}
             >
               {/* Ambient accent inside box */}
               <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 blur-3xl pointer-events-none rounded-full group-hover:bg-emerald-500/10 transition-colors" />
@@ -93,7 +110,9 @@ export default function BentoGrid() {
               y={24}
               delay={0.1}
               duration={0.6}
-              className="h-full glass-card p-6 sm:p-8 rounded-2xl flex flex-col justify-between border border-white/10 hover:border-white/20 transition-all shadow-xl relative"
+              className={`h-full glass-card p-6 sm:p-8 rounded-2xl flex flex-col justify-between border border-white/10 hover:border-white/20 transition-all shadow-xl relative ${pointerFine ? "bento-spotlight" : ""}`}
+              onMouseMove={pointerFine ? handleSpotlightMove : undefined}
+              onMouseLeave={pointerFine ? resetSpotlight : undefined}
             >
               <div>
                 <div className="flex items-center gap-2 mb-4">
@@ -133,7 +152,9 @@ export default function BentoGrid() {
               y={24}
               delay={0.15}
               duration={0.6}
-              className="h-full glass-card p-6 sm:p-8 rounded-2xl border border-white/10 shadow-xl flex flex-col justify-between"
+              className={`h-full glass-card p-6 sm:p-8 rounded-2xl border border-white/10 shadow-xl flex flex-col justify-between ${pointerFine ? "bento-spotlight" : ""}`}
+              onMouseMove={pointerFine ? handleSpotlightMove : undefined}
+              onMouseLeave={pointerFine ? resetSpotlight : undefined}
             >
               <div className="mb-6">
                 <span className="text-xs font-bold uppercase tracking-wider text-emerald-400">
@@ -176,7 +197,9 @@ export default function BentoGrid() {
             <Reveal
               y={20}
               duration={0.55}
-              className="glass-card p-4 sm:p-5 rounded-2xl border border-white/10 overflow-hidden relative"
+              className={`glass-card p-4 sm:p-5 rounded-2xl border border-white/10 overflow-hidden relative ${pointerFine ? "bento-spotlight" : ""}`}
+              onMouseMove={pointerFine ? handleSpotlightMove : undefined}
+              onMouseLeave={pointerFine ? resetSpotlight : undefined}
             >
               <div className="flex items-center gap-3 mb-3 px-2">
                 <span className="w-2 h-2 rounded-full bg-emerald-400" />

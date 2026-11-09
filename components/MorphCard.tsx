@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { CareerRole } from "@/data/portfolio";
 import { motion } from "motion/react";
-import { usePrefersReducedMotion } from "@/hooks/useMediaQuery";
 import { ArrowUpRight } from "lucide-react";
 
 interface MorphCardProps {
@@ -19,12 +18,10 @@ export default function MorphCard({
   isSelected,
   onSelect,
 }: MorphCardProps) {
-  const shouldReduceMotion = usePrefersReducedMotion();
-
   return (
     <motion.button
       type="button"
-      layoutId={shouldReduceMotion ? undefined : `career-card-${role.id}`}
+      layoutId={`career-card-${role.id}`}
       onClick={onSelect}
       aria-haspopup="dialog"
       aria-expanded={isSelected}
@@ -44,7 +41,7 @@ export default function MorphCard({
         {/* Top bar: Company logo & sequence index */}
         <div className="flex items-start justify-between gap-4 mb-5">
           <motion.div
-            layoutId={shouldReduceMotion ? undefined : `career-logo-${role.id}`}
+            layoutId={`career-logo-${role.id}`}
             transition={{ type: "spring", stiffness: 350, damping: 30 }}
             className="relative w-14 h-14 rounded-xl bg-white p-1.5 flex items-center justify-center shrink-0 shadow-sm border border-slate-200 overflow-hidden"
           >
@@ -70,14 +67,14 @@ export default function MorphCard({
 
         {/* Company & Role */}
         <motion.h3
-          layoutId={shouldReduceMotion ? undefined : `career-company-${role.id}`}
+          layoutId={`career-company-${role.id}`}
           transition={{ type: "spring", stiffness: 350, damping: 30 }}
           className="text-base font-bold text-white group-hover:text-emerald-300 transition-colors line-clamp-2"
         >
           {role.company}
         </motion.h3>
         <motion.p
-          layoutId={shouldReduceMotion ? undefined : `career-role-${role.id}`}
+          layoutId={`career-role-${role.id}`}
           transition={{ type: "spring", stiffness: 350, damping: 30 }}
           className="text-sm font-semibold text-emerald-400 mt-1"
         >

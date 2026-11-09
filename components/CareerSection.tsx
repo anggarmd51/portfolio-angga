@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { CAREER_ROLES, CareerRole } from "@/data/portfolio";
-import { useMediaQuery, usePrefersReducedMotion } from "@/hooks/useMediaQuery";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import MorphCard from "./MorphCard";
 import { Reveal } from "./MotionReveal";
 import { motion, AnimatePresence, LayoutGroup } from "motion/react";
@@ -20,7 +20,7 @@ import {
  * Unmounts completely when the viewport is mobile, ensuring zero leftover state,
  * zero lingering modal dialogs, and clean body scroll restoration on breakpoint crossing.
  */
-function DesktopCareerView({ shouldReduceMotion }: { shouldReduceMotion: boolean }) {
+function DesktopCareerView() {
   const [selectedRole, setSelectedRole] = useState<CareerRole | null>(null);
   const dialogRef = useRef<HTMLDivElement | null>(null);
   const triggerCardRef = useRef<HTMLElement | null>(null);
@@ -153,11 +153,7 @@ function DesktopCareerView({ shouldReduceMotion }: { shouldReduceMotion: boolean
             {/* Morph Dialog Container with matching layoutId */}
             <motion.div
               ref={dialogRef}
-              layoutId={
-                shouldReduceMotion
-                  ? undefined
-                  : `career-card-${selectedRole.id}`
-              }
+              layoutId={`career-card-${selectedRole.id}`}
               transition={{
                 type: "spring",
                 stiffness: 350,
@@ -178,11 +174,7 @@ function DesktopCareerView({ shouldReduceMotion }: { shouldReduceMotion: boolean
               {/* Header info with coordinated sub-layout elements */}
               <div className="flex items-start gap-4 mb-6 pr-10">
                 <motion.div
-                  layoutId={
-                    shouldReduceMotion
-                      ? undefined
-                      : `career-logo-${selectedRole.id}`
-                  }
+                  layoutId={`career-logo-${selectedRole.id}`}
                   transition={{
                     type: "spring",
                     stiffness: 350,
@@ -206,11 +198,7 @@ function DesktopCareerView({ shouldReduceMotion }: { shouldReduceMotion: boolean
                   </div>
                   <motion.h3
                     id="dialog-role-title"
-                    layoutId={
-                      shouldReduceMotion
-                        ? undefined
-                        : `career-company-${selectedRole.id}`
-                    }
+                    layoutId={`career-company-${selectedRole.id}`}
                     transition={{
                       type: "spring",
                       stiffness: 350,
@@ -221,11 +209,7 @@ function DesktopCareerView({ shouldReduceMotion }: { shouldReduceMotion: boolean
                     {selectedRole.company}
                   </motion.h3>
                   <motion.p
-                    layoutId={
-                      shouldReduceMotion
-                        ? undefined
-                        : `career-role-${selectedRole.id}`
-                    }
+                    layoutId={`career-role-${selectedRole.id}`}
                     transition={{
                       type: "spring",
                       stiffness: 350,
@@ -366,7 +350,6 @@ function MobileCareerView() {
 
 export default function CareerSection() {
   const isDesktop = useMediaQuery("(min-width: 768px)");
-  const shouldReduceMotion = usePrefersReducedMotion();
 
   return (
     <section
@@ -393,7 +376,7 @@ export default function CareerSection() {
         </Reveal>
 
         {/* DESKTOP VIEW (>= 768px): Mounted conditionally; unmounts completely on mobile */}
-        {isDesktop && <DesktopCareerView shouldReduceMotion={Boolean(shouldReduceMotion)} />}
+        {isDesktop && <DesktopCareerView />}
 
         {/* MOBILE VIEW (< 768px): Accessible Native Accordion */}
         {!isDesktop && <MobileCareerView />}

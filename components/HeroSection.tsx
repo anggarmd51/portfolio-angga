@@ -3,12 +3,32 @@
 import Image from "next/image";
 import { HERO_DATA } from "@/data/portfolio";
 import { ArrowDown, MessageSquare, ShieldCheck, TrendingUp } from "lucide-react";
-import { motion } from "motion/react";
-import { usePrefersReducedMotion } from "@/hooks/useMediaQuery";
+import { motion, useMotionValue, useSpring } from "motion/react";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
+import type { MouseEvent } from "react";
 import { Reveal } from "./MotionReveal";
 
 export default function HeroSection() {
-  const shouldReduceMotion = usePrefersReducedMotion();
+  const pointerFine = useMediaQuery("(pointer: fine)");
+  const magnetX = useMotionValue(0);
+  const magnetY = useMotionValue(0);
+  const springX = useSpring(magnetX, { stiffness: 220, damping: 28, mass: 0.4 });
+  const springY = useSpring(magnetY, { stiffness: 220, damping: 28, mass: 0.4 });
+
+  const handlePrimaryCtaMouseMove = (event: MouseEvent<HTMLAnchorElement>) => {
+    if (!pointerFine) return;
+    const bounds = event.currentTarget.getBoundingClientRect();
+    const maxOffset = 12;
+    const x = ((event.clientX - bounds.left) / bounds.width - 0.5) * maxOffset * 2;
+    const y = ((event.clientY - bounds.top) / bounds.height - 0.5) * maxOffset * 2;
+    magnetX.set(Math.max(-maxOffset, Math.min(maxOffset, x)));
+    magnetY.set(Math.max(-maxOffset, Math.min(maxOffset, y)));
+  };
+
+  const resetPrimaryCta = () => {
+    magnetX.set(0);
+    magnetY.set(0);
+  };
 
   return (
     <section
@@ -66,13 +86,16 @@ export default function HeroSection() {
           {/* CTAs */}
           <Reveal delay={0.3} y={20}>
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 pt-2">
-              <a
+              <motion.a
                 href={HERO_DATA.ctaPrimary.href}
+                style={{ x: springX, y: springY }}
+                onMouseMove={pointerFine ? handlePrimaryCtaMouseMove : undefined}
+                onMouseLeave={pointerFine ? resetPrimaryCta : undefined}
                 className="inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl bg-emerald-500 text-slate-950 font-bold text-sm hover:bg-emerald-400 transition-all shadow-lg shadow-emerald-500/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
               >
                 <span>{HERO_DATA.ctaPrimary.label}</span>
                 <ArrowDown className="w-4 h-4 stroke-[2.5]" />
-              </a>
+              </motion.a>
 
               <a
                 href={HERO_DATA.ctaSecondary.href}
@@ -102,7 +125,7 @@ export default function HeroSection() {
         {/* Right Column: Layered Real Portrait Composition */}
         <div className="lg:col-span-5 flex justify-center items-center relative">
           <motion.div
-            initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, scale: 0.95 }}
+            initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.15, ease: [0.21, 0.47, 0.32, 0.98] }}
             className="motion-reveal relative w-full max-w-[380px] sm:max-w-[420px] lg:max-w-none aspect-[4/5] rounded-3xl overflow-hidden glass-card p-2 border border-white/10 shadow-2xl"
@@ -126,7 +149,7 @@ export default function HeroSection() {
             {/* Floating Glass Badges with subtle staggered entrance */}
             {/* Badge 1: Top Right */}
             <motion.div
-              initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, x: 20 }}
+              initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5, delay: 0.4, ease: "easeOut" }}
               className="motion-reveal absolute top-6 right-6 z-20 max-w-[210px] glass-pill px-3.5 py-2.5 rounded-xl shadow-xl flex items-center gap-2.5"
@@ -141,7 +164,7 @@ export default function HeroSection() {
 
             {/* Badge 2: Bottom Left */}
             <motion.div
-              initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, x: -20 }}
+              initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5, delay: 0.5, ease: "easeOut" }}
               className="motion-reveal absolute bottom-6 left-6 z-20 max-w-[240px] glass-pill px-3.5 py-2.5 rounded-xl shadow-xl flex items-center gap-2.5"

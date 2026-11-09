@@ -52,6 +52,16 @@
     inset 0 1px 1px 0 rgba(255, 255, 255, 0.08);
 }
 
+@media (pointer: fine) {
+  .bento-spotlight {
+    background-image: radial-gradient(
+      260px circle at var(--spotlight-x, -1000px) var(--spotlight-y, -1000px),
+      rgba(16, 185, 129, 0.1),
+      transparent 76%
+    );
+  }
+}
+
 .glass-card-hover {
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -113,33 +123,5 @@
 @media (hover: hover) {
   .animate-marquee:hover {
     animation-play-state: paused;
-  }
-}
-
-/* Prefers-reduced-motion compliance */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-
-  .animate-marquee {
-    animation: none !important;
-    transform: none !important;
-    flex-wrap: wrap !important;
-    width: 100% !important;
-  }
-
-  .glass-card-hover:hover {
-    transform: none !important;
-  }
-
-  .motion-reveal {
-    opacity: 1 !important;
-    transform: none !important;
   }
 }

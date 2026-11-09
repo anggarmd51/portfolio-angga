@@ -20,10 +20,3 @@ export function useMediaQuery(query: string): boolean {
     () => false
   );
 }
-
-/**
- * Hook to detect prefers-reduced-motion
- */
-export function usePrefersReducedMotion(): boolean {
-  return useMediaQuery("(prefers-reduced-motion: reduce)");
-}
