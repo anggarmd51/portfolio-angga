@@ -1,6 +1,6 @@
 "use client";
 
-import { CONTACT_DATA } from "@/data/portfolio";
+import { CONTACT_DATA, type ContactChannel } from "@/data/portfolio";
 import {
   MessageCircle,
   Mail,
@@ -9,8 +9,40 @@ import {
   Download,
   ArrowUpRight,
   Sparkles,
+  FileText,
 } from "lucide-react";
 import { Reveal, StaggerContainer, StaggerItem } from "./MotionReveal";
+
+const ICON_MAP = {
+  whatsapp: MessageCircle,
+  mail: Mail,
+  linkedin: Linkedin,
+  github: Github,
+  "file-text": FileText,
+};
+
+function ContactLink({ channel }: { channel: ContactChannel }) {
+  const Icon = ICON_MAP[channel.iconName];
+  const opensNewTab = channel.href.startsWith("https://");
+
+  return (
+    <a
+      href={channel.href}
+      target={opensNewTab ? "_blank" : undefined}
+      rel={opensNewTab ? "noopener noreferrer" : undefined}
+      download={channel.isDownload ? channel.downloadFilename : undefined}
+      className="min-h-[44px] w-full inline-flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-slate-200 hover:text-white hover:bg-white/10 hover:border-emerald-500/30 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+    >
+      <Icon aria-hidden="true" className="w-5 h-5 text-emerald-400 shrink-0" />
+      <span className="min-w-0 flex-1 text-left">
+        <span className="block text-sm font-semibold leading-snug">{channel.label}</span>
+        <span className="block text-xs text-slate-300 leading-snug break-words">{channel.sublabel}</span>
+      </span>
+      {opensNewTab && <ArrowUpRight aria-hidden="true" className="w-4 h-4 text-slate-400 shrink-0" />}
+      {channel.isDownload && <Download aria-hidden="true" className="w-4 h-4 text-slate-400 shrink-0" />}
+    </a>
+  );
+}
 
 export default function ContactSection() {
   return (
@@ -19,19 +51,16 @@ export default function ContactSection() {
       aria-labelledby="contact-heading"
       className="py-20 md:py-32 px-4 sm:px-6 lg:px-8 border-t border-white/5 relative bg-[#0B0F19] overflow-hidden"
     >
-      {/* Background radial accent */}
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-emerald-500/5 blur-[140px] rounded-full pointer-events-none -z-10" />
+      <div aria-hidden="true" className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-emerald-500/[0.025] blur-[110px] rounded-full pointer-events-none -z-10" />
 
       <div className="max-w-5xl mx-auto text-center">
-        {/* Eyebrow badge */}
         <Reveal delay={0.05} y={16}>
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold tracking-wider uppercase mb-6">
-            <Sparkles className="w-3.5 h-3.5" />
-            Kemitraan & Peluang Karir Eksekutif
+            <Sparkles aria-hidden="true" className="w-3.5 h-3.5" />
+            Kontak & Peluang
           </div>
         </Reveal>
 
-        {/* Massive high-contrast responsive headline */}
         <Reveal delay={0.12} y={22}>
           <h2
             id="contact-heading"
@@ -41,90 +70,43 @@ export default function ContactSection() {
           </h2>
         </Reveal>
 
-        {/* Subheadline */}
         <Reveal delay={0.18} y={22}>
           <p className="mt-6 text-base sm:text-lg md:text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
             {CONTACT_DATA.subheadline}
           </p>
         </Reveal>
 
-        {/* Contact Channels: Full-width on mobile, structured layout on desktop */}
-        <StaggerContainer
-          className="mt-12 max-w-3xl mx-auto flex flex-col sm:flex-row flex-wrap items-center justify-center gap-3.5 sm:gap-4"
-          staggerChildren={0.08}
-          delayChildren={0.1}
-        >
-          {/* 1. WhatsApp Button (Primary Emerald) */}
-          <StaggerItem className="w-full sm:w-auto">
-            <a
-              href="https://wa.me/6285206602391"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-6 py-4 rounded-2xl bg-emerald-500 text-slate-950 font-bold text-sm sm:text-base hover:bg-emerald-400 transition-all shadow-xl shadow-emerald-500/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
-            >
-              <MessageCircle className="w-5 h-5 fill-slate-950 stroke-none" />
-              <span>0852-0660-2391 — Chat via WhatsApp</span>
-              <ArrowUpRight className="w-4 h-4 stroke-[2.5]" />
-            </a>
-          </StaggerItem>
+        <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-5 text-left">
+          {CONTACT_DATA.pathways.map((pathway, index) => {
+            const channels = CONTACT_DATA.channels.filter(
+              (channel) => channel.pathway === pathway.id || channel.pathway === "both"
+            );
+            return (
+              <Reveal key={pathway.id} delay={index * 0.08} y={18}>
+                <section className="h-full glass-card rounded-2xl p-5 sm:p-6 border border-white/10">
+                  <h3 className="text-lg sm:text-xl font-bold text-white">
+                    {pathway.title}
+                  </h3>
+                  <p className="mt-2 mb-5 text-sm text-slate-300 leading-relaxed">
+                    {pathway.description}
+                  </p>
+                  <StaggerContainer className="grid grid-cols-1 gap-3" staggerChildren={0.05}>
+                    {channels.map((channel) => (
+                      <StaggerItem key={channel.label}>
+                        <ContactLink channel={channel} />
+                      </StaggerItem>
+                    ))}
+                  </StaggerContainer>
+                </section>
+              </Reveal>
+            );
+          })}
+        </div>
 
-          {/* 2. Email Button */}
-          <StaggerItem className="w-full sm:w-auto">
-            <a
-              href="mailto:anggaramadhan538@gmail.com"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-6 py-4 rounded-2xl glass-card text-slate-100 hover:text-white hover:bg-white/10 font-semibold text-sm sm:text-base transition-all border border-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
-            >
-              <Mail className="w-5 h-5 text-emerald-400" />
-              <span>anggaramadhan538@gmail.com — Kirim Email</span>
-            </a>
-          </StaggerItem>
-
-          {/* 3. LinkedIn */}
-          <StaggerItem className="w-full sm:w-auto">
-            <a
-              href="https://linkedin.com/in/anggarmd"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-5 py-3.5 rounded-2xl glass-card text-slate-200 hover:text-white hover:bg-white/10 font-medium text-sm transition-all border border-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
-            >
-              <Linkedin className="w-4 h-4 text-blue-400" />
-              <span>linkedin.com/in/anggarmd</span>
-              <ArrowUpRight className="w-3.5 h-3.5 text-slate-400" />
-            </a>
-          </StaggerItem>
-
-          {/* 4. GitHub */}
-          <StaggerItem className="w-full sm:w-auto">
-            <a
-              href="https://github.com/anggarmd51"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-5 py-3.5 rounded-2xl glass-card text-slate-200 hover:text-white hover:bg-white/10 font-medium text-sm transition-all border border-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
-            >
-              <Github className="w-4 h-4 text-slate-300" />
-              <span>github.com/anggarmd51</span>
-              <ArrowUpRight className="w-3.5 h-3.5 text-slate-400" />
-            </a>
-          </StaggerItem>
-
-          {/* 5. PDF CV Download */}
-          <StaggerItem className="w-full sm:w-auto">
-            <a
-              href="/assets/CV_Angga.pdf"
-              download="CV_Muhammad_Angga_Ramadhan.pdf"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-6 py-4 rounded-2xl bg-white/10 border border-white/20 text-white hover:bg-white/15 font-bold text-sm sm:text-base transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
-            >
-              <Download className="w-5 h-5 text-emerald-400" />
-              <span>Unduh CV Lengkap (PDF)</span>
-            </a>
-          </StaggerItem>
-        </StaggerContainer>
-
-        {/* Footer info */}
-        <Reveal delay={0.1} y={16} className="mt-20 pt-8 border-t border-white/10 text-xs sm:text-sm text-slate-400">
+        <Reveal delay={0.1} y={16} className="mt-16 pt-8 border-t border-white/10 text-xs sm:text-sm text-slate-300">
           <p>{CONTACT_DATA.footer}</p>
-          <p className="mt-1 text-[11px] text-slate-400">
-            Dibuat secara mandiri dengan Next.js App Router, Tailwind CSS, & Framer Motion.
+          <p className="mt-2 text-xs text-slate-300">
+            Dibuat secara mandiri dengan Next.js App Router, Tailwind CSS, & Motion.
           </p>
         </Reveal>
       </div>

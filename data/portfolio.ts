@@ -7,6 +7,11 @@ export interface BentoPillar {
   description: string;
 }
 
+export interface CompetencyCategory {
+  title: string;
+  skills: string[];
+}
+
 export interface CareerRole {
   id: string;
   company: string;
@@ -18,6 +23,17 @@ export interface CareerRole {
   bullets: string[];
 }
 
+export interface ProjectScreenshot {
+  src: string;
+  title: string;
+  caption: string;
+}
+
+export interface ProjectPreviewModule {
+  title: string;
+  caption: string;
+}
+
 export interface ProjectItem {
   id: string;
   title: string;
@@ -25,10 +41,15 @@ export interface ProjectItem {
   role: string;
   description: string;
   websiteUrl: string;
-  screenshots: string[];
+  screenshots: ProjectScreenshot[];
   coverScreenshot: string;
   socials?: { platform: string; url: string }[];
   accessNote?: string;
+  objective?: string;
+  contribution?: string;
+  techStack?: string[];
+  status?: "Personal Project" | "Project Showcase";
+  previewModules?: ProjectPreviewModule[];
 }
 
 export interface EducationItem {
@@ -45,6 +66,8 @@ export interface CertificationItem {
   title: string;
   issuer: string;
   period: string;
+  validity?: string;
+  url?: string;
 }
 
 export interface ContactChannel {
@@ -54,68 +77,94 @@ export interface ContactChannel {
   isDownload?: boolean;
   downloadFilename?: string;
   iconName: "whatsapp" | "mail" | "linkedin" | "github" | "file-text";
+  pathway?: "career" | "collaboration" | "both";
 }
 
 export const HERO_DATA = {
-  eyebrow: "EXECUTIVE PORTFOLIO — MEDAN, INDONESIA",
+  eyebrow: "SALES, BUSINESS DEVELOPMENT & ACCOUNT MANAGEMENT",
   name: "Muhammad Angga Ramadhan",
   secondaryName: "(Angga)",
   tagline:
-    "Menyatukan Disiplin Eksekusi Penjualan, Mitigasi Risiko Pembiayaan, dan Teknologi CRM untuk Mengakselerasi Pertumbuhan Bisnis.",
+    "Menangani Penjualan B2B, Pengelolaan Akun, dan Pengembangan Hubungan Bisnis di Sektor Pembiayaan & SaaS.",
   subTagline:
-    "Profesional Sales, Business Development, dan Manajemen Operasional dengan rekam jejak >7 tahun memimpin penetrasi pasar B2B/B2C, mengelola jaringan kemitraan, dan membangun sistem pipeline modern.",
-  portraitUrl: "/profile-placeholder.png",
-  floatingBadges: [
-    { text: "7+ Tahun Pengalaman Finansial & B2B SaaS" },
-    { text: "Sales Leadership • Risk Control • CRM Tech" },
-  ],
+    "Berpengalaman sejak 2019 di industri pembiayaan, perbankan, dan perangkat lunak B2B (HRIS & POS) di Medan. Terbiasa mengelola siklus penjualan dari pemetaan kebutuhan klien, demonstrasi produk, hingga pendampingan onboarding.",
+  portraitUrl: "/muhammad-angga-ramadhan-profile.png",
+  floatingBadges: [{ text: "Berpengalaman sejak 2019 • Medan" }],
   ctaPrimary: {
-    label: "Eksplorasi Rekam Jejak",
+    label: "Lihat Riwayat Kerja",
     href: "#career",
   },
   ctaSecondary: {
-    label: "Diskusikan Peluang Karir & Bisnis",
+    label: "Diskusikan Peluang",
     href: "#contact",
   },
 };
 
 export const BENTO_DATA = {
+  sectionTitle: "Dari Survei Kredit ke Penjualan B2B SaaS",
+  sectionSubtitle:
+    "Perjalanan karier yang dimulai sebagai surveyor pembiayaan di Astra Credit Companies (2019), berlanjut ke penjualan produk perbankan dan pembiayaan, hingga menangani penjualan perangkat lunak B2B.",
   box1: {
-    headline: "Fondasi Perbankan yang Kuat. Ketangkasan Eksekusi B2B SaaS.",
-    body: "Karir saya dibangun dari lapangan—mulai dari analisis kelayakan kredit dan kontrol risiko di industri pembiayaan, hingga memimpin tim penetrasi pasar dan negosiasi tingkat eksekutif (C-Level) di industri perangkat lunak (SaaS). Saya tidak hanya menjalankan target penjualan, tetapi merancang ulang alur kerja tim menggunakan pendekatan berbasis data dan sistem CRM yang saya kembangkan sendiri.",
+    headline: "Pengalaman Pembiayaan & Penjualan Solusi B2B",
+    body: "Saya menangani proses penjualan dari pencarian prospek, pemetaan kebutuhan, presentasi solusi, hingga negosiasi kontrak dan pendampingan klien baru. Di luar pekerjaan utama, saya juga membangun aplikasi AR CRM pribadi untuk mencatat prospek dan aktivitas penjualan harian.",
   },
   box2: {
-    label: "TARGET & FOKUS PERAN MANAJERIAL",
-    roles: [
-      "Sales Manager",
-      "Branch Manager",
-      "Business Development Manager",
-      "Key Account / Commercial Lead",
-    ],
+    label: "FOKUS PERAN",
+    roles: ["Sales Manager", "Business Development Manager", "Account Manager"],
   },
   box3: {
-    title: "Tiga Pilar Kapabilitas Utama",
+    title: "Area Pengalaman",
     pillars: [
       {
-        title: "Commercial Execution",
+        title: "Penjualan & Pengelolaan Akun",
         description:
-          "Penjualan B2B/B2C, Key Account Management, Negosiasi & Retensi.",
+          "Pencarian prospek, pemetaan kebutuhan, presentasi solusi, negosiasi, dan tindak lanjut klien.",
       },
       {
-        title: "Team & Branch Operations",
+        title: "Pembiayaan & Layanan Keuangan",
         description:
-          "Kepemimpinan Tim (BDO/Sales), Penyelarasan SOP, Akuisisi Mitra/Dealer.",
+          "Survei dan verifikasi calon debitur, serta penanganan produk pembiayaan reguler dan syariah.",
       },
       {
-        title: "Risk & Credit Governance",
+        title: "Koordinasi Mitra & Onboarding",
         description:
-          "Analisis Kelayakan Kredit, Pengendalian NPL, Kepatuhan Syariah.",
+          "Koordinasi dengan dealer atau mitra usaha dan pendampingan klien baru saat implementasi.",
       },
     ],
   },
   box4: {
-    marqueeText:
-      "B2B & B2C Sales Strategy • Pipeline Management • Sales Team Coaching • Credit & Risk Analysis • NPL Mitigation • Key Account Management • HubSpot CRM • Web Development",
+    competencyCategories: [
+      {
+        title: "Penjualan & Pengembangan Bisnis",
+        skills: [
+          "B2B Sales",
+          "Account Management",
+          "Business Development",
+          "Pipeline Management",
+          "Presentasi & Demo Produk",
+          "Negosiasi Kontrak",
+        ],
+      },
+      {
+        title: "Pembiayaan & Analisis Risiko",
+        skills: [
+          "Credit Survey & Verification",
+          "Analisis Kelayakan Kredit",
+          "Pembiayaan Reguler & Syariah",
+          "Customer Retention",
+          "Manajemen Relasi Dealer/Mitra",
+        ],
+      },
+      {
+        title: "Inisiatif Digital & Alat Kerja",
+        skills: [
+          "CRM Pipeline Tracking",
+          "AI-Assisted Web Development (Vibe Coding)",
+          "Riset Prospek B2B",
+          "Next.js & Tailwind CSS Dasar",
+        ],
+      },
+    ] satisfies CompetencyCategory[],
   },
 };
 
@@ -128,9 +177,9 @@ export const CAREER_ROLES: CareerRole[] = [
     logo: "/assets/PT%20Media%20Antar%20Nusa%20(Nusawork%20HRIS).jpg",
     logoAlt: "Logo PT Media Antar Nusa - Nusawork HRIS",
     bullets: [
-      "Membangun pipeline prospek B2B secara proaktif dan memimpin demonstrasi solusi SaaS HRIS Nusawork di hadapan jajaran HR dan eksekutif C-Level.",
-      "Mengelola siklus penjualan menyeluruh (end-to-end), mulai dari pemetaan kebutuhan organisasi, penyusunan penawaran komersial, hingga negosiasi kontrak dan closing.",
-      "Mengawal proses onboarding dan adopsi sistem pada klien korporat baru guna menjaga keberlanjutan penggunaan dan meminimalkan risiko churn.",
+      "Mencari prospek B2B dan mempresentasikan demo solusi Nusawork HRIS kepada tim HR serta manajemen perusahaan calon klien.",
+      "Menangani proses penjualan dari pemetaan kebutuhan, penyusunan penawaran, hingga negosiasi dan penutupan kontrak.",
+      "Mendampingi klien baru pada tahap onboarding hingga sistem HRIS mulai digunakan secara operasional.",
     ],
   },
   {
@@ -141,9 +190,8 @@ export const CAREER_ROLES: CareerRole[] = [
     logo: "/assets/PT%20Sarana%20Digital%20Retail%20(Dretail%20POS).png",
     logoAlt: "Logo PT Sarana Digital Retail - Dretail POS",
     bullets: [
-      "Merancang dan mengeksekusi strategi penetrasi pasar B2B untuk memperluas adopsi sistem kasir pintar (POS) Dretail pada pelaku usaha Retail dan F&B di wilayah Medan.",
-      "Memimpin, mengarahkan, dan mengevaluasi kinerja tim lapangan (3 BDO) dalam akuisisi merchant dan kemitraan pemilik bisnis.",
-      "Menganalisis alur operasional merchant untuk merumuskan rekomendasi paket bundling perangkat keras dan perangkat lunak POS yang tepat guna.",
+      "Mengoordinasi aktivitas penjualan sistem kasir (POS) Dretail bersama tim Business Development Officer (BDO) untuk sektor ritel dan F&B di area Medan dan sekitarnya.",
+      "Melakukan demonstrasi penggunaan sistem POS, menyusun penawaran komersial, dan mendampingi proses implementasi pada merchant baru.",
     ],
   },
   {
@@ -154,9 +202,9 @@ export const CAREER_ROLES: CareerRole[] = [
     logo: "/assets/PT%20Astra%20Sedaya%20Finance%20(Astra%20Credit%20Companies).webp",
     logoAlt: "Logo PT Astra Sedaya Finance - ACC",
     bullets: [
-      "Mengelola program retensi nasabah existing untuk produk pembiayaan syariah (Talangan Haji) melalui pendekatan konsultatif.",
-      "Memproses pengajuan pembiayaan ulang (repeat order/refinancing) dengan menjaga kecepatan layanan.",
-      "Memverifikasi kelengkapan dokumen administratif agar pencairan memenuhi standar kepatuhan (compliance).",
+      "Mendampingi nasabah existing untuk kebutuhan produk pembiayaan syariah (Talangan Haji) dan menindaklanjuti pertanyaan layanan.",
+      "Menangani pengajuan pembiayaan ulang (repeat order/refinancing) serta memeriksa kelengkapan dokumen administrasi.",
+      "Melakukan tindak lanjut kepada nasabah sesuai proses layanan dan ketentuan pembiayaan yang berlaku.",
     ],
   },
   {
@@ -167,9 +215,9 @@ export const CAREER_ROLES: CareerRole[] = [
     logo: "/assets/PT%20Bank%20Mega%20Tbk.png",
     logoAlt: "Logo PT Bank Mega Tbk",
     bullets: [
-      "Mengakuisisi nasabah baru untuk produk kartu kredit dan dana pihak ketiga melalui eksekusi direct sales, canvassing, dan booth event.",
-      "Memberikan edukasi langsung mengenai fitur produk, manfaat promosi, dan ketentuan.",
-      "Mengawal pemberkasan pengajuan nasabah dari tahap awal hingga verifikasi dan persetujuan.",
+      "Menangani akuisisi nasabah untuk produk kartu kredit dan dana pihak ketiga melalui direct sales, canvassing, serta booth event.",
+      "Menjelaskan fitur produk, manfaat promosi, dan ketentuan kepada calon nasabah.",
+      "Mengawal kelengkapan berkas pengajuan untuk proses verifikasi dan persetujuan.",
     ],
   },
   {
@@ -180,9 +228,9 @@ export const CAREER_ROLES: CareerRole[] = [
     logo: "/assets/PT%20CIMB%20Niaga%20Auto%20Finance%20(CNAF).png",
     logoAlt: "Logo PT CIMB Niaga Auto Finance - CNAF",
     bullets: [
-      "Memasarkan produk pembiayaan otomotif (auto loan) dan memperluas jaringan kemitraan distribusi dengan showroom serta dealer rekanan di Medan.",
-      "Menjaga hubungan kerja sama harian dengan tim penjualan dealer untuk distribusi aplikasi kredit.",
-      "Mendampingi calon debitur selama proses pengumpulan syarat pengajuan hingga tahap realisasi.",
+      "Mempromosikan produk pembiayaan otomotif kepada calon debitur di Medan.",
+      "Mengoordinasi pengajuan pembiayaan dengan showroom dan dealer rekanan serta mendampingi pengumpulan dokumen.",
+      "Menindaklanjuti aplikasi pembiayaan selama proses verifikasi hingga keputusan.",
     ],
   },
   {
@@ -193,8 +241,8 @@ export const CAREER_ROLES: CareerRole[] = [
     logo: "/assets/PT%20Astra%20Sedaya%20Finance%20(Astra%20Credit%20Companies).webp",
     logoAlt: "Logo PT Astra Sedaya Finance - ACC Surveyor",
     bullets: [
-      "Melaksanakan survei lapangan, verifikasi faktual, serta penilaian kelayakan tempat tinggal dan kapasitas usaha calon debitur untuk memitigasi risiko kredit macet (NPL).",
-      "Menyusun laporan survei objektif dan merumuskan rekomendasi kredit sesuai pedoman tata kelola risiko perusahaan.",
+      "Melakukan survei lapangan dan verifikasi informasi calon debitur, termasuk alamat tempat tinggal dan kapasitas usaha.",
+      "Menyusun laporan hasil survei sebagai bahan pertimbangan proses analisis dan keputusan kredit.",
     ],
   },
 ];
@@ -206,12 +254,22 @@ export const PROJECTS_DATA: ProjectItem[] = [
     subtitle: "Platform Bursa Lowongan Kerja",
     role: "Web Developer & Inisiator Proyek",
     description:
-      "Platform direktori dan bursa pencarian kerja independen untuk menghubungkan pencari kerja dengan perusahaan secara transparan.",
+      "Platform direktori lowongan dan informasi karier untuk membantu pencari kerja menelusuri posisi, lokasi, serta sumber lowongan.",
+    objective:
+      "Menyediakan direktori lowongan yang membantu pencari kerja menelusuri informasi posisi, lokasi, dan sumber lowongan.",
+    contribution:
+      "Membangun situs dengan pencarian, filter, kategori, serta halaman detail lowongan dan sumber informasinya.",
+    techStack: ["Supabase", "Vercel"],
+    status: "Personal Project",
     websiteUrl: "https://lokerresmi.vercel.app",
-    coverScreenshot:
-      "/assets/Tangkapan%20Layar%20Proyek%20LokerResmi.id.png",
+    coverScreenshot: "/assets/Tangkapan%20Layar%20Proyek%20LokerResmi.id.png",
     screenshots: [
-      "/assets/Tangkapan%20Layar%20Proyek%20LokerResmi.id.png",
+      {
+        src: "/assets/Tangkapan%20Layar%20Proyek%20LokerResmi.id.png",
+        title: "Beranda LokerResmi.id",
+        caption:
+          "Tampilan pencarian lowongan, kategori, dan informasi posisi kerja.",
+      },
     ],
     socials: [
       { platform: "Instagram", url: "https://www.instagram.com/lokerresmi_id" },
@@ -228,12 +286,39 @@ export const PROJECTS_DATA: ProjectItem[] = [
     subtitle: "Personal B2B Sales Pipeline App",
     role: "Web Developer & Inisiator Proyek",
     description:
-      "Aplikasi Progressive Web App (PWA) CRM mandiri untuk melacak sales pipeline, lead generation, dan manajemen aktivitas penjualan B2B harian.",
+      "Aplikasi pribadi untuk mencatat prospek, tahapan pipeline, dan aktivitas tindak lanjut penjualan B2B.",
+    objective:
+      "Mencatat prospek, tahapan pipeline, dan aktivitas penjualan harian dalam satu aplikasi untuk kebutuhan pribadi.",
+    contribution:
+      "Membangun PWA CRM pribadi untuk mengelola lead, status peluang, dan tindak lanjut harian.",
+    techStack: ["Firebase", "Progressive Web App"],
+    status: "Personal Project",
     websiteUrl: "https://arcrmapp.vercel.app/",
-    coverScreenshot:
-      "/assets/Tangkapan%20Layar%20Proyek%20AR%20CRM%203.png",
+    coverScreenshot: "/assets/Tangkapan%20Layar%20Proyek%20AR%20CRM%203.png",
     screenshots: [
-      "/assets/Tangkapan%20Layar%20Proyek%20AR%20CRM%203.png",
+      {
+        src: "/assets/Tangkapan%20Layar%20Proyek%20AR%20CRM%203.png",
+        title: "Pratinjau AR CRM",
+        caption:
+          "Tangkapan layar aplikasi. Gambar modul dapat diganti saat screenshot terpisah tersedia.",
+      },
+    ],
+    previewModules: [
+      {
+        title: "Pipeline Kanban & Deal Tracking",
+        caption:
+          "Gambaran pengelolaan tahapan pipeline dan tindak lanjut untuk setiap peluang penjualan.",
+      },
+      {
+        title: "Database Prospek & Lead Generation",
+        caption:
+          "Gambaran pencatatan informasi prospek untuk membantu mengelola dan menelusuri lead.",
+      },
+      {
+        title: "Log Aktivitas & Follow-up Harian",
+        caption:
+          "Gambaran pencatatan aktivitas penjualan dan jadwal tindak lanjut harian.",
+      },
     ],
     accessNote:
       "Akses live aplikasi memerlukan autentikasi Google Sign-In internal workspace.",
@@ -241,15 +326,25 @@ export const PROJECTS_DATA: ProjectItem[] = [
   {
     id: "thirteen-project",
     title: "Thirteen Project",
-    subtitle: "Katalog & Portofolio Klien",
+    subtitle: "Katalog Layanan & Portofolio Otomotif",
     role: "Web Developer",
     description:
-      "Website katalog layanan dan portofolio visual untuk mendukung kebutuhan branding dan presentasi klien korporat/B2B otomotif premium.",
+      "Website katalog layanan otomotif, galeri hasil pengerjaan, dan inventori mobil untuk Thirteen Project.",
+    objective:
+      "Menampilkan layanan otomotif, hasil pekerjaan, dan inventori mobil dalam satu situs katalog.",
+    contribution:
+      "Membangun halaman layanan auto detailing, upgrade lampu, cuci mobil, serta katalog mobil dan kanal kontak.",
+    techStack: ["Supabase", "Vercel"],
+    status: "Project Showcase",
     websiteUrl: "https://thirteenproject.vercel.app",
-    coverScreenshot:
-      "/assets/Tangkapan%20Layar%20Proyek%20Thirteen%20Project.png",
+    coverScreenshot: "/assets/Tangkapan%20Layar%20Proyek%20Thirteen%20Project.png",
     screenshots: [
-      "/assets/Tangkapan%20Layar%20Proyek%20Thirteen%20Project.png",
+      {
+        src: "/assets/Tangkapan%20Layar%20Proyek%20Thirteen%20Project.png",
+        title: "Situs Thirteen Project",
+        caption:
+          "Tampilan katalog layanan dan portofolio otomotif Thirteen Project.",
+      },
     ],
   },
 ];
@@ -269,12 +364,14 @@ export const CERTIFICATIONS_DATA: CertificationItem[] = [
     title: "Sales Management Certification",
     issuer: "HubSpot Academy",
     period: "Okt 2026 – Nov 2028",
+    validity: "Okt 2026 – Nov 2028",
   },
   {
     id: "cert-2",
     title: "HubSpot Sales Hub Software Certified",
     issuer: "HubSpot Academy",
     period: "Jun 2026 – Jul 2027",
+    validity: "Jun 2026 – Jul 2027",
   },
   {
     id: "cert-3",
@@ -303,33 +400,37 @@ export const CERTIFICATIONS_DATA: CertificationItem[] = [
 ];
 
 export const CONTACT_DATA = {
-  headline: "Siap Memimpin Pertumbuhan Tim dan Target Bisnis Anda Berikutnya.",
+  headline: "Mari Diskusikan Peluang Kerja atau Kolaborasi Bisnis",
   subheadline:
-    "Mari jadwalkan diskusi singkat untuk membahas bagaimana kombinasi kepemimpinan penjualan, manajemen risiko, dan inisiatif digital saya dapat memberikan kontribusi nyata bagi perusahaan Anda.",
+    "Saya terbuka untuk peran Sales, Account Management, atau Business Development di Medan maupun remote. Silakan hubungi saya melalui WhatsApp, email, atau LinkedIn, serta unduh CV terbaru saya untuk rincian lengkap.",
   channels: [
     {
       label: "Chat via WhatsApp",
       sublabel: "0852-0660-2391",
       href: "https://wa.me/6285206602391",
       iconName: "whatsapp" as const,
+      pathway: "both" as const,
     },
     {
       label: "Kirim Email",
       sublabel: "anggaramadhan538@gmail.com",
       href: "mailto:anggaramadhan538@gmail.com",
       iconName: "mail" as const,
+      pathway: "both" as const,
     },
     {
       label: "Profil LinkedIn",
       sublabel: "linkedin.com/in/anggarmd",
       href: "https://linkedin.com/in/anggarmd",
       iconName: "linkedin" as const,
+      pathway: "both" as const,
     },
     {
       label: "Repositori GitHub",
       sublabel: "github.com/anggarmd51",
       href: "https://github.com/anggarmd51",
       iconName: "github" as const,
+      pathway: "collaboration" as const,
     },
     {
       label: "Unduh CV Lengkap (PDF)",
@@ -338,6 +439,21 @@ export const CONTACT_DATA = {
       isDownload: true,
       downloadFilename: "CV_Muhammad_Angga_Ramadhan.pdf",
       iconName: "file-text" as const,
+      pathway: "career" as const,
+    },
+  ],
+  pathways: [
+    {
+      id: "career",
+      title: "Peluang Karier (Untuk Recruiter & HR)",
+      description:
+        "Hubungi saya untuk peluang Sales, Account Management, atau Business Development; CV tersedia untuk rincian pengalaman.",
+    },
+    {
+      id: "collaboration",
+      title: "Diskusi & Kolaborasi Bisnis",
+      description:
+        "Buka percakapan tentang kerja sama, proyek digital, atau kebutuhan bisnis melalui kanal yang sesuai.",
     },
   ],
   footer: "Medan, Sumatera Utara, Indonesia • © 2026 Muhammad Angga Ramadhan",
@@ -345,9 +461,9 @@ export const CONTACT_DATA = {
 
 export const NAVIGATION_SECTIONS = [
   { id: "home", label: "Beranda", shortLabel: "Home" },
-  { id: "profile", label: "Profil Eksekutif", shortLabel: "Profil" },
-  { id: "career", label: "Rekam Jejak Karir", shortLabel: "Karir" },
-  { id: "projects", label: "Inisiatif Digital", shortLabel: "Proyek" },
+  { id: "profile", label: "Profil", shortLabel: "Profil" },
+  { id: "career", label: "Riwayat Kerja", shortLabel: "Karir" },
+  { id: "projects", label: "Proyek", shortLabel: "Proyek" },
   { id: "credentials", label: "Pendidikan & Sertifikasi", shortLabel: "Kredensial" },
   { id: "contact", label: "Kontak & Diskusi", shortLabel: "Kontak" },
 ] as const;

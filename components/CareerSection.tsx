@@ -6,7 +6,7 @@ import { CAREER_ROLES, CareerRole } from "@/data/portfolio";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import MorphCard from "./MorphCard";
 import { Reveal } from "./MotionReveal";
-import { motion, AnimatePresence, LayoutGroup } from "motion/react";
+import { motion, AnimatePresence, LayoutGroup, useReducedMotion } from "motion/react";
 import {
   Briefcase,
   Calendar,
@@ -15,6 +15,8 @@ import {
   ChevronDown,
 } from "lucide-react";
 
+const CAREER_COMPANY_COUNT = new Set(CAREER_ROLES.map((role) => role.company)).size;
+
 /**
  * Desktop Career Experience View (>= 768px).
  * Unmounts completely when the viewport is mobile, ensuring zero leftover state,
@@ -22,6 +24,10 @@ import {
  */
 function DesktopCareerView() {
   const [selectedRole, setSelectedRole] = useState<CareerRole | null>(null);
+  const shouldReduceMotion = useReducedMotion() ?? false;
+  const morphTransition = shouldReduceMotion
+    ? { duration: 0 }
+    : { type: "spring" as const, stiffness: 350, damping: 30 };
   const dialogRef = useRef<HTMLDivElement | null>(null);
   const triggerCardRef = useRef<HTMLElement | null>(null);
 
@@ -145,7 +151,7 @@ function DesktopCareerView() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.25 }}
+              transition={{ duration: shouldReduceMotion ? 0 : 0.25 }}
               onClick={() => setSelectedRole(null)}
               className="fixed inset-0 bg-slate-950/80 backdrop-blur-md"
             />
@@ -154,11 +160,7 @@ function DesktopCareerView() {
             <motion.div
               ref={dialogRef}
               layoutId={`career-card-${selectedRole.id}`}
-              transition={{
-                type: "spring",
-                stiffness: 350,
-                damping: 30,
-              }}
+              transition={morphTransition}
               className="relative w-full max-w-2xl bg-slate-900 border border-white/20 rounded-3xl p-6 sm:p-8 shadow-2xl z-10 max-h-[90vh] overflow-y-auto"
             >
               {/* Close button (First focusable element) */}
@@ -175,11 +177,7 @@ function DesktopCareerView() {
               <div className="flex items-start gap-4 mb-6 pr-10">
                 <motion.div
                   layoutId={`career-logo-${selectedRole.id}`}
-                  transition={{
-                    type: "spring",
-                    stiffness: 350,
-                    damping: 30,
-                  }}
+                  transition={morphTransition}
                   className="relative w-16 h-16 rounded-2xl bg-white p-2 flex items-center justify-center shrink-0 border border-slate-200 overflow-hidden shadow-sm"
                 >
                   <Image
@@ -199,22 +197,14 @@ function DesktopCareerView() {
                   <motion.h3
                     id="dialog-role-title"
                     layoutId={`career-company-${selectedRole.id}`}
-                    transition={{
-                      type: "spring",
-                      stiffness: 350,
-                      damping: 30,
-                    }}
+                    transition={morphTransition}
                     className="text-xl sm:text-2xl font-bold text-white"
                   >
                     {selectedRole.company}
                   </motion.h3>
                   <motion.p
                     layoutId={`career-role-${selectedRole.id}`}
-                    transition={{
-                      type: "spring",
-                      stiffness: 350,
-                      damping: 30,
-                    }}
+                    transition={morphTransition}
                     className="text-base font-semibold text-emerald-400"
                   >
                     {selectedRole.role}
@@ -225,7 +215,7 @@ function DesktopCareerView() {
               {/* Body Bullets */}
               <div className="border-t border-white/10 pt-5">
                 <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">
-                  Ruang Lingkup & Prestasi Eksekusi:
+                  Ruang Lingkup Pekerjaan
                 </h4>
                 <ul className="space-y-3.5">
                   {selectedRole.bullets.map((bullet, idx) => (
@@ -326,7 +316,7 @@ function MobileCareerView() {
                 className="px-4 pb-5 pt-2 border-t border-white/5 space-y-3"
               >
                 <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
-                  Tanggung Jawab & Eksekusi Utama:
+                  Ruang Lingkup Pekerjaan
                 </div>
                 <ul className="space-y-2.5">
                   {role.bullets.map((bullet, bIdx) => (
@@ -368,10 +358,10 @@ export default function CareerSection() {
             id="career-heading"
             className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white tracking-tight"
           >
-            Enam Peran Kunci Lintas Finansial & B2B SaaS
+            Riwayat Kerja
           </h2>
           <p className="mt-3 text-sm sm:text-base text-slate-400">
-            Perjalanan karir komersial terstruktur dari penguasaan analisis risiko pembiayaan lapangan hingga kepemimpinan penetrasi pasar perangkat lunak korporat.
+            {CAREER_ROLES.length} posisi di {CAREER_COMPANY_COUNT} perusahaan sejak 2019, mulai dari analisis kredit lapangan hingga Account Manager B2B SaaS.
           </p>
         </Reveal>
 

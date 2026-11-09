@@ -1,7 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt =
-  "Muhammad Angga Ramadhan — Strategic Account Manager & B2B Growth Specialist";
+export const alt = "Muhammad Angga Ramadhan — Sales & Business Development, Medan";
 export const size = {
   width: 1200,
   height: 630,
@@ -18,14 +17,13 @@ export default function OpenGraphImage() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          backgroundColor: "#0B192C",
+          backgroundColor: "#0B0F19",
           color: "#FFFFFF",
           padding: "72px 80px",
-          fontFamily: "Georgia, serif",
+          fontFamily: "Arial, sans-serif",
           position: "relative",
         }}
       >
-        {/* Subtle accent border at top */}
         <div
           style={{
             position: "absolute",
@@ -33,40 +31,24 @@ export default function OpenGraphImage() {
             left: 0,
             right: 0,
             height: "6px",
-            backgroundColor: "#F5B027",
+            backgroundColor: "#10B981",
           }}
         />
-
-        {/* Monogram & Title section */}
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "24px",
-          }}
-        >
-          {/* Monogram Box */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "16px",
-            }}
-          >
+        <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
             <div
               style={{
                 width: "48px",
                 height: "48px",
                 borderRadius: "8px",
-                backgroundColor: "#1E3A5F",
-                border: "1px solid #334E68",
+                backgroundColor: "#10271F",
+                border: "1px solid #166534",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                color: "#F5B027",
+                color: "#34D399",
                 fontSize: "20px",
                 fontWeight: "bold",
-                fontFamily: "sans-serif",
               }}
             >
               AR
@@ -74,18 +56,15 @@ export default function OpenGraphImage() {
             <div
               style={{
                 fontSize: "14px",
-                fontFamily: "sans-serif",
                 textTransform: "uppercase",
-                letterSpacing: "0.15em",
-                color: "#94A3B8",
+                letterSpacing: "0.12em",
+                color: "#CBD5E1",
                 fontWeight: 600,
               }}
             >
-              Executive Portfolio
+              Portofolio Sales &amp; Business Development
             </div>
           </div>
-
-          {/* Name */}
           <div
             style={{
               fontSize: 60,
@@ -99,40 +78,25 @@ export default function OpenGraphImage() {
           </div>
         </div>
 
-        {/* Approved Taglines & Restrained Accent Line */}
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "20px",
-          }}
-        >
+        <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
           <div
             style={{
               width: "80px",
               height: "4px",
-              backgroundColor: "#F5B027",
+              backgroundColor: "#10B981",
               borderRadius: "2px",
             }}
           />
-
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "8px",
-              fontFamily: "sans-serif",
-            }}
-          >
+          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
             <div
               style={{
                 fontSize: 28,
                 fontWeight: 600,
-                color: "#F5B027",
+                color: "#34D399",
                 lineHeight: 1.3,
               }}
             >
-              Strategic Account Manager &amp; B2B Growth Specialist.
+              Sales, Business Development &amp; Account Management
             </div>
             <div
               style={{
@@ -142,14 +106,12 @@ export default function OpenGraphImage() {
                 lineHeight: 1.4,
               }}
             >
-              Bridging Financial Services and B2B SaaS Technology.
+              Pembiayaan, perbankan, dan perangkat lunak B2B di Medan
             </div>
           </div>
         </div>
       </div>
     ),
-    {
-      ...size,
-    }
+    { ...size }
   );
 }

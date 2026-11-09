@@ -15,9 +15,9 @@ export const viewport: Viewport = {
   themeColor: "#0B0F19",
 };
 
-const title = "Muhammad Angga Ramadhan — Executive Portfolio";
+const title = "Muhammad Angga Ramadhan — Portofolio Sales & Business Development";
 const description =
-  "Executive Portfolio: Sales, Business Development, and Branch Management. Menyatukan Disiplin Eksekusi Penjualan, Mitigasi Risiko Pembiayaan, dan Teknologi CRM.";
+  "Portofolio profesional Muhammad Angga Ramadhan. Pengalaman sejak 2019 di bidang B2B Sales, Business Development, Account Management, pembiayaan, dan B2B SaaS di Medan.";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://angga-ramadhan.vercel.app"),
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
         url: "/assets/OG%20Image%20AR.png",
         width: 1034,
         height: 1034,
-        alt: "Muhammad Angga Ramadhan Executive Portfolio",
+        alt: "Muhammad Angga Ramadhan — Sales & Business Development, Medan",
       },
     ],
   },

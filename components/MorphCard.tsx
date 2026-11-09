@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { CareerRole } from "@/data/portfolio";
-import { motion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import { ArrowUpRight } from "lucide-react";
 
 interface MorphCardProps {
@@ -18,6 +18,11 @@ export default function MorphCard({
   isSelected,
   onSelect,
 }: MorphCardProps) {
+  const shouldReduceMotion = useReducedMotion() ?? false;
+  const cardTransition = shouldReduceMotion
+    ? { duration: 0 }
+    : { type: "spring" as const, stiffness: 350, damping: 30 };
+
   return (
     <motion.button
       type="button"
@@ -26,12 +31,8 @@ export default function MorphCard({
       aria-haspopup="dialog"
       aria-expanded={isSelected}
       aria-label={`Lihat rincian posisi ${role.role} di ${role.company}`}
-      transition={{
-        type: "spring",
-        stiffness: 350,
-        damping: 30,
-      }}
-      className={`glass-card p-6 rounded-2xl flex flex-col justify-between cursor-pointer border hover:border-emerald-500/40 hover:bg-white/[0.08] transition-colors shadow-lg group focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 text-left relative overflow-hidden w-full ${
+      transition={cardTransition}
+      className={`min-h-[44px] glass-card p-6 rounded-2xl flex flex-col justify-between cursor-pointer border hover:border-emerald-500/40 hover:bg-white/[0.08] transition-colors shadow-lg group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 text-left relative overflow-hidden w-full ${
         isSelected
           ? "opacity-20 border-emerald-500/30"
           : "border-white/10"
@@ -42,7 +43,7 @@ export default function MorphCard({
         <div className="flex items-start justify-between gap-4 mb-5">
           <motion.div
             layoutId={`career-logo-${role.id}`}
-            transition={{ type: "spring", stiffness: 350, damping: 30 }}
+            transition={cardTransition}
             className="relative w-14 h-14 rounded-xl bg-white p-1.5 flex items-center justify-center shrink-0 shadow-sm border border-slate-200 overflow-hidden"
           >
             <Image
@@ -68,14 +69,14 @@ export default function MorphCard({
         {/* Company & Role */}
         <motion.h3
           layoutId={`career-company-${role.id}`}
-          transition={{ type: "spring", stiffness: 350, damping: 30 }}
+          transition={cardTransition}
           className="text-base font-bold text-white group-hover:text-emerald-300 transition-colors line-clamp-2"
         >
           {role.company}
         </motion.h3>
         <motion.p
           layoutId={`career-role-${role.id}`}
-          transition={{ type: "spring", stiffness: 350, damping: 30 }}
+          transition={cardTransition}
           className="text-sm font-semibold text-emerald-400 mt-1"
         >
           {role.role}
@@ -86,7 +87,7 @@ export default function MorphCard({
       <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between text-xs text-slate-400">
         <span className="font-medium text-slate-300">{role.period}</span>
         <span className="text-emerald-400/90 font-medium group-hover:underline">
-          Detail Eksekutif →
+          Detail Peran →
         </span>
       </div>
     </motion.button>

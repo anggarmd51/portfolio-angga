@@ -16,8 +16,13 @@ import { Reveal, StaggerContainer, StaggerItem } from "./MotionReveal";
 
 const PILLAR_ICONS = [TrendingUp, Users, ShieldAlert];
 
+const EXPERIENCE_TAGS = [
+  "Pengelolaan Pipeline & Tindak Lanjut Prospek",
+  "Presentasi & Demo Produk ke Tim HR dan Manajemen",
+  "Pembuat Aplikasi CRM Pribadi (AR CRM)",
+];
+
 export default function BentoGrid() {
-  const marqueeItems = BENTO_DATA.box4.marqueeText.split(" • ");
   const pointerFine = useMediaQuery("(pointer: fine)");
 
   const handleSpotlightMove = (event: MouseEvent<HTMLDivElement>) => {
@@ -39,28 +44,23 @@ export default function BentoGrid() {
       className="py-20 md:py-28 px-4 sm:px-6 lg:px-8 border-t border-white/5 relative bg-[#0B0F19]"
     >
       <div className="max-w-7xl mx-auto">
-        {/* Section Header with Reveal */}
         <Reveal className="mb-12 md:mb-16 text-left max-w-3xl">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold uppercase tracking-wider mb-3">
             <Compass className="w-3.5 h-3.5" />
-            Profil Eksekutif & Fokus Strategis
+            Profil & Fokus Peran
           </div>
           <h2
             id="bento-heading"
             className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white tracking-tight"
           >
-            Arsitektur Pengalaman & Nilai Tambah Komersial
+            {BENTO_DATA.sectionTitle}
           </h2>
-          <p className="mt-3 text-sm sm:text-base text-slate-400">
-            Sinergi unik antara disiplin tata kelola risiko industri perbankan dan akselerasi pertumbuhan bisnis berbasis ekosistem B2B SaaS.
+          <p className="mt-3 text-sm sm:text-base text-slate-300">
+            {BENTO_DATA.sectionSubtitle}
           </p>
         </Reveal>
 
-        {/* True Four-Box Asymmetrical Bento Grid */}
-        {/* Desktop: 8-col left (Narrative on top, Target Roles below), 4-col right (Vertical Three Pillars spanning 2 rows), 12-col bottom (Skills Marquee) */}
-        {/* Mobile: single-column vertical stack preserving reading order 1 -> 2 -> 3 -> 4 */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          {/* Box 1: Largest Narrative Box (Desktop: upper left, lg:col-span-8 lg:row-start-1) */}
           <div className="lg:col-span-8 lg:row-start-1">
             <Reveal
               y={24}
@@ -69,14 +69,12 @@ export default function BentoGrid() {
               onMouseMove={pointerFine ? handleSpotlightMove : undefined}
               onMouseLeave={pointerFine ? resetSpotlight : undefined}
             >
-              {/* Ambient accent inside box */}
               <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 blur-3xl pointer-events-none rounded-full group-hover:bg-emerald-500/10 transition-colors" />
-
               <div>
                 <div className="flex items-center gap-3 mb-5">
                   <span className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
                   <span className="text-xs font-bold uppercase tracking-wider text-emerald-400">
-                    Filosofi Kepemimpinan
+                    Ringkasan Pengalaman
                   </span>
                 </div>
                 <h3 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-white leading-snug mb-5">
@@ -87,24 +85,17 @@ export default function BentoGrid() {
                 </p>
               </div>
 
-              <div className="mt-8 pt-6 border-t border-white/5 flex flex-wrap items-center gap-4 text-xs font-medium text-slate-400">
-                <span className="inline-flex items-center gap-1.5 text-slate-300">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                  Data-Driven Execution
-                </span>
-                <span className="inline-flex items-center gap-1.5 text-slate-300">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                  C-Level Deal Closing
-                </span>
-                <span className="inline-flex items-center gap-1.5 text-slate-300">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                  Custom In-House CRM Developer
-                </span>
+              <div className="mt-8 pt-6 border-t border-white/5 flex flex-wrap items-center gap-4 text-xs font-medium text-slate-300">
+                {EXPERIENCE_TAGS.map((tag) => (
+                  <span key={tag} className="inline-flex items-center gap-1.5">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                    {tag}
+                  </span>
+                ))}
               </div>
             </Reveal>
           </div>
 
-          {/* Box 2: Medium Target Roles Box (Desktop: lower left, lg:col-span-8 lg:row-start-2) */}
           <div className="lg:col-span-8 lg:row-start-2">
             <Reveal
               y={24}
@@ -121,8 +112,8 @@ export default function BentoGrid() {
                     {BENTO_DATA.box2.label}
                   </h3>
                 </div>
-                <p className="text-xs text-slate-400 mb-6">
-                  Kapabilitas siap pakai untuk memimpin target pertumbuhan unit bisnis:
+                <p className="text-sm text-slate-300 mb-6">
+                  Posisi yang menjadi fokus berikutnya:
                 </p>
 
                 <StaggerContainer
@@ -130,12 +121,12 @@ export default function BentoGrid() {
                   staggerChildren={0.08}
                 >
                   {BENTO_DATA.box2.roles.map((role, idx) => (
-                    <StaggerItem key={idx}>
-                      <div className="flex items-center justify-between p-3.5 rounded-xl bg-white/5 border border-white/5 hover:border-emerald-500/30 hover:bg-emerald-500/5 transition-all">
+                    <StaggerItem key={role}>
+                      <div className="flex items-center justify-between gap-3 p-3.5 rounded-xl bg-white/5 border border-white/5 hover:border-emerald-500/30 hover:bg-emerald-500/5 transition-all">
                         <span className="text-sm font-bold text-white tracking-tight">
                           {role}
                         </span>
-                        <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-white/10 text-slate-300">
+                        <span aria-hidden="true" className="text-[11px] font-mono px-2 py-0.5 rounded bg-white/10 text-slate-300">
                           0{idx + 1}
                         </span>
                       </div>
@@ -146,7 +137,6 @@ export default function BentoGrid() {
             </Reveal>
           </div>
 
-          {/* Box 3: Narrower VERTICAL Three-Pillar Box (Desktop: right side, lg:col-span-4 lg:col-start-9 lg:row-start-1 lg:row-span-2) */}
           <div className="lg:col-span-4 lg:col-start-9 lg:row-start-1 lg:row-span-2">
             <Reveal
               y={24}
@@ -160,20 +150,16 @@ export default function BentoGrid() {
                 <span className="text-xs font-bold uppercase tracking-wider text-emerald-400">
                   {BENTO_DATA.box3.title}
                 </span>
-                <p className="text-xs sm:text-sm text-slate-400 mt-1">
-                  Tiga domain kompetensi inti yang saling menguatkan dalam setiap penugasan komersial.
+                <p className="text-sm text-slate-300 mt-1">
+                  Cakupan pekerjaan yang pernah ditangani.
                 </p>
               </div>
 
-              {/* Vertically stacked pillars with StaggerContainer */}
-              <StaggerContainer
-                className="flex flex-col gap-4"
-                staggerChildren={0.1}
-              >
+              <StaggerContainer className="flex flex-col gap-4" staggerChildren={0.1}>
                 {BENTO_DATA.box3.pillars.map((pillar, idx) => {
                   const Icon = PILLAR_ICONS[idx] || Sparkles;
                   return (
-                    <StaggerItem key={idx}>
+                    <StaggerItem key={pillar.title}>
                       <div className="p-4 sm:p-5 rounded-xl bg-white/[0.03] border border-white/5 hover:border-white/15 transition-all flex flex-col">
                         <div className="w-9 h-9 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mb-3">
                           <Icon className="w-4 h-4 text-emerald-400" />
@@ -192,49 +178,41 @@ export default function BentoGrid() {
             </Reveal>
           </div>
 
-          {/* Box 4: Full-Width Skills Marquee (Desktop & Mobile, lg:col-span-12 lg:row-start-3) */}
           <div className="lg:col-span-12 lg:row-start-3">
             <Reveal
               y={20}
               duration={0.55}
-              className={`glass-card p-4 sm:p-5 rounded-2xl border border-white/10 overflow-hidden relative ${pointerFine ? "bento-spotlight" : ""}`}
+              className={`glass-card p-5 sm:p-6 rounded-2xl border border-white/10 relative ${pointerFine ? "bento-spotlight" : ""}`}
               onMouseMove={pointerFine ? handleSpotlightMove : undefined}
               onMouseLeave={pointerFine ? resetSpotlight : undefined}
             >
-              <div className="flex items-center gap-3 mb-3 px-2">
+              <div className="flex items-center gap-3 mb-5">
                 <span className="w-2 h-2 rounded-full bg-emerald-400" />
-                <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                  Peta Keterampilan Utama & Metodologi
-                </span>
+                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-300">
+                  Kompetensi Utama
+                </h3>
               </div>
-
-              {/* Marquee Wrapper with continuous animation */}
-              <div className="overflow-hidden relative w-full py-1">
-                {/* Fade gradients at edges */}
-                <div className="hidden sm:block absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-[#0B0F19] to-transparent z-10 pointer-events-none" />
-                <div className="hidden sm:block absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-[#0B0F19] to-transparent z-10 pointer-events-none" />
-
-                <div className="animate-marquee flex items-center gap-3">
-                  {/* First set */}
-                  {marqueeItems.map((item, idx) => (
-                    <span
-                      key={`m1-${idx}`}
-                      className="inline-flex items-center px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-xs sm:text-sm font-semibold text-slate-200 whitespace-nowrap"
-                    >
-                      {item}
-                    </span>
-                  ))}
-                  {/* Duplicate set for seamless continuous marquee loop */}
-                  {marqueeItems.map((item, idx) => (
-                    <span
-                      key={`m2-${idx}`}
-                      aria-hidden="true"
-                      className="inline-flex items-center px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-xs sm:text-sm font-semibold text-slate-200 whitespace-nowrap"
-                    >
-                      {item}
-                    </span>
-                  ))}
-                </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {BENTO_DATA.box4.competencyCategories.map((category) => (
+                  <div
+                    key={category.title}
+                    className="rounded-xl border border-white/10 bg-white/[0.025] p-4 sm:p-5"
+                  >
+                    <h4 className="text-sm font-bold text-white mb-3">
+                      {category.title}
+                    </h4>
+                    <ul className="flex flex-wrap gap-2">
+                      {category.skills.map((skill) => (
+                        <li
+                          key={skill}
+                          className="inline-flex items-center px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-xs sm:text-sm font-medium text-slate-200"
+                        >
+                          {skill}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
               </div>
             </Reveal>
           </div>

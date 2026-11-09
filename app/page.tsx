@@ -23,7 +23,7 @@ export default function HomePage() {
       <SectionNavigation />
 
       {/* Main Content: 6 sections in continuous smooth flow */}
-      <main className="flex-1 w-full pb-28 md:pb-12 relative z-10">
+      <main className="flex-1 w-full pb-[calc(7rem+env(safe-area-inset-bottom))] md:pb-12 relative z-10">
         {/* Section 1: Hero */}
         <HeroSection />
 
