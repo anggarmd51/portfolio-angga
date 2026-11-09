@@ -325,6 +325,19 @@ export default function ProjectShowcase() {
                   <p className="text-xs sm:text-sm text-slate-300 mt-1">
                     {gallery.currentIndex + 1} dari {gallery.slides.length} pratinjau
                   </p>
+                  {gallery.projectTitle === "AR CRM" && (
+                    <span
+                      className={`mt-2 inline-flex items-center rounded-full border px-2.5 py-1 text-[11px] font-semibold ${
+                        activeSlide.kind === "image"
+                          ? "border-sky-400/30 bg-sky-400/10 text-sky-200"
+                          : "border-amber-400/30 bg-amber-400/10 text-amber-200"
+                      }`}
+                    >
+                      {activeSlide.kind === "image"
+                        ? "Tangkapan Layar Aplikasi"
+                        : "Ilustrasi Modul Fitur"}
+                    </span>
+                  )}
                 </div>
                 <button
                   ref={closeButtonRef}

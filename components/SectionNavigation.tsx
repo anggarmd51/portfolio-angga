@@ -129,7 +129,7 @@ export default function SectionNavigation() {
               className="group relative flex items-center justify-end min-h-[44px] min-w-[44px] p-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 rounded-full"
               aria-label={`Ke bagian ${sec.label}`}
             >
-              <span className="absolute right-8 px-2.5 py-1 rounded bg-slate-900 border border-white/10 text-xs text-slate-200 whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity shadow-lg">
+              <span className="absolute right-8 px-2.5 py-1 rounded bg-slate-900 border border-white/10 text-xs text-slate-200 whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity shadow-lg">
                 {sec.label}
               </span>
               <span

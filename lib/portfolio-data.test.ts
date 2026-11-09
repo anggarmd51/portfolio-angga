@@ -11,6 +11,7 @@ import {
   CERTIFICATIONS_DATA,
   CONTACT_DATA,
   NAVIGATION_SECTIONS,
+  SALES_WORKFLOW_STEPS,
 } from "../data/portfolio";
 
 const projectRoot = process.cwd();
@@ -58,6 +59,21 @@ test("profile uses factual positioning, three target roles, and static competenc
   assert.ok(BENTO_DATA.box4.competencyCategories.every((category) => category.skills.length > 0));
 });
 
+test("B2B sales workflow contains the six approved stages in order", () => {
+  assert.deepEqual(
+    SALES_WORKFLOW_STEPS.map(({ number, label }) => `${number} ${label}`),
+    [
+      "01 Prospecting",
+      "02 Discovery",
+      "03 Solution Demo",
+      "04 Commercial & Closing",
+      "05 Onboarding",
+      "06 Account Retention",
+    ]
+  );
+  assert.ok(SALES_WORKFLOW_STEPS.every((step) => step.description.trim().length > 0));
+});
+
 test("career history retains the exact six roles, companies, and periods through June 2026", () => {
   assert.equal(CAREER_ROLES.length, 6);
   assert.deepEqual(
@@ -72,7 +88,7 @@ test("career history retains the exact six roles, companies, and periods through
     ]
   );
   assert.ok(CAREER_ROLES.every((role) => role.bullets.length > 0));
-  assert.match(CAREER_ROLES[0].bullets[0], /mempresentasikan demo/);
+  assert.match(CAREER_ROLES[0].bullets[0], /mendemonstrasikan Nusawork HRIS/);
   assert.match(CAREER_ROLES[1].bullets[0], /Business Development Officer/);
   assert.doesNotMatch(JSON.stringify(CAREER_ROLES), /mentransformasi|\b\d+%/i);
 });
@@ -98,11 +114,24 @@ test("all three projects provide purpose, scope, status, tech stack, and local p
       assert.ok(screenshot.title);
       assert.ok(screenshot.caption);
     }
+    assert.notEqual(project.description, project.objective, `${project.title} copy is distinct`);
   }
+
+  assert.equal(
+    PROJECTS_DATA[0].description,
+    "Platform direktori bursa kerja terstruktur dengan pemetaan posisi, filter lokasi spesifik, dan transparansi sumber rekrutmen."
+  );
+  assert.match(PROJECTS_DATA[0].objective ?? "", /Memangkas waktu pencarian kerja/);
+  assert.match(PROJECTS_DATA[1].description, /Progressive Web App \(PWA\) CRM internal/);
+  assert.match(PROJECTS_DATA[1].objective ?? "", /pencatatan prospek manual di spreadsheet/);
+  assert.match(PROJECTS_DATA[2].description, /layanan perawatan otomotif/);
 
   const arcrm = PROJECTS_DATA.find((project) => project.id === "arcrm");
   assert.equal(arcrm?.screenshots.length, 1);
+  assert.equal(arcrm?.screenshots[0]?.title, "Tangkapan layar AR CRM");
+  assert.match(arcrm?.screenshots[0]?.caption ?? "", /^Tangkapan layar/);
   assert.equal(arcrm?.previewModules?.length, 3);
+  assert.ok(arcrm?.previewModules?.every((module) => module.caption.startsWith("Ilustrasi")));
   assert.deepEqual(arcrm?.previewModules?.map((module) => module.title), [
     "Pipeline Kanban & Deal Tracking",
     "Database Prospek & Lead Generation",
@@ -133,6 +162,7 @@ test("metadata and share card use the approved title and description", () => {
   assert.match(layout, /Portofolio profesional Muhammad Angga Ramadhan/);
   assert.match(layout, /Muhammad Angga Ramadhan — Sales & Business Development, Medan/);
   assert.match(navigation, /Portofolio Sales & Business Development/);
+  assert.match(navigation, /group-focus-visible:opacity-100/);
   assert.doesNotMatch(`${layout}\n${navigation}\n${openGraphImage}`, /Executive Portfolio/);
 });
 
@@ -140,6 +170,10 @@ test("education and certifications preserve the six listed certificates and opti
   assert.match(EDUCATION_DATA.institution, /Universitas Islam Negeri Sumatera Utara/);
   assert.equal(EDUCATION_DATA.gpa, "3.26");
   assert.equal(EDUCATION_DATA.logo, "/assets/Logo-UIN-SU-Medan-PNG-1.png");
+  assert.equal(
+    EDUCATION_DATA.professionalSummary,
+    "Fondasi akademik di bidang Perbankan Syariah yang diperkuat dengan sertifikasi praktisi dalam manajemen penjualan B2B, pengoperasian perangkat lunak CRM (HubSpot), serta pengembangan aplikasi berbantuan AI."
+  );
   assert.equal(CERTIFICATIONS_DATA.length, 6);
   assert.equal(CERTIFICATIONS_DATA[0].title, "Sales Management Certification");
   assert.equal(CERTIFICATIONS_DATA[1].title, "HubSpot Sales Hub Software Certified");
@@ -163,4 +197,27 @@ test("contact has two clear paths and keeps WhatsApp, email, LinkedIn, GitHub, a
   assert.equal(whatsapp?.href, "https://wa.me/6285206602391");
   const cv = CONTACT_DATA.channels.find((channel) => channel.isDownload);
   assert.equal(cv?.href, "/assets/CV_Angga.pdf");
+});
+
+test("copy-email control keeps its approved address and touch-sized accessible feedback", () => {
+  const contactSource = readFileSync(join(projectRoot, "components/ContactSection.tsx"), "utf8");
+  assert.match(contactSource, /const email = "anggaramadhan538@gmail\.com"/);
+  assert.match(contactSource, /navigator\.clipboard\.writeText\(email\)/);
+  assert.match(contactSource, /document\.execCommand\("copy"\)/);
+  assert.match(contactSource, /Salin Email/);
+  assert.match(contactSource, /Email Tersalin!/);
+  assert.match(contactSource, /min-h-\[44px\]/);
+  assert.match(contactSource, /useReducedMotion/);
+});
+
+test("sales workflow renders a keyboard-operable single active panel", () => {
+  const bento = readFileSync(join(projectRoot, "components/BentoGrid.tsx"), "utf8");
+  const showcase = readFileSync(join(projectRoot, "components/ProjectShowcase.tsx"), "utf8");
+  assert.match(bento, /lg:col-span-12 lg:row-start-4/);
+  assert.match(bento, /role="tablist"/);
+  assert.match(bento, /role="tabpanel"/);
+  assert.match(bento, /ArrowRight/);
+  assert.match(bento, /useReducedMotion/);
+  assert.match(showcase, /Tangkapan Layar Aplikasi/);
+  assert.match(showcase, /Ilustrasi Modul Fitur/);
 });

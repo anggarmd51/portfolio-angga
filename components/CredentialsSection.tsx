@@ -25,7 +25,7 @@ export default function CredentialsSection() {
             Fondasi Akademik & Sertifikasi Profesional
           </h2>
           <p className="mt-3 text-sm sm:text-base text-slate-300">
-            Latar belakang pendidikan perbankan syariah dan sertifikasi yang relevan dengan penjualan, pemasaran digital, serta pengembangan kompetensi.
+            {EDUCATION_DATA.professionalSummary}
           </p>
         </Reveal>
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { BENTO_DATA } from "@/data/portfolio";
+import { BENTO_DATA, SALES_WORKFLOW_STEPS } from "@/data/portfolio";
 import {
   Compass,
   Briefcase,
@@ -11,7 +11,8 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
-import type { MouseEvent } from "react";
+import { useRef, useState, type KeyboardEvent, type MouseEvent } from "react";
+import { motion, useReducedMotion } from "motion/react";
 import { Reveal, StaggerContainer, StaggerItem } from "./MotionReveal";
 
 const PILLAR_ICONS = [TrendingUp, Users, ShieldAlert];
@@ -24,6 +25,31 @@ const EXPERIENCE_TAGS = [
 
 export default function BentoGrid() {
   const pointerFine = useMediaQuery("(pointer: fine)");
+  const prefersReducedMotion = useReducedMotion();
+  const [activeWorkflowIndex, setActiveWorkflowIndex] = useState(0);
+  const workflowTabRefs = useRef<Array<HTMLButtonElement | null>>([]);
+
+  const handleWorkflowKeyDown = (
+    event: KeyboardEvent<HTMLButtonElement>,
+    currentIndex: number
+  ) => {
+    let nextIndex: number | undefined;
+    if (event.key === "ArrowRight" || event.key === "ArrowDown") {
+      nextIndex = (currentIndex + 1) % SALES_WORKFLOW_STEPS.length;
+    } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
+      nextIndex = (currentIndex - 1 + SALES_WORKFLOW_STEPS.length) % SALES_WORKFLOW_STEPS.length;
+    } else if (event.key === "Home") {
+      nextIndex = 0;
+    } else if (event.key === "End") {
+      nextIndex = SALES_WORKFLOW_STEPS.length - 1;
+    }
+
+    if (nextIndex !== undefined) {
+      event.preventDefault();
+      setActiveWorkflowIndex(nextIndex);
+      workflowTabRefs.current[nextIndex]?.focus();
+    }
+  };
 
   const handleSpotlightMove = (event: MouseEvent<HTMLDivElement>) => {
     if (!pointerFine) return;
@@ -214,6 +240,84 @@ export default function BentoGrid() {
                   </div>
                 ))}
               </div>
+            </Reveal>
+          </div>
+
+          <div className="lg:col-span-12 lg:row-start-4">
+            <Reveal
+              y={16}
+              duration={0.45}
+              className="glass-card p-5 sm:p-6 rounded-2xl border border-white/10 shadow-xl"
+            >
+              <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 mb-5">
+                <div>
+                  <span className="text-xs font-bold uppercase tracking-wider text-emerald-400">
+                    Proses Kerja
+                  </span>
+                  <h3 className="mt-1 text-lg sm:text-xl font-bold text-white">
+                    Alur Penjualan B2B
+                  </h3>
+                </div>
+                <p className="text-xs sm:text-sm text-slate-300">
+                  Enam tahap, dari pemetaan akun hingga retensi.
+                </p>
+              </div>
+
+              <div
+                role="tablist"
+                aria-label="Enam tahap alur penjualan B2B"
+                aria-orientation="horizontal"
+                className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2"
+              >
+                {SALES_WORKFLOW_STEPS.map((step, index) => {
+                  const isActive = activeWorkflowIndex === index;
+                  return (
+                    <button
+                      key={step.id}
+                      ref={(element) => {
+                        workflowTabRefs.current[index] = element;
+                      }}
+                      id={`workflow-tab-${step.id}`}
+                      type="button"
+                      role="tab"
+                      aria-selected={isActive}
+                      aria-controls="sales-workflow-panel"
+                      tabIndex={isActive ? 0 : -1}
+                      onClick={() => setActiveWorkflowIndex(index)}
+                      onKeyDown={(event) => handleWorkflowKeyDown(event, index)}
+                      className={`min-h-[44px] rounded-xl border px-2.5 py-2 text-left text-xs sm:text-sm font-semibold leading-tight transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 ${
+                        isActive
+                          ? "bg-emerald-500/15 border-emerald-400/50 text-emerald-200"
+                          : "bg-white/[0.03] border-white/10 text-slate-300 hover:bg-white/[0.07] hover:text-white"
+                      }`}
+                    >
+                      <span className="block text-[10px] font-mono text-slate-300">
+                        {step.number}
+                      </span>
+                      <span>{step.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              <motion.div
+                key={SALES_WORKFLOW_STEPS[activeWorkflowIndex].id}
+                id="sales-workflow-panel"
+                role="tabpanel"
+                aria-labelledby={`workflow-tab-${SALES_WORKFLOW_STEPS[activeWorkflowIndex].id}`}
+                tabIndex={0}
+                initial={prefersReducedMotion ? false : { opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.18, ease: "easeOut" }}
+                className="mt-4 min-h-20 rounded-xl border border-white/10 bg-white/[0.025] px-4 py-3.5 sm:px-5 sm:py-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+              >
+                <h4 className="text-sm sm:text-base font-bold text-white">
+                  {SALES_WORKFLOW_STEPS[activeWorkflowIndex].title}
+                </h4>
+                <p className="mt-1.5 text-sm text-slate-300 leading-relaxed">
+                  {SALES_WORKFLOW_STEPS[activeWorkflowIndex].description}
+                </p>
+              </motion.div>
             </Reveal>
           </div>
         </div>

@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useRef, useState, Fragment } from "react";
+import { motion, useReducedMotion } from "motion/react";
 import { CONTACT_DATA, type ContactChannel } from "@/data/portfolio";
 import {
   MessageCircle,
@@ -10,6 +12,8 @@ import {
   ArrowUpRight,
   Sparkles,
   FileText,
+  Copy,
+  Check,
 } from "lucide-react";
 import { Reveal, StaggerContainer, StaggerItem } from "./MotionReveal";
 
@@ -41,6 +45,90 @@ function ContactLink({ channel }: { channel: ContactChannel }) {
       {opensNewTab && <ArrowUpRight aria-hidden="true" className="w-4 h-4 text-slate-400 shrink-0" />}
       {channel.isDownload && <Download aria-hidden="true" className="w-4 h-4 text-slate-400 shrink-0" />}
     </a>
+  );
+}
+
+function fallbackCopyText(text: string): boolean {
+  const previouslyFocused = document.activeElement as HTMLElement | null;
+  const textarea = document.createElement("textarea");
+  textarea.value = text;
+  textarea.setAttribute("readonly", "");
+  textarea.style.position = "fixed";
+  textarea.style.opacity = "0";
+  textarea.style.pointerEvents = "none";
+  document.body.appendChild(textarea);
+  textarea.focus();
+  textarea.select();
+  textarea.setSelectionRange(0, text.length);
+
+  let copied = false;
+  try {
+    copied = document.execCommand("copy");
+  } catch {
+    copied = false;
+  }
+  textarea.remove();
+  previouslyFocused?.focus();
+  return copied;
+}
+
+function CopyEmailButton() {
+  const prefersReducedMotion = useReducedMotion();
+  const [copied, setCopied] = useState(false);
+  const resetTimer = useRef<number | undefined>(undefined);
+
+  useEffect(
+    () => () => {
+      if (resetTimer.current !== undefined) window.clearTimeout(resetTimer.current);
+    },
+    []
+  );
+
+  const copyEmail = async () => {
+    const email = "anggaramadhan538@gmail.com";
+    let successfullyCopied = fallbackCopyText(email);
+
+    if (!successfullyCopied) {
+      try {
+        await navigator.clipboard.writeText(email);
+        successfullyCopied = true;
+      } catch {
+        return;
+      }
+    }
+
+    if (!successfullyCopied) return;
+    setCopied(true);
+    if (resetTimer.current !== undefined) window.clearTimeout(resetTimer.current);
+    resetTimer.current = window.setTimeout(() => {
+      setCopied(false);
+      resetTimer.current = undefined;
+    }, 2000);
+  };
+
+  const StatusIcon = copied ? Check : Copy;
+
+  return (
+    <motion.button
+      type="button"
+      onClick={() => void copyEmail()}
+      whileTap={prefersReducedMotion ? undefined : { scale: 0.98 }}
+      transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.12 }}
+      className="min-h-[44px] w-full inline-flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-emerald-500/30 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+    >
+      <StatusIcon aria-hidden="true" className="w-5 h-5 text-emerald-400 shrink-0" />
+      <span className="min-w-0 flex-1 text-left">
+        <span
+          aria-live="polite"
+          className={`block text-sm font-semibold leading-snug ${copied ? "text-emerald-400" : "text-slate-200"}`}
+        >
+          {copied ? "Email Tersalin!" : "Salin Email"}
+        </span>
+        <span className="block text-xs text-slate-300 leading-snug break-words">
+          anggaramadhan538@gmail.com
+        </span>
+      </span>
+    </motion.button>
   );
 }
 
@@ -92,9 +180,16 @@ export default function ContactSection() {
                   </p>
                   <StaggerContainer className="grid grid-cols-1 gap-3" staggerChildren={0.05}>
                     {channels.map((channel) => (
-                      <StaggerItem key={channel.label}>
-                        <ContactLink channel={channel} />
-                      </StaggerItem>
+                      <Fragment key={channel.label}>
+                        <StaggerItem>
+                          <ContactLink channel={channel} />
+                        </StaggerItem>
+                        {pathway.id === "career" && channel.iconName === "mail" && (
+                          <StaggerItem>
+                            <CopyEmailButton />
+                          </StaggerItem>
+                        )}
+                      </Fragment>
                     ))}
                   </StaggerContainer>
                 </section>

@@ -59,6 +59,7 @@ export interface EducationItem {
   graduationYear: string;
   gpa: string;
   logo: string;
+  professionalSummary: string;
 }
 
 export interface CertificationItem {
@@ -168,6 +169,51 @@ export const BENTO_DATA = {
   },
 };
 
+export const SALES_WORKFLOW_STEPS = [
+  {
+    id: "prospecting",
+    number: "01",
+    label: "Prospecting",
+    title: "01 Prospecting",
+    description: "Pemetaan pasar B2B & identifikasi akun potensial di sektor target.",
+  },
+  {
+    id: "discovery",
+    number: "02",
+    label: "Discovery",
+    title: "02 Discovery",
+    description: "Analisis kendala operasional klien (HR/Retail/Pembiayaan) & kualifikasi kebutuhan.",
+  },
+  {
+    id: "solution-demo",
+    number: "03",
+    label: "Solution Demo",
+    title: "03 Solution Demo",
+    description: "Presentasi produk terarah & simulasi penggunaan sistem kepada pengambil keputusan.",
+  },
+  {
+    id: "commercial-closing",
+    number: "04",
+    label: "Commercial & Closing",
+    title: "04 Commercial & Closing",
+    description: "Penyusunan proposal penawaran, negosiasi klausul, dan penutupan kontrak.",
+  },
+  {
+    id: "onboarding",
+    number: "05",
+    label: "Onboarding",
+    title: "05 Onboarding",
+    description: "Pendampingan implementasi awal bersama tim teknis hingga sistem berjalan stabil.",
+  },
+  {
+    id: "account-retention",
+    number: "06",
+    label: "Account Retention",
+    title: "06 Account Retention",
+    description: "Evaluasi berkala dan penjagaan relasi jangka panjang untuk mencegah churn.",
+  },
+] as const;
+
 export const CAREER_ROLES: CareerRole[] = [
   {
     id: "role-1",
@@ -177,9 +223,9 @@ export const CAREER_ROLES: CareerRole[] = [
     logo: "/assets/PT%20Media%20Antar%20Nusa%20(Nusawork%20HRIS).jpg",
     logoAlt: "Logo PT Media Antar Nusa - Nusawork HRIS",
     bullets: [
-      "Mencari prospek B2B dan mempresentasikan demo solusi Nusawork HRIS kepada tim HR serta manajemen perusahaan calon klien.",
-      "Menangani proses penjualan dari pemetaan kebutuhan, penyusunan penawaran, hingga negosiasi dan penutupan kontrak.",
-      "Mendampingi klien baru pada tahap onboarding hingga sistem HRIS mulai digunakan secara operasional.",
+      "Memetakan akun B2B dan mengkualifikasi kebutuhan operasional bersama HR Manager serta Kepala Operasional, lalu mendemonstrasikan Nusawork HRIS kepada calon klien.",
+      "Menyusun penawaran dan bernegosiasi dengan pengambil keputusan hingga penutupan kontrak.",
+      "Mendampingi onboarding bersama tim teknis sampai klien mulai menggunakan sistem HRIS.",
     ],
   },
   {
@@ -190,8 +236,9 @@ export const CAREER_ROLES: CareerRole[] = [
     logo: "/assets/PT%20Sarana%20Digital%20Retail%20(Dretail%20POS).png",
     logoAlt: "Logo PT Sarana Digital Retail - Dretail POS",
     bullets: [
-      "Mengoordinasi aktivitas penjualan sistem kasir (POS) Dretail bersama tim Business Development Officer (BDO) untuk sektor ritel dan F&B di area Medan dan sekitarnya.",
-      "Melakukan demonstrasi penggunaan sistem POS, menyusun penawaran komersial, dan mendampingi proses implementasi pada merchant baru.",
+      "Mengoordinasi penjualan POS Dretail bersama tim Business Development Officer untuk merchant ritel dan F&B di Medan dan sekitarnya.",
+      "Berdiskusi dengan pemilik bisnis dan pengelola operasional, mendemonstrasikan sistem POS, serta menyusun penawaran komersial.",
+      "Mendampingi implementasi awal pada merchant baru dan menjaga tindak lanjut setelah penerapan.",
     ],
   },
   {
@@ -254,11 +301,11 @@ export const PROJECTS_DATA: ProjectItem[] = [
     subtitle: "Platform Bursa Lowongan Kerja",
     role: "Web Developer & Inisiator Proyek",
     description:
-      "Platform direktori lowongan dan informasi karier untuk membantu pencari kerja menelusuri posisi, lokasi, serta sumber lowongan.",
+      "Platform direktori bursa kerja terstruktur dengan pemetaan posisi, filter lokasi spesifik, dan transparansi sumber rekrutmen.",
     objective:
-      "Menyediakan direktori lowongan yang membantu pencari kerja menelusuri informasi posisi, lokasi, dan sumber lowongan.",
+      "Memangkas waktu pencarian kerja dengan menyatukan informasi lowongan yang tersebar ke dalam satu antarmuka yang mudah difilter.",
     contribution:
-      "Membangun situs dengan pencarian, filter, kategori, serta halaman detail lowongan dan sumber informasinya.",
+      "Arsitektur web direktori dengan pencarian instan, filter kategori/wilayah berlapis, serta halaman detail lowongan berbasis Supabase.",
     techStack: ["Supabase", "Vercel"],
     status: "Personal Project",
     websiteUrl: "https://lokerresmi.vercel.app",
@@ -286,11 +333,11 @@ export const PROJECTS_DATA: ProjectItem[] = [
     subtitle: "Personal B2B Sales Pipeline App",
     role: "Web Developer & Inisiator Proyek",
     description:
-      "Aplikasi pribadi untuk mencatat prospek, tahapan pipeline, dan aktivitas tindak lanjut penjualan B2B.",
+      "Progressive Web App (PWA) CRM internal untuk mendigitalisasi pelacakan prospek dan tahapan pipeline penjualan B2B harian.",
     objective:
-      "Mencatat prospek, tahapan pipeline, dan aktivitas penjualan harian dalam satu aplikasi untuk kebutuhan pribadi.",
+      "Menggantikan pencatatan prospek manual di spreadsheet agar jadwal tindak lanjut (follow-up) dan riwayat interaksi klien tercatat rapi.",
     contribution:
-      "Membangun PWA CRM pribadi untuk mengelola lead, status peluang, dan tindak lanjut harian.",
+      "Aplikasi CRM berbasis Firebase dengan autentikasi Google Sign-In khusus workspace, papan pipeline Kanban, database prospek, dan log aktivitas.",
     techStack: ["Firebase", "Progressive Web App"],
     status: "Personal Project",
     websiteUrl: "https://arcrmapp.vercel.app/",
@@ -298,26 +345,25 @@ export const PROJECTS_DATA: ProjectItem[] = [
     screenshots: [
       {
         src: "/assets/Tangkapan%20Layar%20Proyek%20AR%20CRM%203.png",
-        title: "Pratinjau AR CRM",
-        caption:
-          "Tangkapan layar aplikasi. Gambar modul dapat diganti saat screenshot terpisah tersedia.",
+        title: "Tangkapan layar AR CRM",
+        caption: "Tangkapan layar antarmuka aplikasi AR CRM.",
       },
     ],
     previewModules: [
       {
         title: "Pipeline Kanban & Deal Tracking",
         caption:
-          "Gambaran pengelolaan tahapan pipeline dan tindak lanjut untuk setiap peluang penjualan.",
+          "Ilustrasi pengelolaan tahapan pipeline dan tindak lanjut untuk setiap peluang penjualan.",
       },
       {
         title: "Database Prospek & Lead Generation",
         caption:
-          "Gambaran pencatatan informasi prospek untuk membantu mengelola dan menelusuri lead.",
+          "Ilustrasi pencatatan informasi prospek untuk membantu mengelola dan menelusuri lead.",
       },
       {
         title: "Log Aktivitas & Follow-up Harian",
         caption:
-          "Gambaran pencatatan aktivitas penjualan dan jadwal tindak lanjut harian.",
+          "Ilustrasi pencatatan aktivitas penjualan dan jadwal tindak lanjut harian.",
       },
     ],
     accessNote:
@@ -329,11 +375,11 @@ export const PROJECTS_DATA: ProjectItem[] = [
     subtitle: "Katalog Layanan & Portofolio Otomotif",
     role: "Web Developer",
     description:
-      "Website katalog layanan otomotif, galeri hasil pengerjaan, dan inventori mobil untuk Thirteen Project.",
+      "Situs katalog komersial untuk layanan perawatan otomotif (auto detailing & custom lighting) serta inventori mobil bekas.",
     objective:
-      "Menampilkan layanan otomotif, hasil pekerjaan, dan inventori mobil dalam satu situs katalog.",
+      "Meningkatkan kredibilitas visual bengkel di mata pelanggan dan mempercepat alur konsultasi maupun pemesanan jadwal via WhatsApp.",
     contribution:
-      "Membangun halaman layanan auto detailing, upgrade lampu, cuci mobil, serta katalog mobil dan kanal kontak.",
+      "Katalog web responsif yang memuat spesifikasi layanan, galeri hasil pengerjaan, etalase stok kendaraan, dan integrasi kontak langsung.",
     techStack: ["Supabase", "Vercel"],
     status: "Project Showcase",
     websiteUrl: "https://thirteenproject.vercel.app",
@@ -356,6 +402,8 @@ export const EDUCATION_DATA: EducationItem = {
   graduationYear: "2019",
   gpa: "3.26",
   logo: "/assets/Logo-UIN-SU-Medan-PNG-1.png",
+  professionalSummary:
+    "Fondasi akademik di bidang Perbankan Syariah yang diperkuat dengan sertifikasi praktisi dalam manajemen penjualan B2B, pengoperasian perangkat lunak CRM (HubSpot), serta pengembangan aplikasi berbantuan AI.",
 };
 
 export const CERTIFICATIONS_DATA: CertificationItem[] = [
