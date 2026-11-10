@@ -164,7 +164,11 @@ test("metadata and share card use the approved title and description", () => {
   const navigation = readFileSync(join(projectRoot, "components/SectionNavigation.tsx"), "utf8");
   assert.match(layout, /Muhammad Angga Ramadhan \| B2B Sales & Business Development/);
   assert.match(layout, /Portofolio profesional B2B Sales, Account Management, dan Business Development\. Berpengalaman dalam pipeline management dan SaaS CRM\./);
-  assert.match(layout, /https:\/\/angga-ramadhan\.vercel\.app\/muhammad-angga-ramadhan-profile\.png/);
+  assert.match(layout, /https:\/\/angga-ramadhan\.vercel\.app\/assets\/og-image\.png/);
+  assert.match(layout, /width: 1200/);
+  assert.match(layout, /height: 630/);
+  assert.match(layout, /alt: "Muhammad Angga Ramadhan B2B Sales Portfolio"/);
+  assert.match(layout, /images: \[\{ url: ogImage, alt: "Muhammad Angga Ramadhan B2B Sales Portfolio" \}\]/);
   assert.match(layout, /card: "summary_large_image"/);
   assert.match(layout, /process\.env\.VERCEL === "1" \? <Analytics \/> : null/);
   assert.match(layout, /<Analytics \/>[\s\S]*<\/body>/);

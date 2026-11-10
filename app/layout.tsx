@@ -20,8 +20,7 @@ export const viewport: Viewport = {
 const title = "Muhammad Angga Ramadhan | B2B Sales & Business Development";
 const description =
   "Portofolio profesional B2B Sales, Account Management, dan Business Development. Berpengalaman dalam pipeline management dan SaaS CRM.";
-const profileImage =
-  "https://angga-ramadhan.vercel.app/muhammad-angga-ramadhan-profile.png";
+const ogImage = "https://angga-ramadhan.vercel.app/assets/og-image.png";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://angga-ramadhan.vercel.app"),
@@ -41,10 +40,10 @@ export const metadata: Metadata = {
     locale: "id_ID",
     images: [
       {
-        url: profileImage,
-        width: 1914,
-        height: 1920,
-        alt: "Foto profil Muhammad Angga Ramadhan, B2B Sales & Business Development",
+        url: ogImage,
+        width: 1200,
+        height: 630,
+        alt: "Muhammad Angga Ramadhan B2B Sales Portfolio",
       },
     ],
   },
@@ -52,7 +51,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title,
     description,
-    images: [profileImage],
+    images: [{ url: ogImage, alt: "Muhammad Angga Ramadhan B2B Sales Portfolio" }],
   },
 };
 
