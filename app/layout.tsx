@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
+import { MotionConfig } from "motion/react";
 import "./globals.css";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
@@ -65,7 +66,7 @@ export default function RootLayout({
         suppressHydrationWarning
         className="min-h-screen bg-[#0B0F19] text-slate-100 antialiased selection:bg-emerald-500/20 selection:text-emerald-300"
       >
-        {children}
+        <MotionConfig reducedMotion="never">{children}</MotionConfig>
       </body>
     </html>
   );

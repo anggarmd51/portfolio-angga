@@ -59,7 +59,7 @@ test("profile uses factual positioning, four target roles, and balanced competen
   );
   assert.deepEqual(
     BENTO_DATA.box4.competencyCategories.map((category) => category.skills.length),
-    [5, 5, 5]
+    [6, 6, 6]
   );
 });
 
@@ -181,19 +181,30 @@ test("education and certifications preserve the six listed certificates and opti
   assert.equal(CERTIFICATIONS_DATA.length, 6);
   assert.equal(CERTIFICATIONS_DATA[0].title, "Sales Management Certification");
   assert.equal(CERTIFICATIONS_DATA[1].title, "HubSpot Sales Hub Software Certified");
+  assert.equal(CERTIFICATIONS_DATA[3].title, "Sales Forecasting");
+  assert.equal(CERTIFICATIONS_DATA[3].issuer, "HP LIFE (HP Foundation)");
+  assert.equal(CERTIFICATIONS_DATA[3].period, "Oktober 2026");
+  assert.equal(CERTIFICATIONS_DATA[4].title, "Frictionless Sales");
+  assert.equal(CERTIFICATIONS_DATA[4].issuer, "HubSpot Academy");
   assert.ok(CERTIFICATIONS_DATA[0].validity);
-  assert.ok(CERTIFICATIONS_DATA.every((certification) => !certification.url || certification.url.trim().length > 0));
+  assert.ok(CERTIFICATIONS_DATA.every((certification) => certification.url?.trim()));
+  for (const certification of CERTIFICATIONS_DATA) {
+    const assetPath = decodeURIComponent(certification.url!.replace(/^\//, ""));
+    assert.ok(existsSync(join(projectRoot, "public", assetPath)), `${certification.title} certificate file exists`);
+  }
 });
 
-test("contact consolidates five useful channels into one career and collaboration panel", () => {
+test("contact presents six actions in the approved order and career positioning", () => {
   assert.equal(CONTACT_DATA.panelTitle, "Peluang Karier & Kolaborasi");
-  assert.equal(CONTACT_DATA.channels.length, 5);
+  assert.equal(CONTACT_DATA.channels.length, 6);
+  assert.match(CONTACT_DATA.subheadline, /B2B Sales, Account Management, Sales Manager atau Business Development Manager/);
   const labels = CONTACT_DATA.channels.map((channel) => channel.label);
   assert.deepEqual(labels, [
     "Chat via WhatsApp",
-    "Salin Email",
+    "Email",
     "Profil LinkedIn",
     "Repositori GitHub",
+    "Instagram",
     "Unduh CV Lengkap (PDF)",
   ]);
   const whatsapp = CONTACT_DATA.channels.find((channel) => channel.iconName === "whatsapp");
@@ -201,6 +212,9 @@ test("contact consolidates five useful channels into one career and collaboratio
   const cv = CONTACT_DATA.channels.find((channel) => channel.isDownload);
   assert.equal(cv?.href, "/assets/CV_Angga.pdf");
   assert.equal(CONTACT_DATA.channels.find((channel) => channel.iconName === "mail")?.href, "");
+  const instagram = CONTACT_DATA.channels.find((channel) => channel.iconName === "instagram");
+  assert.equal(instagram?.href, "https://www.instagram.com/angga.rmd_/" );
+  assert.equal(instagram?.sublabel, "@angga.rmd_");
 });
 
 test("copy-email control keeps its approved address and touch-sized accessible feedback", () => {
@@ -208,13 +222,23 @@ test("copy-email control keeps its approved address and touch-sized accessible f
   assert.match(contactSource, /const email = "anggaramadhan538@gmail\.com"/);
   assert.match(contactSource, /navigator\.clipboard\.writeText\(email\)/);
   assert.match(contactSource, /document\.execCommand\("copy"\)/);
-  assert.match(contactSource, /Salin Email/);
+  assert.match(contactSource, /href=\{`mailto:\$\{email\}`\}/);
   assert.match(contactSource, /Tersalin!/);
   assert.match(contactSource, /\}, 2000\)/);
   assert.match(contactSource, /aria-live="polite"/);
-  assert.doesNotMatch(contactSource, /mailto:/);
+  assert.match(contactSource, /<div className="min-h-\[72px\] w-full grid/);
+  assert.match(contactSource, /<button[\s\S]*?Salin alamat email/);
+  assert.doesNotMatch(contactSource, /prefers-reduced-motion/);
   assert.match(contactSource, /min-h-\[44px\]/);
-  assert.match(contactSource, /useMediaQuery\("\(prefers-reduced-motion: reduce\)"\)/);
+});
+
+test("role and certificate cards omit sequence badges and certificate links open safely", () => {
+  const bento = readFileSync(join(projectRoot, "components/BentoGrid.tsx"), "utf8");
+  const credentials = readFileSync(join(projectRoot, "components/CredentialsSection.tsx"), "utf8");
+  assert.doesNotMatch(bento, /0\{idx \+ 1\}/);
+  assert.doesNotMatch(credentials, /0\{idx \+ 1\}/);
+  assert.match(credentials, /target="_blank"/);
+  assert.match(credentials, /rel="noopener noreferrer"/);
 });
 
 test("sales workflow renders a keyboard-operable single active panel", () => {
@@ -225,12 +249,14 @@ test("sales workflow renders a keyboard-operable single active panel", () => {
   assert.match(bento, /role="tablist"/);
   assert.match(bento, /role="tabpanel"/);
   assert.match(bento, /ArrowRight/);
-  assert.match(bento, /useMediaQuery\("\(prefers-reduced-motion: reduce\)"\)/);
   assert.match(bento, /<ToolMarquee\s*\/>/);
-  assert.equal((marquee.match(/slug: "/g) ?? []).length, 7);
+  assert.equal((marquee.match(/slug: "/g) ?? []).length, 14);
   assert.match(marquee, /cdn\.simpleicons\.org/);
-  assert.match(marquee, /useMediaQuery\("\(prefers-reduced-motion: reduce\)"\)/);
-  assert.match(marquee, /data-reduced-motion/);
+  assert.match(marquee, /slug: "claude", color: "D97757", label: "Claude"/);
+  assert.match(marquee, /tool-marquee-item/);
+  assert.match(marquee, /<span>\{logo\.label\}<\/span>/);
+  assert.match(marquee, /<LogoGroup decorative \/>/);
+  assert.doesNotMatch(marquee, /prefers-reduced-motion|data-reduced-motion/);
   assert.match(showcase, /Tangkapan Layar Aplikasi/);
   assert.match(showcase, /Ilustrasi Modul Fitur/);
 });
@@ -245,19 +271,21 @@ test("career details have no sequence numbers and close through modal/history co
   assert.match(career, /window\.addEventListener\("popstate"/);
   assert.match(career, /CAREER_ACCORDION_HISTORY_KEY/);
   assert.match(career, /event\.key === "Escape"/);
+  assert.doesNotMatch(career, /Tutup Dialog/);
+  assert.doesNotMatch(`${career}\n${morphCard}`, /prefers-reduced-motion/);
 });
 
-test("presentation scroll-snap is desktop-only, proximity-based, and reduced-motion aware", () => {
+test("presentation scroll-snap uses proximity at all sizes and keeps mobile sections natural", () => {
   const css = readFileSync(join(projectRoot, "app/globals.css"), "utf8");
-  assert.match(css, /@media \(min-width: 768px\)[\s\S]*scroll-snap-type: y proximity/);
+  assert.match(css, /html\s*\{\s*scroll-snap-type: y proximity;/);
+  assert.match(css, /\.presentation-section\s*\{\s*scroll-snap-align: start;\s*scroll-snap-stop: normal;/);
   assert.match(css, /scrollbar-width: none/);
-  assert.match(css, /scroll-snap-type: none !important/);
-  assert.match(css, /\.motion-reveal\s*\{\s*opacity: 1 !important;\s*transform: none !important;/);
   assert.match(css, /min-height: 100svh/);
   assert.doesNotMatch(css, /scroll-snap-type: y mandatory/);
+  assert.doesNotMatch(css, /prefers-reduced-motion|animation:\s*none\s*!important/);
 });
 
-test("all motion surfaces subscribe to the hydration-safe reduced-motion preference", () => {
+test("all site motion is independent of the OS reduced-motion setting", () => {
   const motionFiles = [
     "components/ContactSection.tsx",
     "components/ToolMarquee.tsx",
@@ -269,15 +297,14 @@ test("all motion surfaces subscribe to the hydration-safe reduced-motion prefere
   ];
   for (const file of motionFiles) {
     const source = readFileSync(join(projectRoot, file), "utf8");
-    assert.match(
-      source,
-      /useMediaQuery\("\(prefers-reduced-motion: reduce\)"\)/,
-      `${file} subscribes to the reduced-motion preference`
-    );
+    assert.doesNotMatch(source, /prefers-reduced-motion|shouldReduceMotion|prefersReducedMotion/, `${file} has no reduced-motion gate`);
   }
-
-  const mediaQuerySource = readFileSync(join(projectRoot, "hooks/useMediaQuery.ts"), "utf8");
-  assert.match(mediaQuerySource, /useSyncExternalStore/);
-  assert.match(mediaQuerySource, /window\.matchMedia\(query\)\.matches/);
-  assert.match(mediaQuerySource, /media\.addEventListener\("change", callback\)/);
+  const css = readFileSync(join(projectRoot, "app/globals.css"), "utf8");
+  assert.doesNotMatch(css, /prefers-reduced-motion/);
+  assert.match(css, /animation: tool-marquee 36s linear infinite/);
+  const layout = readFileSync(join(projectRoot, "app/layout.tsx"), "utf8");
+  assert.match(layout, /MotionConfig reducedMotion="never"/);
+  const motionSource = readFileSync(join(projectRoot, "components/MotionReveal.tsx"), "utf8");
+  assert.match(motionSource, /initial=\{\{ opacity: 0, y \}\}/);
+  assert.match(motionSource, /whileInView=\{\{ opacity: 1, y: 0 \}\}/);
 });

@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { CareerRole } from "@/data/portfolio";
 import { motion } from "motion/react";
-import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { ArrowUpRight } from "lucide-react";
 
 interface MorphCardProps {
@@ -17,10 +16,7 @@ export default function MorphCard({
   isSelected,
   onSelect,
 }: MorphCardProps) {
-  const shouldReduceMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
-  const cardTransition = shouldReduceMotion
-    ? { duration: 0 }
-    : { type: "spring" as const, stiffness: 350, damping: 30 };
+  const cardTransition = { type: "spring" as const, stiffness: 350, damping: 30 };
 
   return (
     <motion.button

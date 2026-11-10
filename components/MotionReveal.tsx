@@ -1,8 +1,6 @@
 "use client";
-
 import type { MouseEventHandler, ReactNode } from "react";
 import { motion, type Variants } from "motion/react";
-import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 interface RevealProps {
   children: ReactNode;
@@ -25,17 +23,14 @@ export function Reveal({
   onMouseMove,
   onMouseLeave,
 }: RevealProps) {
-  const shouldReduceMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
-
   return (
     <motion.div
-      initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y }}
-      animate={shouldReduceMotion ? { opacity: 1, y: 0 } : undefined}
+      initial={{ opacity: 0, y }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount }}
       transition={{
-        duration: shouldReduceMotion ? 0 : duration,
-        delay: shouldReduceMotion ? 0 : delay,
+        duration,
+        delay,
         ease: [0.21, 0.47, 0.32, 0.98],
       }}
       className={`motion-reveal ${className}`.trim()}
@@ -76,18 +71,12 @@ export function StaggerContainer({
   staggerChildren = 0.08,
   amount = 0.15,
 }: StaggerContainerProps) {
-  const shouldReduceMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
-
   return (
     <motion.div
-      initial={shouldReduceMotion ? "visible" : "hidden"}
-      animate={shouldReduceMotion ? "visible" : undefined}
+      initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount }}
-      variants={containerVariants(
-        shouldReduceMotion ? 0 : delayChildren,
-        shouldReduceMotion ? 0 : staggerChildren
-      )}
+      variants={containerVariants(delayChildren, staggerChildren)}
       className={`motion-reveal ${className}`.trim()}
     >
       {children}
@@ -107,23 +96,15 @@ const itemVariants: Variants = {
   },
 };
 
-const reducedItemVariants: Variants = {
-  hidden: { opacity: 1, y: 0 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0 } },
-};
-
 interface StaggerItemProps {
   children: ReactNode;
   className?: string;
 }
 
 export function StaggerItem({ children, className = "" }: StaggerItemProps) {
-  const shouldReduceMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
-
   return (
     <motion.div
-      variants={shouldReduceMotion ? reducedItemVariants : itemVariants}
-      animate={shouldReduceMotion ? "visible" : undefined}
+      variants={itemVariants}
       className={`motion-reveal ${className}`.trim()}
     >
       {children}

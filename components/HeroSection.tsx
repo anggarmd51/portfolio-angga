@@ -10,14 +10,13 @@ import { Reveal } from "./MotionReveal";
 
 export default function HeroSection() {
   const pointerFine = useMediaQuery("(pointer: fine)");
-  const shouldReduceMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
   const magnetX = useMotionValue(0);
   const magnetY = useMotionValue(0);
   const springX = useSpring(magnetX, { stiffness: 220, damping: 28, mass: 0.4 });
   const springY = useSpring(magnetY, { stiffness: 220, damping: 28, mass: 0.4 });
 
   const handlePrimaryCtaMouseMove = (event: MouseEvent<HTMLAnchorElement>) => {
-    if (!pointerFine || shouldReduceMotion) return;
+    if (!pointerFine) return;
     const bounds = event.currentTarget.getBoundingClientRect();
     const maxOffset = 12;
     const x = ((event.clientX - bounds.left) / bounds.width - 0.5) * maxOffset * 2;
@@ -79,9 +78,9 @@ export default function HeroSection() {
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 pt-1">
               <motion.a
                 href={HERO_DATA.ctaPrimary.href}
-                style={{ x: shouldReduceMotion ? 0 : springX, y: shouldReduceMotion ? 0 : springY }}
-                onMouseMove={pointerFine && !shouldReduceMotion ? handlePrimaryCtaMouseMove : undefined}
-                onMouseLeave={pointerFine && !shouldReduceMotion ? resetPrimaryCta : undefined}
+                style={{ x: springX, y: springY }}
+                onMouseMove={pointerFine ? handlePrimaryCtaMouseMove : undefined}
+                onMouseLeave={pointerFine ? resetPrimaryCta : undefined}
                 className="min-h-[44px] inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl bg-emerald-500 text-slate-950 font-bold text-sm hover:bg-emerald-400 transition-all shadow-lg shadow-emerald-500/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
               >
                 <span>{HERO_DATA.ctaPrimary.label}</span>
@@ -114,9 +113,9 @@ export default function HeroSection() {
 
         <div className="lg:col-span-5 flex justify-center items-center relative">
           <motion.div
-            initial={shouldReduceMotion ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.95 }}
+            initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: shouldReduceMotion ? 0 : 0.6, delay: shouldReduceMotion ? 0 : 0.15, ease: [0.21, 0.47, 0.32, 0.98] }}
+            transition={{ duration: 0.6, delay: 0.15, ease: [0.21, 0.47, 0.32, 0.98] }}
             className="motion-reveal relative w-full max-w-[380px] sm:max-w-[420px] lg:max-w-none aspect-[4/5] rounded-3xl overflow-hidden glass-card p-2 border border-white/10 shadow-2xl"
           >
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent z-10 pointer-events-none" />
@@ -133,9 +132,9 @@ export default function HeroSection() {
             </div>
 
             <motion.div
-              initial={shouldReduceMotion ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
+              initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: shouldReduceMotion ? 0 : 0.5, delay: shouldReduceMotion ? 0 : 0.4, ease: "easeOut" }}
+              transition={{ duration: 0.5, delay: 0.4, ease: "easeOut" }}
               className="motion-reveal absolute bottom-4 left-4 right-4 z-20 max-w-[calc(100%-2rem)] glass-pill px-3.5 py-2.5 rounded-xl shadow-xl flex items-center gap-2.5"
             >
               <div className="w-8 h-8 rounded-lg bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center shrink-0">

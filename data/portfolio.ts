@@ -77,7 +77,7 @@ export interface ContactChannel {
   href: string;
   isDownload?: boolean;
   downloadFilename?: string;
-  iconName: "whatsapp" | "mail" | "linkedin" | "github" | "file-text";
+  iconName: "whatsapp" | "mail" | "linkedin" | "github" | "instagram" | "file-text";
 }
 
 export const HERO_DATA = {
@@ -142,6 +142,7 @@ export const BENTO_DATA = {
           "Business Development",
           "Presentasi & Demo Produk",
           "Negosiasi Kontrak",
+          "Pengelolaan Pipeline & Tindak Lanjut Prospek",
         ],
       },
       {
@@ -152,6 +153,7 @@ export const BENTO_DATA = {
           "Pembiayaan Reguler & Syariah",
           "Customer Retention",
           "Manajemen Relasi Dealer/Mitra",
+          "Pembiayaan Ulang (Repeat Order/Refinancing)",
         ],
       },
       {
@@ -162,6 +164,7 @@ export const BENTO_DATA = {
           "AI-Assisted Web Development (Vibe Coding)",
           "Riset Prospek B2B",
           "Next.js & Tailwind CSS Dasar",
+          "Pembuatan Aplikasi CRM Pribadi (AR CRM)",
         ],
       },
     ] satisfies CompetencyCategory[],
@@ -412,6 +415,7 @@ export const CERTIFICATIONS_DATA: CertificationItem[] = [
     issuer: "HubSpot Academy",
     period: "Okt 2026 – Nov 2028",
     validity: "Okt 2026 – Nov 2028",
+    url: "/assets/sertifikat/Hubspot%20Academy%20-%20Sales%20Management.pdf",
   },
   {
     id: "cert-2",
@@ -419,37 +423,42 @@ export const CERTIFICATIONS_DATA: CertificationItem[] = [
     issuer: "HubSpot Academy",
     period: "Jun 2026 – Jul 2027",
     validity: "Jun 2026 – Jul 2027",
+    url: "/assets/sertifikat/HubSpot%20Academy%20-%20Sales%20Hub%20Software.pdf",
   },
   {
     id: "cert-3",
     title: "Boosting MSME Growth through AI",
     issuer: "Hacktiv8, Google.org & ADB",
     period: "Nov 2025",
+    url: "/assets/sertifikat/Hacktiv8%20-%20Boosting%20MSME%20Growth%20through%20AI.pdf",
   },
   {
     id: "cert-4",
-    title: "Vibe Coding: AI App for Students",
-    issuer: "Ruangguru Engineering Academy+",
-    period: "Okt 2026",
+    title: "Sales Forecasting",
+    issuer: "HP LIFE (HP Foundation)",
+    period: "Oktober 2026",
+    url: "/assets/sertifikat/Certificate%20of%20Completion%20-%20HP%20LIFE.pdf",
   },
   {
     id: "cert-5",
-    title: "Introduction to Digital Marketing",
-    issuer: "Classpedia",
+    title: "Frictionless Sales",
+    issuer: "HubSpot Academy",
     period: "Okt 2026",
+    url: "/assets/sertifikat/Hubspot%20Academy%20-%20Frictionless%20Sales.pdf",
   },
   {
     id: "cert-6",
     title: "Financial Literacy and Job Readiness",
     issuer: "DBS Foundation & Plan Int.",
     period: "Sep 2026",
+    url: "/assets/sertifikat/Muhammad%20Angga%20Ramadhan%20-%20Sertifikat%20Financial%20Literasi.pdf",
   },
 ];
 
 export const CONTACT_DATA = {
   headline: "Mari Diskusikan Peluang Kerja atau Kolaborasi Bisnis",
   subheadline:
-    "Saya terbuka untuk peran Sales, Account Management, atau Business Development di Medan maupun remote. Silakan hubungi saya melalui WhatsApp, email, atau LinkedIn, serta unduh CV terbaru saya untuk rincian lengkap.",
+    "Saya terbuka untuk peran B2B Sales, Account Management, Sales Manager atau Business Development Manager di Medan maupun remote. Silakan hubungi saya melalui WhatsApp, email, atau LinkedIn, serta unduh CV terbaru saya untuk rincian lengkap.",
   panelTitle: "Peluang Karier & Kolaborasi",
   panelDescription: "Pilih kanal yang paling nyaman untuk menghubungi saya atau melihat profil profesional.",
   channels: [
@@ -460,7 +469,7 @@ export const CONTACT_DATA = {
       iconName: "whatsapp" as const,
     },
     {
-      label: "Salin Email",
+      label: "Email",
       sublabel: "anggaramadhan538@gmail.com",
       href: "",
       iconName: "mail" as const,
@@ -476,6 +485,12 @@ export const CONTACT_DATA = {
       sublabel: "github.com/anggarmd51",
       href: "https://github.com/anggarmd51",
       iconName: "github" as const,
+    },
+    {
+      label: "Instagram",
+      sublabel: "@angga.rmd_",
+      href: "https://www.instagram.com/angga.rmd_/",
+      iconName: "instagram" as const,
     },
     {
       label: "Unduh CV Lengkap (PDF)",

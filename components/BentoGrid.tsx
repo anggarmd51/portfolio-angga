@@ -26,7 +26,6 @@ const EXPERIENCE_TAGS = [
 
 export default function BentoGrid() {
   const pointerFine = useMediaQuery("(pointer: fine)");
-  const prefersReducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
   const [activeWorkflowIndex, setActiveWorkflowIndex] = useState(0);
   const workflowTabRefs = useRef<Array<HTMLButtonElement | null>>([]);
 
@@ -147,14 +146,11 @@ export default function BentoGrid() {
                   className="grid grid-cols-1 sm:grid-cols-2 gap-3.5"
                   staggerChildren={0.08}
                 >
-                  {BENTO_DATA.box2.roles.map((role, idx) => (
+                  {BENTO_DATA.box2.roles.map((role) => (
                     <StaggerItem key={role}>
                       <div className="flex items-center justify-between gap-3 p-3.5 rounded-xl bg-white/5 border border-white/5 hover:border-emerald-500/30 hover:bg-emerald-500/5 transition-all">
                         <span className="text-sm font-bold text-white tracking-tight">
                           {role}
-                        </span>
-                        <span aria-hidden="true" className="text-[11px] font-mono px-2 py-0.5 rounded bg-white/10 text-slate-300">
-                          0{idx + 1}
                         </span>
                       </div>
                     </StaggerItem>
@@ -307,9 +303,9 @@ export default function BentoGrid() {
                 role="tabpanel"
                 aria-labelledby={`workflow-tab-${SALES_WORKFLOW_STEPS[activeWorkflowIndex].id}`}
                 tabIndex={0}
-                initial={prefersReducedMotion ? false : { opacity: 0, y: 8 }}
+                initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.18, ease: "easeOut" }}
+                transition={{ duration: 0.18, ease: "easeOut" }}
                 className="mt-4 min-h-20 rounded-xl border border-white/10 bg-white/[0.025] px-4 py-3.5 sm:px-5 sm:py-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
               >
                 <h4 className="text-sm sm:text-base font-bold text-white">

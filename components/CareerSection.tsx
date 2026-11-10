@@ -47,10 +47,7 @@ function writeHistoryEntry(key: string, roleId: string, replace = false) {
  */
 function DesktopCareerView() {
   const [selectedRole, setSelectedRole] = useState<CareerRole | null>(null);
-  const shouldReduceMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
-  const morphTransition = shouldReduceMotion
-    ? { duration: 0 }
-    : { type: "spring" as const, stiffness: 350, damping: 30 };
+  const morphTransition = { type: "spring" as const, stiffness: 350, damping: 30 };
   const dialogRef = useRef<HTMLDivElement | null>(null);
   const triggerCardRef = useRef<HTMLElement | null>(null);
   const previousBodyOverflow = useRef("");
@@ -187,7 +184,7 @@ function DesktopCareerView() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: shouldReduceMotion ? 0 : 0.25 }}
+              transition={{ duration: 0.25 }}
               onClick={closeRole}
               className="fixed inset-0 bg-slate-950/80 backdrop-blur-md"
             />
@@ -268,16 +265,8 @@ function DesktopCareerView() {
                 </ul>
               </div>
 
-              {/* Footer note & Close Button (Last focusable element) */}
-              <div className="mt-8 pt-4 border-t border-white/5 flex items-center justify-between text-xs text-slate-400">
-                <span>Penempatan: Medan, Sumatera Utara</span>
-                <button
-                  type="button"
-                  onClick={closeRole}
-                  className="min-h-[44px] px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-200 font-medium transition focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
-                >
-                  Tutup Dialog
-                </button>
+              <div className="mt-8 pt-4 border-t border-white/5 text-xs text-slate-400">
+                Penempatan: Medan, Sumatera Utara
               </div>
             </motion.div>
           </div>

@@ -90,7 +90,7 @@ export default function CredentialsSection() {
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
             staggerChildren={0.08}
           >
-            {CERTIFICATIONS_DATA.map((cert, idx) => (
+            {CERTIFICATIONS_DATA.map((cert) => (
               <StaggerItem key={cert.id} className="flex">
                 <article className="w-full glass-card p-5 sm:p-6 rounded-2xl border border-white/10 hover:border-emerald-500/30 transition-all flex flex-col justify-between">
                   <div>
@@ -98,9 +98,6 @@ export default function CredentialsSection() {
                       <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0">
                         <Award aria-hidden="true" className="w-4 h-4 text-emerald-400" />
                       </div>
-                      <span aria-hidden="true" className="text-[11px] font-mono text-slate-300">
-                        0{idx + 1}
-                      </span>
                     </div>
                     <h4 className="text-sm sm:text-base font-bold text-white leading-snug">
                       {cert.title}

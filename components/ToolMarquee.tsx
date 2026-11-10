@@ -1,46 +1,53 @@
 "use client";
-
 import Image from "next/image";
-import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 const TOOL_LOGOS = [
+  { slug: "google", color: "4285F4", label: "Google" },
+  { slug: "notion", color: "FFFFFF", label: "Notion" },
+  { slug: "googlegemini", color: "8E75B2", label: "Gemini" },
+  { slug: "claude", color: "D97757", label: "Claude" },
+  { slug: "deepseek", color: "4D6BFE", label: "DeepSeek" },
   { slug: "hubspot", color: "FF7A59", label: "HubSpot" },
-  { slug: "firebase", color: "FFCA28", label: "Firebase" },
   { slug: "supabase", color: "3ECF8E", label: "Supabase" },
+  { slug: "github", color: "FFFFFF", label: "GitHub" },
+  { slug: "firebase", color: "FFCA28", label: "Firebase" },
+  { slug: "netlify", color: "00C7B7", label: "Netlify" },
   { slug: "vercel", color: "FFFFFF", label: "Vercel" },
   { slug: "nextdotjs", color: "FFFFFF", label: "Next.js" },
   { slug: "tailwindcss", color: "06B6D4", label: "Tailwind CSS" },
-  { slug: "github", color: "FFFFFF", label: "GitHub" },
+  { slug: "react", color: "61DAFB", label: "React" },
 ] as const;
 
 function LogoGroup({ decorative = false }: { decorative?: boolean }) {
   return (
-    <div className="tool-marquee-group" aria-hidden={decorative}>
+    <div className="tool-marquee-group" role="list" aria-hidden={decorative}>
       {TOOL_LOGOS.map((logo) => (
-        <Image
-          key={logo.slug}
-          src={`https://cdn.simpleicons.org/${logo.slug}/${logo.color}`}
-          alt={decorative ? "" : `${logo.label} logo`}
-          width={40}
-          height={40}
-          unoptimized
-          draggable={false}
-          className="tool-marquee-logo"
-        />
+        <div className="tool-marquee-item" key={logo.slug} role="listitem">
+          <Image
+            src={`https://cdn.simpleicons.org/${logo.slug}/${logo.color}`}
+            alt={decorative ? "" : `${logo.label} logo`}
+            width={36}
+            height={36}
+            unoptimized
+            draggable={false}
+            className="tool-marquee-logo"
+          />
+          <span>{logo.label}</span>
+        </div>
       ))}
     </div>
   );
 }
 
 export default function ToolMarquee() {
-  const prefersReducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
-
   return (
-    <div className="tool-marquee-shell" role="group" aria-label="Logo perangkat kerja dan teknologi">
-      <div
-        className="tool-marquee-track"
-        data-reduced-motion={prefersReducedMotion ? "true" : "false"}
-      >
+    <div
+      className="tool-marquee-shell"
+      role="group"
+      aria-label="Logo perangkat kerja dan teknologi"
+      data-testid="tool-marquee"
+    >
+      <div className="tool-marquee-track" data-testid="tool-marquee-track">
         <LogoGroup />
         <LogoGroup decorative />
       </div>

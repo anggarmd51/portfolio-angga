@@ -1,14 +1,13 @@
 "use client";
-
 import { useEffect, useRef, useState } from "react";
-import { motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { CONTACT_DATA, type ContactChannel } from "@/data/portfolio";
-import { useMediaQuery } from "@/hooks/useMediaQuery";
 import {
   MessageCircle,
   Mail,
   Linkedin,
   Github,
+  Instagram,
   Download,
   ArrowUpRight,
   Sparkles,
@@ -23,20 +22,20 @@ const ICON_MAP = {
   mail: Mail,
   linkedin: Linkedin,
   github: Github,
+  instagram: Instagram,
   "file-text": FileText,
 };
 
 function ContactLink({ channel }: { channel: ContactChannel }) {
   const Icon = ICON_MAP[channel.iconName];
   const opensNewTab = channel.href.startsWith("https://");
-
   return (
     <a
       href={channel.href}
       target={opensNewTab ? "_blank" : undefined}
       rel={opensNewTab ? "noopener noreferrer" : undefined}
       download={channel.isDownload ? channel.downloadFilename : undefined}
-      className="min-h-[44px] w-full inline-flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-slate-200 hover:text-white hover:bg-white/10 hover:border-emerald-500/30 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+      className="min-h-[72px] w-full inline-flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-slate-200 hover:text-white hover:bg-white/10 hover:border-emerald-500/30 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
     >
       <Icon aria-hidden="true" className="w-5 h-5 text-emerald-400 shrink-0" />
       <span className="min-w-0 flex-1 text-left">
@@ -67,7 +66,6 @@ function fallbackCopyText(text: string): boolean {
   textarea.focus();
   textarea.select();
   textarea.setSelectionRange(0, text.length);
-
   let copied = false;
   try {
     copied = document.execCommand("copy");
@@ -79,10 +77,10 @@ function fallbackCopyText(text: string): boolean {
   return copied;
 }
 
-function CopyEmailButton() {
-  const prefersReducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
+function ContactEmailCard({ channel }: { channel: ContactChannel }) {
   const [copied, setCopied] = useState(false);
   const resetTimer = useRef<number | undefined>(undefined);
+  const email = "anggaramadhan538@gmail.com";
 
   useEffect(
     () => () => {
@@ -92,18 +90,13 @@ function CopyEmailButton() {
   );
 
   const copyEmail = async () => {
-    const email = "anggaramadhan538@gmail.com";
-    let successfullyCopied = fallbackCopyText(email);
-
-    if (!successfullyCopied) {
-      try {
-        await navigator.clipboard.writeText(email);
-        successfullyCopied = true;
-      } catch {
-        return;
-      }
+    let successfullyCopied = false;
+    try {
+      await navigator.clipboard.writeText(email);
+      successfullyCopied = true;
+    } catch {
+      successfullyCopied = fallbackCopyText(email);
     }
-
     if (!successfullyCopied) return;
     setCopied(true);
     if (resetTimer.current !== undefined) window.clearTimeout(resetTimer.current);
@@ -114,36 +107,53 @@ function CopyEmailButton() {
   };
 
   const StatusIcon = copied ? Check : Copy;
-
   return (
-    <motion.button
-      type="button"
-      onClick={() => void copyEmail()}
-      whileTap={prefersReducedMotion ? undefined : { scale: 0.98 }}
-      transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.12 }}
-      className="min-h-[44px] w-full inline-flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-emerald-500/30 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
-    >
-      <StatusIcon
-        aria-hidden="true"
-        className="w-5 h-5 text-emerald-400 shrink-0"
-      />
-      <span className="min-w-0 flex-1 text-left">
-        <span
-          aria-live="polite"
-          className={`block text-sm font-semibold leading-snug ${copied ? "text-emerald-400" : "text-slate-200"}`}
-        >
-          {copied ? "Tersalin!" : "Salin Email"}
+    <div className="min-h-[72px] w-full grid grid-cols-[minmax(0,1fr)_auto] rounded-xl bg-white/5 border border-white/10 hover:border-emerald-500/30 transition">
+      <a
+        href={`mailto:${email}`}
+        className="min-w-0 inline-flex items-center gap-3 px-4 py-3 rounded-l-xl text-slate-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-emerald-400"
+      >
+        <Mail aria-hidden="true" className="w-5 h-5 text-emerald-400 shrink-0" />
+        <span className="min-w-0 flex-1 text-left">
+          <span className="block text-sm font-semibold leading-snug">{channel.label}</span>
+          <span className="block text-xs text-slate-300 leading-snug break-words">
+            {channel.sublabel}
+          </span>
         </span>
-        <span className="block text-xs text-slate-300 leading-snug break-words">
-          anggaramadhan538@gmail.com
+        <ArrowUpRight aria-hidden="true" className="w-4 h-4 text-slate-400 shrink-0" />
+      </a>
+      <button
+        type="button"
+        onClick={() => void copyEmail()}
+        aria-label={copied ? "Alamat email berhasil disalin" : "Salin alamat email"}
+        className="min-h-[44px] min-w-[76px] self-center mr-2 inline-flex flex-col items-center justify-center gap-1 rounded-lg px-2 text-slate-300 hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+      >
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.span
+            key={copied ? "copied" : "copy"}
+            initial={{ opacity: 0, scale: 0.65, rotate: copied ? -35 : 0 }}
+            animate={{ opacity: 1, scale: 1, rotate: 0 }}
+            exit={{ opacity: 0, scale: 0.65, rotate: copied ? 0 : 35 }}
+            transition={{ duration: 0.18, ease: "easeOut" }}
+            className="inline-flex"
+          >
+            <StatusIcon aria-hidden="true" className="w-5 h-5 text-emerald-400" />
+          </motion.span>
+        </AnimatePresence>
+        <span aria-live="polite" className={`text-[10px] font-semibold ${copied ? "text-emerald-400" : "text-slate-400"}`}>
+          {copied ? "Tersalin!" : "Salin"}
         </span>
-      </span>
-    </motion.button>
+      </button>
+    </div>
   );
 }
 
 function ContactAction({ channel }: { channel: ContactChannel }) {
-  return channel.iconName === "mail" ? <CopyEmailButton /> : <ContactLink channel={channel} />;
+  return channel.iconName === "mail" ? (
+    <ContactEmailCard channel={channel} />
+  ) : (
+    <ContactLink channel={channel} />
+  );
 }
 
 export default function ContactSection() {
@@ -157,7 +167,6 @@ export default function ContactSection() {
         aria-hidden="true"
         className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-emerald-500/[0.025] blur-[110px] rounded-full pointer-events-none -z-10"
       />
-
       <div className="max-w-5xl mx-auto text-center">
         <Reveal delay={0.05} y={16}>
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold tracking-wider uppercase mb-6">
@@ -165,7 +174,6 @@ export default function ContactSection() {
             Kontak & Peluang
           </div>
         </Reveal>
-
         <Reveal delay={0.12} y={22}>
           <h2
             id="contact-heading"
@@ -174,13 +182,11 @@ export default function ContactSection() {
             {CONTACT_DATA.headline}
           </h2>
         </Reveal>
-
         <Reveal delay={0.18} y={22}>
           <p className="mt-6 text-base sm:text-lg md:text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
             {CONTACT_DATA.subheadline}
           </p>
         </Reveal>
-
         <Reveal delay={0.14} y={18} className="mt-12 text-left">
           <section className="glass-card rounded-3xl p-5 sm:p-7 lg:p-8 border border-white/10 shadow-xl">
             <div className="max-w-2xl">
@@ -203,7 +209,6 @@ export default function ContactSection() {
             </StaggerContainer>
           </section>
         </Reveal>
-
         <Reveal
           delay={0.1}
           y={16}

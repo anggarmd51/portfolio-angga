@@ -48,17 +48,20 @@
     inset 0 1px 1px 0 rgba(255, 255, 255, 0.08);
 }
 
-/* Presentation snapping is deliberately desktop-only; mobile keeps natural flow. */
-@media (min-width: 768px) {
-  html {
-    scroll-snap-type: y proximity;
-  }
+/* Gentle proximity snapping stays enabled on touch and desktop without trapping scrolling. */
+html {
+  scroll-snap-type: y proximity;
+}
 
+.presentation-section {
+  scroll-snap-align: start;
+  scroll-snap-stop: normal;
+}
+
+@media (min-width: 768px) {
   .presentation-section {
     min-height: 100vh;
     min-height: 100svh;
-    scroll-snap-align: start;
-    scroll-snap-stop: normal;
   }
 }
 
@@ -72,45 +75,59 @@
 }
 
 .tool-marquee-track {
-  display: grid;
-  grid-auto-flow: column;
-  grid-template-columns: repeat(2, 100%);
-  width: 100%;
-  animation: tool-marquee 32s linear infinite;
+  display: flex;
+  width: max-content;
+  animation: tool-marquee 36s linear infinite;
+  will-change: transform;
 }
 
 .tool-marquee-group {
   display: flex;
-  min-width: 0;
+  flex: 0 0 auto;
   align-items: center;
-  justify-content: space-around;
-  gap: clamp(0.5rem, 3vw, 2.5rem);
-  padding-inline: clamp(0.5rem, 2vw, 1.5rem);
+  gap: clamp(0.8rem, 2vw, 1.5rem);
+  padding-inline: 0.75rem;
+}
+
+.tool-marquee-item {
+  display: flex;
+  min-width: 4.25rem;
+  flex: 0 0 auto;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  color: #cbd5e1;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
 }
 
 .tool-marquee-logo {
   display: block;
-  width: 2rem;
-  height: 2rem;
+  width: 1.75rem;
+  height: 1.75rem;
   flex: 0 0 auto;
   object-fit: contain;
-  opacity: 0.88;
+  opacity: 0.9;
 }
 
 @media (min-width: 640px) {
-  .tool-marquee-logo {
-    width: 2.5rem;
-    height: 2.5rem;
+  .tool-marquee-item {
+    min-width: 4.75rem;
+    font-size: 0.7rem;
   }
-}
 
-.tool-marquee-track[data-reduced-motion="true"] {
-  animation: none;
+  .tool-marquee-logo {
+    width: 2rem;
+    height: 2rem;
+  }
 }
 
 @keyframes tool-marquee {
   to {
-    transform: translateX(-100%);
+    transform: translateX(-50%);
   }
 }
 
@@ -170,32 +187,5 @@
   a,
   button {
     min-height: 44px;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto !important;
-    scroll-snap-type: none !important;
-  }
-
-  *,
-  *::before,
-  *::after {
-    scroll-behavior: auto !important;
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-
-  .motion-reveal {
-    opacity: 1 !important;
-    transform: none !important;
-    animation: none !important;
-  }
-
-  .tool-marquee-track {
-    animation: none !important;
-    transform: none !important;
   }
 }
