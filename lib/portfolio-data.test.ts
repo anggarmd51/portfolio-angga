@@ -185,7 +185,7 @@ test("education and certifications preserve the six listed certificates and opti
   assert.equal(CERTIFICATIONS_DATA[3].title, "Sales Forecasting");
   assert.equal(CERTIFICATIONS_DATA[3].issuer, "HP LIFE (HP Foundation)");
   assert.equal(CERTIFICATIONS_DATA[3].period, "Oktober 2026");
-  assert.equal(CERTIFICATIONS_DATA[4].title, "Frictionless Sales");
+  assert.equal(CERTIFICATIONS_DATA[4].title, "Frictionless Sales Certified");
   assert.equal(CERTIFICATIONS_DATA[4].issuer, "HubSpot Academy");
   assert.ok(CERTIFICATIONS_DATA[0].validity);
   assert.ok(CERTIFICATIONS_DATA.every((certification) => certification.url?.trim()));
@@ -274,13 +274,18 @@ test("sales workflow renders a keyboard-operable single active panel", () => {
   assert.match(bento, /role="tabpanel"/);
   assert.match(bento, /ArrowRight/);
   assert.match(bento, /<ToolMarquee\s*\/>/);
-  assert.equal((marquee.match(/slug: "/g) ?? []).length, 14);
+  assert.equal((marquee.match(/slug: "/g) ?? []).length, 16);
+  assert.match(marquee, /slug: "linkedin"/);
+  assert.match(marquee, /slug: "visualstudiocode"/);
   assert.match(marquee, /cdn\.simpleicons\.org/);
   assert.match(marquee, /slug: "claude", color: "D97757", label: "Claude"/);
   assert.match(marquee, /tool-marquee-item/);
   assert.match(marquee, /<span>\{logo\.label\}<\/span>/);
   assert.match(marquee, /<LogoGroup decorative \/>/);
   assert.doesNotMatch(marquee, /prefers-reduced-motion|data-reduced-motion/);
+  for (const asset of ["apollo.png", "chatgpt.svg", "manus.svg", "antigravity.svg", "linkedin.svg", "visualstudiocode.svg"]) {
+    assert.ok(existsSync(join(projectRoot, "public", "assets", "tools", asset)), `${asset} logo asset exists`);
+  }
   assert.match(showcase, /Tangkapan Layar Aplikasi/);
   assert.match(showcase, /Ilustrasi Modul Fitur/);
 });

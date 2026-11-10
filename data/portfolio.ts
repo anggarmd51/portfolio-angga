@@ -443,7 +443,7 @@ export const CERTIFICATIONS_DATA: CertificationItem[] = [
   },
   {
     id: "cert-5",
-    title: "Frictionless Sales",
+    title: "Frictionless Sales Certified",
     issuer: "HubSpot Academy",
     period: "Okt 2026",
     url: "/assets/sertifikat/Hubspot%20Academy%20-%20Frictionless%20Sales.webp",
@@ -503,7 +503,7 @@ export const CONTACT_DATA = {
       iconName: "file-text" as const,
     },
   ],
-  footer: "Medan, Sumatera Utara, Indonesia • © 2026 Muhammad Angga Ramadhan",
+  footer: "© 2026 Muhammad Angga Ramadhan",
 };
 
 export const NAVIGATION_SECTIONS = [

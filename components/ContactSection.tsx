@@ -215,9 +215,6 @@ export default function ContactSection() {
           className="mt-16 pt-8 border-t border-white/10 text-xs sm:text-sm text-slate-300"
         >
           <p>{CONTACT_DATA.footer}</p>
-          <p className="mt-2 text-xs text-slate-300">
-            Dibuat secara mandiri dengan Next.js App Router, Tailwind CSS, & Motion.
-          </p>
         </Reveal>
       </div>
     </section>
