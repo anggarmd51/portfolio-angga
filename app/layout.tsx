@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import { MotionConfig } from "motion/react";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
@@ -16,9 +17,11 @@ export const viewport: Viewport = {
   themeColor: "#0B0F19",
 };
 
-const title = "Muhammad Angga Ramadhan — Portofolio Sales & Business Development";
+const title = "Muhammad Angga Ramadhan | B2B Sales & Business Development";
 const description =
-  "Portofolio profesional Muhammad Angga Ramadhan. Pengalaman sejak 2019 di bidang B2B Sales, Business Development, Account Management, pembiayaan, dan B2B SaaS di Medan.";
+  "Portofolio profesional B2B Sales, Account Management, dan Business Development. Berpengalaman dalam pipeline management dan SaaS CRM.";
+const profileImage =
+  "https://angga-ramadhan.vercel.app/muhammad-angga-ramadhan-profile.png";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://angga-ramadhan.vercel.app"),
@@ -33,13 +36,15 @@ export const metadata: Metadata = {
     title,
     description,
     type: "website",
+    url: "https://angga-ramadhan.vercel.app",
+    siteName: "Muhammad Angga Ramadhan",
     locale: "id_ID",
     images: [
       {
-        url: "/assets/OG%20Image%20AR.png",
-        width: 1034,
-        height: 1034,
-        alt: "Muhammad Angga Ramadhan — Sales & Business Development, Medan",
+        url: profileImage,
+        width: 1914,
+        height: 1920,
+        alt: "Foto profil Muhammad Angga Ramadhan, B2B Sales & Business Development",
       },
     ],
   },
@@ -47,7 +52,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title,
     description,
-    images: ["/assets/OG%20Image%20AR.png"],
+    images: [profileImage],
   },
 };
 
@@ -67,6 +72,7 @@ export default function RootLayout({
         className="min-h-screen bg-[#0B0F19] text-slate-100 antialiased selection:bg-emerald-500/20 selection:text-emerald-300"
       >
         <MotionConfig reducedMotion="never">{children}</MotionConfig>
+        {process.env.VERCEL === "1" ? <Analytics /> : null}
       </body>
     </html>
   );

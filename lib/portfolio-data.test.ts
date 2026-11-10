@@ -162,13 +162,36 @@ test("public portfolio data contains no Rupiah amounts", () => {
 test("metadata and share card use the approved title and description", () => {
   const layout = readFileSync(join(projectRoot, "app/layout.tsx"), "utf8");
   const navigation = readFileSync(join(projectRoot, "components/SectionNavigation.tsx"), "utf8");
-  const openGraphImage = readFileSync(join(projectRoot, "app/opengraph-image.tsx"), "utf8");
-  assert.match(layout, /Muhammad Angga Ramadhan — Portofolio Sales & Business Development/);
-  assert.match(layout, /Portofolio profesional Muhammad Angga Ramadhan/);
-  assert.match(layout, /Muhammad Angga Ramadhan — Sales & Business Development, Medan/);
+  assert.match(layout, /Muhammad Angga Ramadhan \| B2B Sales & Business Development/);
+  assert.match(layout, /Portofolio profesional B2B Sales, Account Management, dan Business Development\. Berpengalaman dalam pipeline management dan SaaS CRM\./);
+  assert.match(layout, /https:\/\/angga-ramadhan\.vercel\.app\/muhammad-angga-ramadhan-profile\.png/);
+  assert.match(layout, /card: "summary_large_image"/);
+  assert.match(layout, /process\.env\.VERCEL === "1" \? <Analytics \/> : null/);
+  assert.match(layout, /<Analytics \/>[\s\S]*<\/body>/);
+  assert.equal(existsSync(join(projectRoot, "app/opengraph-image.tsx")), false);
   assert.match(navigation, /Portofolio Sales & Business Development/);
   assert.match(navigation, /group-focus-visible:opacity-100/);
-  assert.doesNotMatch(`${layout}\n${navigation}\n${openGraphImage}`, /Executive Portfolio/);
+  assert.doesNotMatch(`${layout}\n${navigation}`, /Executive Portfolio/);
+});
+
+test("floating WhatsApp CTA is accessible, mobile-only, animated, and gated by scroll", () => {
+  const cta = readFileSync(join(projectRoot, "components/FloatingCTA.tsx"), "utf8");
+  const page = readFileSync(join(projectRoot, "app/page.tsx"), "utf8");
+  const layout = readFileSync(join(projectRoot, "app/layout.tsx"), "utf8");
+  assert.match(cta, /window\.scrollY > 300/);
+  assert.match(cta, /window\.matchMedia\("\(max-width: 767px\)"\)/);
+  const ctaClasses = cta.match(/className="([^"]+)"/)?.[1]?.split(/\s+/) ?? [];
+  assert.ok(
+    ["fixed", "bottom-6", "right-6", "z-50", "md:hidden"].every((className) =>
+      ctaClasses.includes(className)
+    )
+  );
+  assert.match(cta, /wa\.me\/6285206602391/);
+  assert.match(cta, /aria-label=/);
+  assert.match(cta, /focus-visible:ring/);
+  assert.match(cta, /AnimatePresence/);
+  assert.match(layout, /MotionConfig reducedMotion="never"/);
+  assert.match(page, /<FloatingCTA \/>/);
 });
 
 test("education and certifications preserve the six listed certificates and optional verification", () => {

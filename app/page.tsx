@@ -4,6 +4,7 @@ import CareerSection from "@/components/CareerSection";
 import ProjectShowcase from "@/components/ProjectShowcase";
 import CredentialsSection from "@/components/CredentialsSection";
 import ContactSection from "@/components/ContactSection";
+import FloatingCTA from "@/components/FloatingCTA";
 
 export default function HomePage() {
   return (
@@ -19,7 +20,7 @@ export default function HomePage() {
       />
 
       {/* Main Content: 6 sections in continuous smooth flow */}
-      <main className="flex-1 w-full pb-12 relative z-10">
+      <main className="flex-1 w-full pb-28 md:pb-12 relative z-10">
         {/* Section 1: Hero */}
         <HeroSection />
 
@@ -38,6 +39,7 @@ export default function HomePage() {
         {/* Section 6: Closing Pitch & Contact */}
         <ContactSection />
       </main>
+      <FloatingCTA />
     </div>
   );
 }
