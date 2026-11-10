@@ -3,14 +3,14 @@
 import Image from "next/image";
 import { HERO_DATA } from "@/data/portfolio";
 import { ArrowDown, MessageSquare, TrendingUp } from "lucide-react";
-import { motion, useMotionValue, useReducedMotion, useSpring } from "motion/react";
+import { motion, useMotionValue, useSpring } from "motion/react";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import type { MouseEvent } from "react";
 import { Reveal } from "./MotionReveal";
 
 export default function HeroSection() {
   const pointerFine = useMediaQuery("(pointer: fine)");
-  const shouldReduceMotion = useReducedMotion() ?? false;
+  const shouldReduceMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
   const magnetX = useMotionValue(0);
   const magnetY = useMotionValue(0);
   const springX = useSpring(magnetX, { stiffness: 220, damping: 28, mass: 0.4 });
@@ -35,7 +35,7 @@ export default function HeroSection() {
     <section
       id="home"
       aria-labelledby="hero-name"
-      className="relative min-h-screen flex items-center justify-center pt-20 pb-16 md:pt-28 md:pb-24 px-4 sm:px-6 lg:px-8 overflow-hidden bg-radial-gradient"
+      className="relative min-h-screen flex items-center justify-center pt-20 pb-16 md:pt-28 md:pb-24 px-4 sm:px-6 lg:px-8 overflow-hidden bg-radial-gradient presentation-section"
     >
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-emerald-500/[0.025] blur-[100px] rounded-full pointer-events-none -z-10" />
       <div className="absolute bottom-10 right-10 w-96 h-96 bg-blue-500/[0.025] blur-[90px] rounded-full pointer-events-none -z-10" />

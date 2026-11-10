@@ -1,7 +1,8 @@
 "use client";
 
 import type { MouseEventHandler, ReactNode } from "react";
-import { motion, type Variants, useReducedMotion } from "motion/react";
+import { motion, type Variants } from "motion/react";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 interface RevealProps {
   children: ReactNode;
@@ -24,11 +25,12 @@ export function Reveal({
   onMouseMove,
   onMouseLeave,
 }: RevealProps) {
-  const shouldReduceMotion = useReducedMotion() ?? false;
+  const shouldReduceMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
 
   return (
     <motion.div
       initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y }}
+      animate={shouldReduceMotion ? { opacity: 1, y: 0 } : undefined}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount }}
       transition={{
@@ -74,11 +76,12 @@ export function StaggerContainer({
   staggerChildren = 0.08,
   amount = 0.15,
 }: StaggerContainerProps) {
-  const shouldReduceMotion = useReducedMotion() ?? false;
+  const shouldReduceMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
 
   return (
     <motion.div
       initial={shouldReduceMotion ? "visible" : "hidden"}
+      animate={shouldReduceMotion ? "visible" : undefined}
       whileInView="visible"
       viewport={{ once: true, amount }}
       variants={containerVariants(
@@ -115,11 +118,12 @@ interface StaggerItemProps {
 }
 
 export function StaggerItem({ children, className = "" }: StaggerItemProps) {
-  const shouldReduceMotion = useReducedMotion() ?? false;
+  const shouldReduceMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
 
   return (
     <motion.div
       variants={shouldReduceMotion ? reducedItemVariants : itemVariants}
+      animate={shouldReduceMotion ? "visible" : undefined}
       className={`motion-reveal ${className}`.trim()}
     >
       {children}

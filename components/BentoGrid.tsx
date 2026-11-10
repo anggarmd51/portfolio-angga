@@ -12,8 +12,9 @@ import {
 } from "lucide-react";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useRef, useState, type KeyboardEvent, type MouseEvent } from "react";
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
 import { Reveal, StaggerContainer, StaggerItem } from "./MotionReveal";
+import ToolMarquee from "./ToolMarquee";
 
 const PILLAR_ICONS = [TrendingUp, Users, ShieldAlert];
 
@@ -25,7 +26,7 @@ const EXPERIENCE_TAGS = [
 
 export default function BentoGrid() {
   const pointerFine = useMediaQuery("(pointer: fine)");
-  const prefersReducedMotion = useReducedMotion();
+  const prefersReducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
   const [activeWorkflowIndex, setActiveWorkflowIndex] = useState(0);
   const workflowTabRefs = useRef<Array<HTMLButtonElement | null>>([]);
 
@@ -67,7 +68,7 @@ export default function BentoGrid() {
     <section
       id="profile"
       aria-labelledby="bento-heading"
-      className="py-20 md:py-28 px-4 sm:px-6 lg:px-8 border-t border-white/5 relative bg-[#0B0F19]"
+      className="py-20 md:py-28 px-4 sm:px-6 lg:px-8 border-t border-white/5 relative bg-[#0B0F19] presentation-section"
     >
       <div className="max-w-7xl mx-auto">
         <Reveal className="mb-12 md:mb-16 text-left max-w-3xl">
@@ -318,6 +319,7 @@ export default function BentoGrid() {
                   {SALES_WORKFLOW_STEPS[activeWorkflowIndex].description}
                 </p>
               </motion.div>
+              <ToolMarquee />
             </Reveal>
           </div>
         </div>

@@ -39,11 +39,12 @@ test("hero uses the approved role copy and keeps portrait fallback assets", () =
   assert.ok(existsSync(join(projectRoot, "public/profile-placeholder.png")));
 });
 
-test("profile uses factual positioning, three target roles, and static competency groups", () => {
+test("profile uses factual positioning, four target roles, and balanced competency groups", () => {
   assert.equal(BENTO_DATA.sectionTitle, "Dari Survei Kredit ke Penjualan B2B SaaS");
   assert.equal(BENTO_DATA.box1.headline, "Pengalaman Pembiayaan & Penjualan Solusi B2B");
   assert.deepEqual(BENTO_DATA.box2.roles, [
     "Sales Manager",
+    "B2B Sales",
     "Business Development Manager",
     "Account Manager",
   ]);
@@ -53,10 +54,13 @@ test("profile uses factual positioning, three target roles, and static competenc
     [
       "Penjualan & Pengembangan Bisnis",
       "Pembiayaan & Analisis Risiko",
-      "Inisiatif Digital & Alat Kerja",
+      "CRM, Digital & Alat Kerja",
     ]
   );
-  assert.ok(BENTO_DATA.box4.competencyCategories.every((category) => category.skills.length > 0));
+  assert.deepEqual(
+    BENTO_DATA.box4.competencyCategories.map((category) => category.skills.length),
+    [5, 5, 5]
+  );
 });
 
 test("B2B sales workflow contains the six approved stages in order", () => {
@@ -181,14 +185,13 @@ test("education and certifications preserve the six listed certificates and opti
   assert.ok(CERTIFICATIONS_DATA.every((certification) => !certification.url || certification.url.trim().length > 0));
 });
 
-test("contact has two clear paths and keeps WhatsApp, email, LinkedIn, GitHub, and CV links", () => {
-  assert.equal(CONTACT_DATA.pathways.length, 2);
-  assert.equal(CONTACT_DATA.pathways[0].title, "Peluang Karier (Untuk Recruiter & HR)");
-  assert.equal(CONTACT_DATA.pathways[1].title, "Diskusi & Kolaborasi Bisnis");
+test("contact consolidates five useful channels into one career and collaboration panel", () => {
+  assert.equal(CONTACT_DATA.panelTitle, "Peluang Karier & Kolaborasi");
+  assert.equal(CONTACT_DATA.channels.length, 5);
   const labels = CONTACT_DATA.channels.map((channel) => channel.label);
   assert.deepEqual(labels, [
     "Chat via WhatsApp",
-    "Kirim Email",
+    "Salin Email",
     "Profil LinkedIn",
     "Repositori GitHub",
     "Unduh CV Lengkap (PDF)",
@@ -197,6 +200,7 @@ test("contact has two clear paths and keeps WhatsApp, email, LinkedIn, GitHub, a
   assert.equal(whatsapp?.href, "https://wa.me/6285206602391");
   const cv = CONTACT_DATA.channels.find((channel) => channel.isDownload);
   assert.equal(cv?.href, "/assets/CV_Angga.pdf");
+  assert.equal(CONTACT_DATA.channels.find((channel) => channel.iconName === "mail")?.href, "");
 });
 
 test("copy-email control keeps its approved address and touch-sized accessible feedback", () => {
@@ -205,19 +209,75 @@ test("copy-email control keeps its approved address and touch-sized accessible f
   assert.match(contactSource, /navigator\.clipboard\.writeText\(email\)/);
   assert.match(contactSource, /document\.execCommand\("copy"\)/);
   assert.match(contactSource, /Salin Email/);
-  assert.match(contactSource, /Email Tersalin!/);
+  assert.match(contactSource, /Tersalin!/);
+  assert.match(contactSource, /\}, 2000\)/);
+  assert.match(contactSource, /aria-live="polite"/);
+  assert.doesNotMatch(contactSource, /mailto:/);
   assert.match(contactSource, /min-h-\[44px\]/);
-  assert.match(contactSource, /useReducedMotion/);
+  assert.match(contactSource, /useMediaQuery\("\(prefers-reduced-motion: reduce\)"\)/);
 });
 
 test("sales workflow renders a keyboard-operable single active panel", () => {
   const bento = readFileSync(join(projectRoot, "components/BentoGrid.tsx"), "utf8");
+  const marquee = readFileSync(join(projectRoot, "components/ToolMarquee.tsx"), "utf8");
   const showcase = readFileSync(join(projectRoot, "components/ProjectShowcase.tsx"), "utf8");
   assert.match(bento, /lg:col-span-12 lg:row-start-4/);
   assert.match(bento, /role="tablist"/);
   assert.match(bento, /role="tabpanel"/);
   assert.match(bento, /ArrowRight/);
-  assert.match(bento, /useReducedMotion/);
+  assert.match(bento, /useMediaQuery\("\(prefers-reduced-motion: reduce\)"\)/);
+  assert.match(bento, /<ToolMarquee\s*\/>/);
+  assert.equal((marquee.match(/slug: "/g) ?? []).length, 7);
+  assert.match(marquee, /cdn\.simpleicons\.org/);
+  assert.match(marquee, /useMediaQuery\("\(prefers-reduced-motion: reduce\)"\)/);
+  assert.match(marquee, /data-reduced-motion/);
   assert.match(showcase, /Tangkapan Layar Aplikasi/);
   assert.match(showcase, /Ilustrasi Modul Fitur/);
+});
+
+test("career details have no sequence numbers and close through modal/history controls", () => {
+  const career = readFileSync(join(projectRoot, "components/CareerSection.tsx"), "utf8");
+  const morphCard = readFileSync(join(projectRoot, "components/MorphCard.tsx"), "utf8");
+  assert.ok(CAREER_ROLES.every((role) => role.bullets.every((bullet) => !/^\d{2}[\s.)]/.test(bullet))));
+  assert.doesNotMatch(`${career}\n${morphCard}`, /0\{(?:idx|index)\s*\+\s*1\}/);
+  assert.match(morphCard, /layoutId=\{`career-card-\$\{role\.id\}`\}/);
+  assert.match(career, /onClick=\{closeRole\}/);
+  assert.match(career, /window\.addEventListener\("popstate"/);
+  assert.match(career, /CAREER_ACCORDION_HISTORY_KEY/);
+  assert.match(career, /event\.key === "Escape"/);
+});
+
+test("presentation scroll-snap is desktop-only, proximity-based, and reduced-motion aware", () => {
+  const css = readFileSync(join(projectRoot, "app/globals.css"), "utf8");
+  assert.match(css, /@media \(min-width: 768px\)[\s\S]*scroll-snap-type: y proximity/);
+  assert.match(css, /scrollbar-width: none/);
+  assert.match(css, /scroll-snap-type: none !important/);
+  assert.match(css, /\.motion-reveal\s*\{\s*opacity: 1 !important;\s*transform: none !important;/);
+  assert.match(css, /min-height: 100svh/);
+  assert.doesNotMatch(css, /scroll-snap-type: y mandatory/);
+});
+
+test("all motion surfaces subscribe to the hydration-safe reduced-motion preference", () => {
+  const motionFiles = [
+    "components/ContactSection.tsx",
+    "components/ToolMarquee.tsx",
+    "components/MotionReveal.tsx",
+    "components/HeroSection.tsx",
+    "components/BentoGrid.tsx",
+    "components/CareerSection.tsx",
+    "components/MorphCard.tsx",
+  ];
+  for (const file of motionFiles) {
+    const source = readFileSync(join(projectRoot, file), "utf8");
+    assert.match(
+      source,
+      /useMediaQuery\("\(prefers-reduced-motion: reduce\)"\)/,
+      `${file} subscribes to the reduced-motion preference`
+    );
+  }
+
+  const mediaQuerySource = readFileSync(join(projectRoot, "hooks/useMediaQuery.ts"), "utf8");
+  assert.match(mediaQuerySource, /useSyncExternalStore/);
+  assert.match(mediaQuerySource, /window\.matchMedia\(query\)\.matches/);
+  assert.match(mediaQuerySource, /media\.addEventListener\("change", callback\)/);
 });

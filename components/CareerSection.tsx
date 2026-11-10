@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useCallback, useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { CAREER_ROLES, CareerRole } from "@/data/portfolio";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import MorphCard from "./MorphCard";
 import { Reveal } from "./MotionReveal";
-import { motion, AnimatePresence, LayoutGroup, useReducedMotion } from "motion/react";
+import { motion, AnimatePresence, LayoutGroup } from "motion/react";
 import {
   Briefcase,
   Calendar,
@@ -17,6 +17,29 @@ import {
 
 const CAREER_COMPANY_COUNT = new Set(CAREER_ROLES.map((role) => role.company)).size;
 
+const CAREER_DIALOG_HISTORY_KEY = "__careerRoleDialog";
+const CAREER_ACCORDION_HISTORY_KEY = "__careerAccordionRole";
+
+function getHistoryState(): Record<string, unknown> {
+  const state: unknown = window.history.state;
+  return state && typeof state === "object"
+    ? { ...(state as Record<string, unknown>) }
+    : {};
+}
+
+function hasHistoryEntry(key: string, roleId: string): boolean {
+  return getHistoryState()[key] === roleId;
+}
+
+function writeHistoryEntry(key: string, roleId: string, replace = false) {
+  const nextState = { ...getHistoryState(), [key]: roleId };
+  if (replace) {
+    window.history.replaceState(nextState, "", window.location.href);
+  } else {
+    window.history.pushState(nextState, "", window.location.href);
+  }
+}
+
 /**
  * Desktop Career Experience View (>= 768px).
  * Unmounts completely when the viewport is mobile, ensuring zero leftover state,
@@ -24,12 +47,27 @@ const CAREER_COMPANY_COUNT = new Set(CAREER_ROLES.map((role) => role.company)).s
  */
 function DesktopCareerView() {
   const [selectedRole, setSelectedRole] = useState<CareerRole | null>(null);
-  const shouldReduceMotion = useReducedMotion() ?? false;
+  const shouldReduceMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
   const morphTransition = shouldReduceMotion
     ? { duration: 0 }
     : { type: "spring" as const, stiffness: 350, damping: 30 };
   const dialogRef = useRef<HTMLDivElement | null>(null);
   const triggerCardRef = useRef<HTMLElement | null>(null);
+  const previousBodyOverflow = useRef("");
+
+  const openRole = (role: CareerRole) => {
+    triggerCardRef.current = document.activeElement as HTMLElement;
+    writeHistoryEntry(CAREER_DIALOG_HISTORY_KEY, role.id);
+    setSelectedRole(role);
+  };
+
+  const closeRole = useCallback(() => {
+    if (selectedRole && hasHistoryEntry(CAREER_DIALOG_HISTORY_KEY, selectedRole.id)) {
+      window.history.back();
+      return;
+    }
+    setSelectedRole(null);
+  }, [selectedRole]);
 
   // Reset selected role on matchMedia change as an event subscription
   useEffect(() => {
@@ -37,25 +75,23 @@ function DesktopCareerView() {
     const handleMediaChange = (e: MediaQueryListEvent) => {
       if (!e.matches) {
         setSelectedRole(null);
-        document.body.style.overflow = "";
       }
     };
 
     mediaQuery.addEventListener("change", handleMediaChange);
     return () => {
       mediaQuery.removeEventListener("change", handleMediaChange);
-      // Guarantee body scroll lock is removed when Desktop view unmounts
-      document.body.style.overflow = "";
     };
   }, []);
 
   // Handle focus trap, ESC key, body scroll lock, and focus restoration
   useEffect(() => {
     if (!selectedRole) {
-      document.body.style.overflow = "";
+      document.body.style.overflow = previousBodyOverflow.current;
       return;
     }
 
+    previousBodyOverflow.current = document.body.style.overflow;
     document.body.style.overflow = "hidden";
 
     // Set initial focus to the first focusable element inside the modal
@@ -73,7 +109,7 @@ function DesktopCareerView() {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         e.preventDefault();
-        setSelectedRole(null);
+        closeRole();
         return;
       }
 
@@ -110,29 +146,29 @@ function DesktopCareerView() {
       }
     };
 
+    const handleHistoryBack = () => setSelectedRole(null);
+
     window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("popstate", handleHistoryBack);
     return () => {
       clearTimeout(focusTimer);
-      document.body.style.overflow = "";
+      document.body.style.overflow = previousBodyOverflow.current;
       window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("popstate", handleHistoryBack);
       // Restore focus to the triggering card
       triggerCardRef.current?.focus();
     };
-  }, [selectedRole]);
+  }, [selectedRole, closeRole]);
 
   return (
     <LayoutGroup id="career-morph-group">
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
-        {CAREER_ROLES.map((role, idx) => (
+        {CAREER_ROLES.map((role) => (
           <MorphCard
             key={role.id}
             role={role}
-            index={idx}
             isSelected={selectedRole?.id === role.id}
-            onSelect={() => {
-              triggerCardRef.current = document.activeElement as HTMLElement;
-              setSelectedRole(role);
-            }}
+            onSelect={() => openRole(role)}
           />
         ))}
       </div>
@@ -152,7 +188,7 @@ function DesktopCareerView() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: shouldReduceMotion ? 0 : 0.25 }}
-              onClick={() => setSelectedRole(null)}
+              onClick={closeRole}
               className="fixed inset-0 bg-slate-950/80 backdrop-blur-md"
             />
 
@@ -166,9 +202,9 @@ function DesktopCareerView() {
               {/* Close button (First focusable element) */}
               <button
                 type="button"
-                onClick={() => setSelectedRole(null)}
+                onClick={closeRole}
                 aria-label="Tutup rincian karir"
-                className="absolute top-5 right-5 w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white flex items-center justify-center transition focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+                className="absolute top-5 right-5 min-h-[44px] min-w-[44px] rounded-full bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white flex items-center justify-center transition focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -237,8 +273,8 @@ function DesktopCareerView() {
                 <span>Penempatan: Medan, Sumatera Utara</span>
                 <button
                   type="button"
-                  onClick={() => setSelectedRole(null)}
-                  className="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-200 font-medium transition focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+                  onClick={closeRole}
+                  className="min-h-[44px] px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-200 font-medium transition focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
                 >
                   Tutup Dialog
                 </button>
@@ -257,10 +293,54 @@ function DesktopCareerView() {
  */
 function MobileCareerView() {
   const [mobileExpandedId, setMobileExpandedId] = useState<string | null>("role-1");
+  const mobileHistoryEntry = useRef(false);
+
+  const closeMobileDetails = useCallback(() => {
+    if (
+      mobileExpandedId &&
+      mobileHistoryEntry.current &&
+      hasHistoryEntry(CAREER_ACCORDION_HISTORY_KEY, mobileExpandedId)
+    ) {
+      window.history.back();
+      return;
+    }
+    mobileHistoryEntry.current = false;
+    setMobileExpandedId(null);
+  }, [mobileExpandedId]);
+
+  useEffect(() => {
+    if (!mobileExpandedId) return;
+
+    if (!mobileHistoryEntry.current) {
+      writeHistoryEntry(CAREER_ACCORDION_HISTORY_KEY, mobileExpandedId);
+      mobileHistoryEntry.current = true;
+    } else if (!hasHistoryEntry(CAREER_ACCORDION_HISTORY_KEY, mobileExpandedId)) {
+      writeHistoryEntry(CAREER_ACCORDION_HISTORY_KEY, mobileExpandedId, true);
+    }
+
+    const handleHistoryBack = () => {
+      if (!mobileHistoryEntry.current) return;
+      mobileHistoryEntry.current = false;
+      setMobileExpandedId(null);
+    };
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        closeMobileDetails();
+      }
+    };
+
+    window.addEventListener("popstate", handleHistoryBack);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("popstate", handleHistoryBack);
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [mobileExpandedId, closeMobileDetails]);
 
   return (
     <div className="space-y-4">
-      {CAREER_ROLES.map((role, idx) => {
+      {CAREER_ROLES.map((role) => {
         const isExpanded = mobileExpandedId === role.id;
         return (
           <div
@@ -270,7 +350,7 @@ function MobileCareerView() {
             <button
               type="button"
               onClick={() =>
-                setMobileExpandedId(isExpanded ? null : role.id)
+                isExpanded ? closeMobileDetails() : setMobileExpandedId(role.id)
               }
               aria-expanded={isExpanded}
               aria-controls={`role-content-${role.id}`}
@@ -289,7 +369,7 @@ function MobileCareerView() {
                 </div>
                 <div className="min-w-0">
                   <span className="text-[10px] font-mono font-bold text-emerald-400 block">
-                    0{idx + 1} • {role.period}
+                    {role.period}
                   </span>
                   <h3 className="text-sm font-bold text-white truncate">
                     {role.company}
@@ -345,7 +425,7 @@ export default function CareerSection() {
     <section
       id="career"
       aria-labelledby="career-heading"
-      className="py-20 md:py-28 px-4 sm:px-6 lg:px-8 border-t border-white/5 relative bg-[#0B0F19]"
+      className="py-20 md:py-28 px-4 sm:px-6 lg:px-8 border-t border-white/5 relative bg-[#0B0F19] presentation-section"
     >
       <div className="max-w-7xl mx-auto">
         {/* Section Header with Reveal */}

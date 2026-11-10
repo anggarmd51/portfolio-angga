@@ -78,7 +78,6 @@ export interface ContactChannel {
   isDownload?: boolean;
   downloadFilename?: string;
   iconName: "whatsapp" | "mail" | "linkedin" | "github" | "file-text";
-  pathway?: "career" | "collaboration" | "both";
 }
 
 export const HERO_DATA = {
@@ -111,7 +110,7 @@ export const BENTO_DATA = {
   },
   box2: {
     label: "FOKUS PERAN",
-    roles: ["Sales Manager", "Business Development Manager", "Account Manager"],
+    roles: ["Sales Manager", "B2B Sales", "Business Development Manager", "Account Manager"],
   },
   box3: {
     title: "Area Pengalaman",
@@ -141,7 +140,6 @@ export const BENTO_DATA = {
           "B2B Sales",
           "Account Management",
           "Business Development",
-          "Pipeline Management",
           "Presentasi & Demo Produk",
           "Negosiasi Kontrak",
         ],
@@ -157,9 +155,10 @@ export const BENTO_DATA = {
         ],
       },
       {
-        title: "Inisiatif Digital & Alat Kerja",
+        title: "CRM, Digital & Alat Kerja",
         skills: [
           "CRM Pipeline Tracking",
+          "Pipeline Management",
           "AI-Assisted Web Development (Vibe Coding)",
           "Riset Prospek B2B",
           "Next.js & Tailwind CSS Dasar",
@@ -451,34 +450,32 @@ export const CONTACT_DATA = {
   headline: "Mari Diskusikan Peluang Kerja atau Kolaborasi Bisnis",
   subheadline:
     "Saya terbuka untuk peran Sales, Account Management, atau Business Development di Medan maupun remote. Silakan hubungi saya melalui WhatsApp, email, atau LinkedIn, serta unduh CV terbaru saya untuk rincian lengkap.",
+  panelTitle: "Peluang Karier & Kolaborasi",
+  panelDescription: "Pilih kanal yang paling nyaman untuk menghubungi saya atau melihat profil profesional.",
   channels: [
     {
       label: "Chat via WhatsApp",
       sublabel: "0852-0660-2391",
       href: "https://wa.me/6285206602391",
       iconName: "whatsapp" as const,
-      pathway: "both" as const,
     },
     {
-      label: "Kirim Email",
+      label: "Salin Email",
       sublabel: "anggaramadhan538@gmail.com",
-      href: "mailto:anggaramadhan538@gmail.com",
+      href: "",
       iconName: "mail" as const,
-      pathway: "both" as const,
     },
     {
       label: "Profil LinkedIn",
       sublabel: "linkedin.com/in/anggarmd",
       href: "https://linkedin.com/in/anggarmd",
       iconName: "linkedin" as const,
-      pathway: "both" as const,
     },
     {
       label: "Repositori GitHub",
       sublabel: "github.com/anggarmd51",
       href: "https://github.com/anggarmd51",
       iconName: "github" as const,
-      pathway: "collaboration" as const,
     },
     {
       label: "Unduh CV Lengkap (PDF)",
@@ -487,21 +484,6 @@ export const CONTACT_DATA = {
       isDownload: true,
       downloadFilename: "CV_Muhammad_Angga_Ramadhan.pdf",
       iconName: "file-text" as const,
-      pathway: "career" as const,
-    },
-  ],
-  pathways: [
-    {
-      id: "career",
-      title: "Peluang Karier (Untuk Recruiter & HR)",
-      description:
-        "Hubungi saya untuk peluang Sales, Account Management, atau Business Development; CV tersedia untuk rincian pengalaman.",
-    },
-    {
-      id: "collaboration",
-      title: "Diskusi & Kolaborasi Bisnis",
-      description:
-        "Buka percakapan tentang kerja sama, proyek digital, atau kebutuhan bisnis melalui kanal yang sesuai.",
     },
   ],
   footer: "Medan, Sumatera Utara, Indonesia • © 2026 Muhammad Angga Ramadhan",

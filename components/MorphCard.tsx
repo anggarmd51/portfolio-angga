@@ -2,23 +2,22 @@
 
 import Image from "next/image";
 import { CareerRole } from "@/data/portfolio";
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { ArrowUpRight } from "lucide-react";
 
 interface MorphCardProps {
   role: CareerRole;
-  index: number;
   isSelected: boolean;
   onSelect: () => void;
 }
 
 export default function MorphCard({
   role,
-  index,
   isSelected,
   onSelect,
 }: MorphCardProps) {
-  const shouldReduceMotion = useReducedMotion() ?? false;
+  const shouldReduceMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
   const cardTransition = shouldReduceMotion
     ? { duration: 0 }
     : { type: "spring" as const, stiffness: 350, damping: 30 };
@@ -39,7 +38,7 @@ export default function MorphCard({
       }`}
     >
       <div>
-        {/* Top bar: Company logo & sequence index */}
+        {/* Top bar: Company logo & card action */}
         <div className="flex items-start justify-between gap-4 mb-5">
           <motion.div
             layoutId={`career-logo-${role.id}`}
@@ -56,10 +55,7 @@ export default function MorphCard({
             />
           </motion.div>
 
-          <div className="flex items-center gap-2">
-            <span className="text-[11px] font-mono font-bold px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-slate-300">
-              0{index + 1}
-            </span>
+          <div className="flex items-center">
             <div className="w-7 h-7 rounded-full bg-white/5 group-hover:bg-emerald-500/20 group-hover:text-emerald-400 text-slate-400 flex items-center justify-center transition">
               <ArrowUpRight className="w-4 h-4" />
             </div>

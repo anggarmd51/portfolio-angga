@@ -10,7 +10,7 @@ export default function CredentialsSection() {
     <section
       id="credentials"
       aria-labelledby="credentials-heading"
-      className="py-20 md:py-28 px-4 sm:px-6 lg:px-8 border-t border-white/5 relative bg-[#0B0F19]"
+      className="py-20 md:py-28 px-4 sm:px-6 lg:px-8 border-t border-white/5 relative bg-[#0B0F19] presentation-section"
     >
       <div className="max-w-7xl mx-auto">
         <Reveal className="mb-12 md:mb-16 text-left max-w-3xl">

@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState, Fragment } from "react";
-import { motion, useReducedMotion } from "motion/react";
+import { useEffect, useRef, useState } from "react";
+import { motion } from "motion/react";
 import { CONTACT_DATA, type ContactChannel } from "@/data/portfolio";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import {
   MessageCircle,
   Mail,
@@ -40,10 +41,16 @@ function ContactLink({ channel }: { channel: ContactChannel }) {
       <Icon aria-hidden="true" className="w-5 h-5 text-emerald-400 shrink-0" />
       <span className="min-w-0 flex-1 text-left">
         <span className="block text-sm font-semibold leading-snug">{channel.label}</span>
-        <span className="block text-xs text-slate-300 leading-snug break-words">{channel.sublabel}</span>
+        <span className="block text-xs text-slate-300 leading-snug break-words">
+          {channel.sublabel}
+        </span>
       </span>
-      {opensNewTab && <ArrowUpRight aria-hidden="true" className="w-4 h-4 text-slate-400 shrink-0" />}
-      {channel.isDownload && <Download aria-hidden="true" className="w-4 h-4 text-slate-400 shrink-0" />}
+      {opensNewTab && (
+        <ArrowUpRight aria-hidden="true" className="w-4 h-4 text-slate-400 shrink-0" />
+      )}
+      {channel.isDownload && (
+        <Download aria-hidden="true" className="w-4 h-4 text-slate-400 shrink-0" />
+      )}
     </a>
   );
 }
@@ -73,7 +80,7 @@ function fallbackCopyText(text: string): boolean {
 }
 
 function CopyEmailButton() {
-  const prefersReducedMotion = useReducedMotion();
+  const prefersReducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
   const [copied, setCopied] = useState(false);
   const resetTimer = useRef<number | undefined>(undefined);
 
@@ -116,13 +123,16 @@ function CopyEmailButton() {
       transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.12 }}
       className="min-h-[44px] w-full inline-flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-emerald-500/30 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
     >
-      <StatusIcon aria-hidden="true" className="w-5 h-5 text-emerald-400 shrink-0" />
+      <StatusIcon
+        aria-hidden="true"
+        className="w-5 h-5 text-emerald-400 shrink-0"
+      />
       <span className="min-w-0 flex-1 text-left">
         <span
           aria-live="polite"
           className={`block text-sm font-semibold leading-snug ${copied ? "text-emerald-400" : "text-slate-200"}`}
         >
-          {copied ? "Email Tersalin!" : "Salin Email"}
+          {copied ? "Tersalin!" : "Salin Email"}
         </span>
         <span className="block text-xs text-slate-300 leading-snug break-words">
           anggaramadhan538@gmail.com
@@ -132,14 +142,21 @@ function CopyEmailButton() {
   );
 }
 
+function ContactAction({ channel }: { channel: ContactChannel }) {
+  return channel.iconName === "mail" ? <CopyEmailButton /> : <ContactLink channel={channel} />;
+}
+
 export default function ContactSection() {
   return (
     <section
       id="contact"
       aria-labelledby="contact-heading"
-      className="py-20 md:py-32 px-4 sm:px-6 lg:px-8 border-t border-white/5 relative bg-[#0B0F19] overflow-hidden"
+      className="py-20 md:py-32 px-4 sm:px-6 lg:px-8 border-t border-white/5 relative bg-[#0B0F19] overflow-hidden presentation-section"
     >
-      <div aria-hidden="true" className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-emerald-500/[0.025] blur-[110px] rounded-full pointer-events-none -z-10" />
+      <div
+        aria-hidden="true"
+        className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-emerald-500/[0.025] blur-[110px] rounded-full pointer-events-none -z-10"
+      />
 
       <div className="max-w-5xl mx-auto text-center">
         <Reveal delay={0.05} y={16}>
@@ -164,41 +181,34 @@ export default function ContactSection() {
           </p>
         </Reveal>
 
-        <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-5 text-left">
-          {CONTACT_DATA.pathways.map((pathway, index) => {
-            const channels = CONTACT_DATA.channels.filter(
-              (channel) => channel.pathway === pathway.id || channel.pathway === "both"
-            );
-            return (
-              <Reveal key={pathway.id} delay={index * 0.08} y={18}>
-                <section className="h-full glass-card rounded-2xl p-5 sm:p-6 border border-white/10">
-                  <h3 className="text-lg sm:text-xl font-bold text-white">
-                    {pathway.title}
-                  </h3>
-                  <p className="mt-2 mb-5 text-sm text-slate-300 leading-relaxed">
-                    {pathway.description}
-                  </p>
-                  <StaggerContainer className="grid grid-cols-1 gap-3" staggerChildren={0.05}>
-                    {channels.map((channel) => (
-                      <Fragment key={channel.label}>
-                        <StaggerItem>
-                          <ContactLink channel={channel} />
-                        </StaggerItem>
-                        {pathway.id === "career" && channel.iconName === "mail" && (
-                          <StaggerItem>
-                            <CopyEmailButton />
-                          </StaggerItem>
-                        )}
-                      </Fragment>
-                    ))}
-                  </StaggerContainer>
-                </section>
-              </Reveal>
-            );
-          })}
-        </div>
+        <Reveal delay={0.14} y={18} className="mt-12 text-left">
+          <section className="glass-card rounded-3xl p-5 sm:p-7 lg:p-8 border border-white/10 shadow-xl">
+            <div className="max-w-2xl">
+              <h3 className="text-lg sm:text-xl font-bold text-white">
+                {CONTACT_DATA.panelTitle}
+              </h3>
+              <p className="mt-2 mb-6 text-sm text-slate-300 leading-relaxed">
+                {CONTACT_DATA.panelDescription}
+              </p>
+            </div>
+            <StaggerContainer
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"
+              staggerChildren={0.05}
+            >
+              {CONTACT_DATA.channels.map((channel) => (
+                <StaggerItem key={channel.label}>
+                  <ContactAction channel={channel} />
+                </StaggerItem>
+              ))}
+            </StaggerContainer>
+          </section>
+        </Reveal>
 
-        <Reveal delay={0.1} y={16} className="mt-16 pt-8 border-t border-white/10 text-xs sm:text-sm text-slate-300">
+        <Reveal
+          delay={0.1}
+          y={16}
+          className="mt-16 pt-8 border-t border-white/10 text-xs sm:text-sm text-slate-300"
+        >
           <p>{CONTACT_DATA.footer}</p>
           <p className="mt-2 text-xs text-slate-300">
             Dibuat secara mandiri dengan Next.js App Router, Tailwind CSS, & Motion.
