@@ -21,9 +21,10 @@ function CertificateViewer({
   const [viewerKey, setViewerKey] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [hasLoadError, setHasLoadError] = useState(false);
-  const [verifiedUrl, setVerifiedUrl] = useState<string | null>(null);
   const loadingTimeoutRef = useRef<number | null>(null);
-  const iframeKeyboardCleanupRef = useRef<(() => void) | null>(null);
+  const imageLoadedRef = useRef(false);
+  const imageUrl = certificate.url?.trim();
+  const hasPreviewError = hasLoadError || !imageUrl;
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -43,48 +44,21 @@ function CertificateViewer({
   }, []);
 
   useEffect(() => {
-    let active = true;
-    const controller = new AbortController();
-
-    const failPreview = () => {
-      if (!active) return;
-      if (loadingTimeoutRef.current !== null) window.clearTimeout(loadingTimeoutRef.current);
-      setIsLoading(false);
-      setHasLoadError(true);
-      setVerifiedUrl(null);
-    };
-
+    if (!imageUrl) return;
     loadingTimeoutRef.current = window.setTimeout(() => {
-      failPreview();
-      controller.abort();
+      if (!imageLoadedRef.current) {
+        setIsLoading(false);
+        setHasLoadError(true);
+      }
     }, 10000);
 
-    const validatePdf = async () => {
-      try {
-        if (!certificate.url?.trim() || navigator.pdfViewerEnabled === false) {
-          failPreview();
-          return;
-        }
-        const response = await fetch(certificate.url, { method: "HEAD", signal: controller.signal });
-        if (!response.ok || !response.headers.get("content-type")?.includes("application/pdf")) {
-          failPreview();
-          return;
-        }
-        if (active) setVerifiedUrl(certificate.url);
-      } catch {
-        failPreview();
+    return () => {
+      if (loadingTimeoutRef.current !== null) {
+        window.clearTimeout(loadingTimeoutRef.current);
+        loadingTimeoutRef.current = null;
       }
     };
-    void validatePdf();
-
-    return () => {
-      active = false;
-      controller.abort();
-      if (loadingTimeoutRef.current !== null) window.clearTimeout(loadingTimeoutRef.current);
-      iframeKeyboardCleanupRef.current?.();
-      iframeKeyboardCleanupRef.current = null;
-    };
-  }, [certificate.url, viewerKey]);
+  }, [imageUrl, viewerKey]);
 
   const closeViewer = () => {
     if (dialogRef.current?.open) dialogRef.current.close();
@@ -141,7 +115,7 @@ function CertificateViewer({
               {certificate.title}
             </h2>
             <p id="certificate-viewer-help" className="mt-1 text-xs text-slate-300">
-              Tekan Esc atau × untuk menutup. Setelah memakai kontrol PDF bawaan peramban, gunakan tombol ×.
+              Tekan Esc atau × untuk menutup.
             </p>
           </div>
           <button
@@ -155,22 +129,22 @@ function CertificateViewer({
           </button>
         </div>
 
-        <div className="relative min-h-0 flex-1 bg-slate-900" aria-busy={isLoading}>
-          {isLoading && !hasLoadError ? (
+        <div className="relative flex min-h-0 flex-1 items-center justify-center overflow-hidden bg-slate-900 p-2 sm:p-4" aria-busy={isLoading && !hasPreviewError}>
+          {isLoading && !hasPreviewError ? (
             <p className="absolute inset-0 z-10 flex items-center justify-center px-6 text-center text-sm text-slate-300" aria-live="polite">
               Memuat pratinjau sertifikat…
             </p>
           ) : null}
-          {hasLoadError ? (
+          {hasPreviewError ? (
             <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 px-6 text-center" aria-live="assertive">
-              <p className="text-sm text-slate-200">Pratinjau PDF tidak dapat ditampilkan di perangkat ini.</p>
-              <p className="max-w-md text-xs text-slate-300">Periksa koneksi atau gunakan peramban yang mendukung pratinjau PDF bawaan. Tidak ada file yang diunduh otomatis.</p>
+              <p className="text-sm text-slate-200">Gambar sertifikat tidak dapat ditampilkan.</p>
+              <p className="max-w-md text-xs text-slate-300">Periksa koneksi lalu coba muat ulang pratinjau.</p>
               <button
                 type="button"
                 onClick={() => {
+                  imageLoadedRef.current = false;
                   setHasLoadError(false);
                   setIsLoading(true);
-                  setVerifiedUrl(null);
                   setViewerKey((key) => key + 1);
                 }}
                 className="min-h-[44px] rounded-lg border border-emerald-500/30 px-4 py-2 text-sm font-semibold text-emerald-300 hover:bg-emerald-500/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
@@ -179,43 +153,37 @@ function CertificateViewer({
               </button>
             </div>
           ) : null}
-          {verifiedUrl ? <iframe
-            key={viewerKey}
-            src={verifiedUrl}
-            tabIndex={-1}
-            title={`Pratinjau PDF sertifikat: ${certificate.title}`}
-            className={`h-full min-h-[60vh] w-full border-0 transition-opacity sm:min-h-0 ${isLoading || hasLoadError ? "opacity-0" : "opacity-100"}`}
-            onLoad={(event) => {
-              if (loadingTimeoutRef.current !== null) window.clearTimeout(loadingTimeoutRef.current);
-              iframeKeyboardCleanupRef.current?.();
-              const frameWindow = event.currentTarget.contentWindow;
-              const handleFrameKeyDown = (keyEvent: globalThis.KeyboardEvent) => {
-                if (keyEvent.key === "Escape") {
-                  keyEvent.preventDefault();
-                  closeViewer();
+          {imageUrl && !hasPreviewError ? (
+            <Image
+              key={`${imageUrl}-${viewerKey}`}
+              src={imageUrl}
+              alt={`Sertifikat ${certificate.title} dari ${certificate.issuer}`}
+              fill
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 1024px"
+              className={`h-full w-full object-contain transition-opacity duration-200 ${isLoading ? "opacity-0" : "opacity-100"}`}
+              priority
+              onLoad={() => {
+                imageLoadedRef.current = true;
+                if (loadingTimeoutRef.current !== null) {
+                  window.clearTimeout(loadingTimeoutRef.current);
+                  loadingTimeoutRef.current = null;
                 }
-              };
-              // Certificate files are same-origin; frame key events do not bubble to the dialog.
-              try {
-                frameWindow?.addEventListener("keydown", handleFrameKeyDown, true);
-                iframeKeyboardCleanupRef.current = () => frameWindow?.removeEventListener("keydown", handleFrameKeyDown, true);
-              } catch {
-                // A browser-isolated native PDF toolbar may keep its own keyboard shortcuts.
-                // The visible close button and native dialog controls remain available.
-                iframeKeyboardCleanupRef.current = null;
-              }
-              setIsLoading(false);
-              setHasLoadError(false);
-            }}
-            onError={() => {
-              if (loadingTimeoutRef.current !== null) window.clearTimeout(loadingTimeoutRef.current);
-              setIsLoading(false);
-              setHasLoadError(true);
-              setVerifiedUrl(null);
-            }}
-          /> : null}
+                setIsLoading(false);
+                setHasLoadError(false);
+              }}
+              onError={() => {
+                imageLoadedRef.current = false;
+                if (loadingTimeoutRef.current !== null) {
+                  window.clearTimeout(loadingTimeoutRef.current);
+                  loadingTimeoutRef.current = null;
+                }
+                setIsLoading(false);
+                setHasLoadError(true);
+              }}
+            />
+          ) : null}
           <p id="certificate-viewer-status" className="sr-only" aria-live="polite">
-            {isLoading ? "Memuat pratinjau PDF." : hasLoadError ? "Pratinjau PDF gagal dimuat." : "Pratinjau PDF siap."}
+            {isLoading && !hasPreviewError ? "Memuat gambar sertifikat." : hasPreviewError ? "Gambar sertifikat gagal dimuat." : "Gambar sertifikat siap."}
           </p>
         </div>
       </div>

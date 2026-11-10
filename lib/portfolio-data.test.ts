@@ -190,6 +190,7 @@ test("education and certifications preserve the six listed certificates and opti
   assert.ok(CERTIFICATIONS_DATA[0].validity);
   assert.ok(CERTIFICATIONS_DATA.every((certification) => certification.url?.trim()));
   for (const certification of CERTIFICATIONS_DATA) {
+    assert.match(certification.url!, /\.webp$/i);
     const assetPath = decodeURIComponent(certification.url!.replace(/^\//, ""));
     assert.ok(existsSync(join(projectRoot, "public", assetPath)), `${certification.title} certificate file exists`);
   }
@@ -233,7 +234,7 @@ test("copy-email control keeps its approved address and touch-sized accessible f
   assert.match(contactSource, /min-h-\[44px\]/);
 });
 
-test("role and certificate cards omit sequence badges and certificates use an internal accessible viewer", () => {
+test("role and certificate cards omit sequence badges and certificates use an internal accessible image viewer", () => {
   const bento = readFileSync(join(projectRoot, "components/BentoGrid.tsx"), "utf8");
   const credentials = readFileSync(join(projectRoot, "components/CredentialsSection.tsx"), "utf8");
   assert.doesNotMatch(bento, /0\{idx \+ 1\}/);
@@ -243,10 +244,11 @@ test("role and certificate cards omit sequence badges and certificates use an in
   assert.match(credentials, /dialog\.showModal\(\)/);
   assert.match(credentials, /aria-haspopup="dialog"/);
   assert.match(credentials, /aria-labelledby="certificate-viewer-title"/);
-  assert.match(credentials, /<iframe/);
-  assert.match(credentials, /title=\{`Pratinjau PDF sertifikat:/);
-  assert.match(credentials, /src=\{verifiedUrl\}/);
-  assert.match(credentials, /method: "HEAD"/);
+  assert.match(credentials, /<Image/);
+  assert.match(credentials, /src=\{imageUrl\}/);
+  assert.match(credentials, /object-contain/);
+  assert.match(credentials, /alt=\{`Sertifikat/);
+  assert.doesNotMatch(credentials, /<iframe|<object|pdfViewerEnabled|application\/pdf|method: "HEAD"/);
   assert.match(credentials, /event\.key === "Escape"/);
   assert.match(credentials, /event\.target === event\.currentTarget/);
   assert.match(credentials, /previouslyFocusedRef\.current\?\.focus\(\)/);
