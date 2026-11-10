@@ -343,29 +343,31 @@ export const PROJECTS_DATA: ProjectItem[] = [
     techStack: ["Firebase", "Progressive Web App"],
     status: "Personal Project",
     websiteUrl: "https://arcrmapp.vercel.app/",
-    coverScreenshot: "/assets/Tangkapan%20Layar%20Proyek%20AR%20CRM%203.png",
+    coverScreenshot: "/assets/arcrm-dashboard-sanitized.png",
     screenshots: [
       {
-        src: "/assets/Tangkapan%20Layar%20Proyek%20AR%20CRM%203.png",
-        title: "Tangkapan layar AR CRM",
-        caption: "Tangkapan layar antarmuka aplikasi AR CRM.",
-      },
-    ],
-    previewModules: [
-      {
-        title: "Pipeline Kanban & Deal Tracking",
+        src: "/assets/arcrm-dashboard-sanitized.png",
+        title: "Dashboard AR CRM",
         caption:
-          "Ilustrasi pengelolaan tahapan pipeline dan tindak lanjut untuk setiap peluang penjualan.",
+          "Tangkapan layar asli dashboard forecast dan pengingat follow-up. Identitas akun dan nominal disamarkan untuk privasi.",
       },
       {
-        title: "Database Prospek & Lead Generation",
+        src: "/assets/arcrm-pipeline-sanitized.png",
+        title: "Pipeline Kanban AR CRM",
         caption:
-          "Ilustrasi pencatatan informasi prospek untuk membantu mengelola dan menelusuri lead.",
+          "Tangkapan layar asli papan pipeline Kanban pada workspace kosong. Nominal disamarkan untuk privasi.",
       },
       {
-        title: "Log Aktivitas & Follow-up Harian",
+        src: "/assets/arcrm-leads-finder-sanitized.png",
+        title: "Leads Finder AR CRM",
         caption:
-          "Ilustrasi pencatatan aktivitas penjualan dan jadwal tindak lanjut harian.",
+          "Tangkapan layar asli antarmuka riset prospek dan filter jabatan, tanpa menampilkan hasil pencarian atau kontak pribadi.",
+      },
+      {
+        src: "/assets/arcrm-activities-sanitized.png",
+        title: "Field Activities AR CRM",
+        caption:
+          "Tangkapan layar asli daftar aktivitas dan filter check-in pada workspace kosong, tanpa catatan bisnis pribadi.",
       },
     ],
     accessNote:

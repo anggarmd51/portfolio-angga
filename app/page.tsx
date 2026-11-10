@@ -1,4 +1,3 @@
-import SectionNavigation from "@/components/SectionNavigation";
 import HeroSection from "@/components/HeroSection";
 import BentoGrid from "@/components/BentoGrid";
 import CareerSection from "@/components/CareerSection";
@@ -19,11 +18,8 @@ export default function HomePage() {
         className="fixed -top-40 left-1/2 -translate-x-1/2 w-[900px] h-[450px] bg-emerald-500/[0.035] blur-[140px] rounded-full pointer-events-none z-0"
       />
 
-      {/* Floating navigation system */}
-      <SectionNavigation />
-
       {/* Main Content: 6 sections in continuous smooth flow */}
-      <main className="flex-1 w-full pb-[calc(7rem+env(safe-area-inset-bottom))] md:pb-12 relative z-10">
+      <main className="flex-1 w-full pb-12 relative z-10">
         {/* Section 1: Hero */}
         <HeroSection />
 

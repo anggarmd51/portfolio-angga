@@ -1,11 +1,231 @@
 "use client";
 
 import Image from "next/image";
+import { useEffect, useRef, useState, type KeyboardEvent, type MouseEvent } from "react";
 import { EDUCATION_DATA, CERTIFICATIONS_DATA } from "@/data/portfolio";
-import { GraduationCap, Award, Calendar, ExternalLink } from "lucide-react";
+import { GraduationCap, Award, Calendar, Eye, X } from "lucide-react";
 import { Reveal, StaggerContainer, StaggerItem } from "./MotionReveal";
 
+type Certificate = (typeof CERTIFICATIONS_DATA)[number];
+
+function CertificateViewer({
+  certificate,
+  onClose,
+}: {
+  certificate: Certificate;
+  onClose: () => void;
+}) {
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const previouslyFocusedRef = useRef<HTMLElement | null>(null);
+  const [viewerKey, setViewerKey] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const [hasLoadError, setHasLoadError] = useState(false);
+  const [verifiedUrl, setVerifiedUrl] = useState<string | null>(null);
+  const loadingTimeoutRef = useRef<number | null>(null);
+  const iframeKeyboardCleanupRef = useRef<(() => void) | null>(null);
+
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+
+    previouslyFocusedRef.current = document.activeElement as HTMLElement | null;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    dialog.showModal();
+    closeButtonRef.current?.focus();
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      if (dialog.open) dialog.close();
+      previouslyFocusedRef.current?.focus();
+    };
+  }, []);
+
+  useEffect(() => {
+    let active = true;
+    const controller = new AbortController();
+
+    const failPreview = () => {
+      if (!active) return;
+      if (loadingTimeoutRef.current !== null) window.clearTimeout(loadingTimeoutRef.current);
+      setIsLoading(false);
+      setHasLoadError(true);
+      setVerifiedUrl(null);
+    };
+
+    loadingTimeoutRef.current = window.setTimeout(() => {
+      failPreview();
+      controller.abort();
+    }, 10000);
+
+    const validatePdf = async () => {
+      try {
+        if (!certificate.url?.trim() || navigator.pdfViewerEnabled === false) {
+          failPreview();
+          return;
+        }
+        const response = await fetch(certificate.url, { method: "HEAD", signal: controller.signal });
+        if (!response.ok || !response.headers.get("content-type")?.includes("application/pdf")) {
+          failPreview();
+          return;
+        }
+        if (active) setVerifiedUrl(certificate.url);
+      } catch {
+        failPreview();
+      }
+    };
+    void validatePdf();
+
+    return () => {
+      active = false;
+      controller.abort();
+      if (loadingTimeoutRef.current !== null) window.clearTimeout(loadingTimeoutRef.current);
+      iframeKeyboardCleanupRef.current?.();
+      iframeKeyboardCleanupRef.current = null;
+    };
+  }, [certificate.url, viewerKey]);
+
+  const closeViewer = () => {
+    if (dialogRef.current?.open) dialogRef.current.close();
+    onClose();
+  };
+
+  const handleKeyDown = (event: KeyboardEvent<HTMLDialogElement>) => {
+    if (event.key === "Escape") {
+      event.preventDefault();
+      closeViewer();
+      return;
+    }
+
+    if (event.key !== "Tab") return;
+    const focusable = Array.from(
+      dialogRef.current?.querySelectorAll<HTMLElement>(
+        'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled])',
+      ) ?? [],
+    );
+    if (!focusable.length) return;
+
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  };
+
+  const handleBackdropClick = (event: MouseEvent<HTMLDialogElement>) => {
+    if (event.target === event.currentTarget) closeViewer();
+  };
+
+  return (
+    <dialog
+      ref={dialogRef}
+      aria-labelledby="certificate-viewer-title"
+      aria-describedby="certificate-viewer-help certificate-viewer-status"
+      onCancel={(event) => {
+        event.preventDefault();
+        closeViewer();
+      }}
+      onKeyDown={handleKeyDown}
+      onClick={handleBackdropClick}
+      className="fixed inset-0 m-0 h-full w-full max-h-none max-w-none bg-black/75 p-4 backdrop:bg-black/75 sm:p-6"
+    >
+      <div className="mx-auto flex h-full w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-white/15 bg-[#111827] shadow-2xl">
+        <div className="flex shrink-0 items-center justify-between gap-4 border-b border-white/10 px-4 py-3 sm:px-6">
+          <div className="min-w-0">
+            <h2 id="certificate-viewer-title" className="text-sm font-bold text-white sm:text-base">
+              {certificate.title}
+            </h2>
+            <p id="certificate-viewer-help" className="mt-1 text-xs text-slate-300">
+              Tekan Esc atau × untuk menutup. Setelah memakai kontrol PDF bawaan peramban, gunakan tombol ×.
+            </p>
+          </div>
+          <button
+            ref={closeButtonRef}
+            type="button"
+            onClick={closeViewer}
+            aria-label="Tutup pratinjau sertifikat"
+            className="inline-flex min-h-[44px] min-w-[44px] shrink-0 items-center justify-center rounded-lg text-slate-300 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+          >
+            <X aria-hidden="true" className="h-5 w-5" />
+          </button>
+        </div>
+
+        <div className="relative min-h-0 flex-1 bg-slate-900" aria-busy={isLoading}>
+          {isLoading && !hasLoadError ? (
+            <p className="absolute inset-0 z-10 flex items-center justify-center px-6 text-center text-sm text-slate-300" aria-live="polite">
+              Memuat pratinjau sertifikat…
+            </p>
+          ) : null}
+          {hasLoadError ? (
+            <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 px-6 text-center" aria-live="assertive">
+              <p className="text-sm text-slate-200">Pratinjau PDF tidak dapat ditampilkan di perangkat ini.</p>
+              <p className="max-w-md text-xs text-slate-300">Periksa koneksi atau gunakan peramban yang mendukung pratinjau PDF bawaan. Tidak ada file yang diunduh otomatis.</p>
+              <button
+                type="button"
+                onClick={() => {
+                  setHasLoadError(false);
+                  setIsLoading(true);
+                  setVerifiedUrl(null);
+                  setViewerKey((key) => key + 1);
+                }}
+                className="min-h-[44px] rounded-lg border border-emerald-500/30 px-4 py-2 text-sm font-semibold text-emerald-300 hover:bg-emerald-500/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+              >
+                Coba lagi
+              </button>
+            </div>
+          ) : null}
+          {verifiedUrl ? <iframe
+            key={viewerKey}
+            src={verifiedUrl}
+            tabIndex={-1}
+            title={`Pratinjau PDF sertifikat: ${certificate.title}`}
+            className={`h-full min-h-[60vh] w-full border-0 transition-opacity sm:min-h-0 ${isLoading || hasLoadError ? "opacity-0" : "opacity-100"}`}
+            onLoad={(event) => {
+              if (loadingTimeoutRef.current !== null) window.clearTimeout(loadingTimeoutRef.current);
+              iframeKeyboardCleanupRef.current?.();
+              const frameWindow = event.currentTarget.contentWindow;
+              const handleFrameKeyDown = (keyEvent: globalThis.KeyboardEvent) => {
+                if (keyEvent.key === "Escape") {
+                  keyEvent.preventDefault();
+                  closeViewer();
+                }
+              };
+              // Certificate files are same-origin; frame key events do not bubble to the dialog.
+              try {
+                frameWindow?.addEventListener("keydown", handleFrameKeyDown, true);
+                iframeKeyboardCleanupRef.current = () => frameWindow?.removeEventListener("keydown", handleFrameKeyDown, true);
+              } catch {
+                // A browser-isolated native PDF toolbar may keep its own keyboard shortcuts.
+                // The visible close button and native dialog controls remain available.
+                iframeKeyboardCleanupRef.current = null;
+              }
+              setIsLoading(false);
+              setHasLoadError(false);
+            }}
+            onError={() => {
+              if (loadingTimeoutRef.current !== null) window.clearTimeout(loadingTimeoutRef.current);
+              setIsLoading(false);
+              setHasLoadError(true);
+              setVerifiedUrl(null);
+            }}
+          /> : null}
+          <p id="certificate-viewer-status" className="sr-only" aria-live="polite">
+            {isLoading ? "Memuat pratinjau PDF." : hasLoadError ? "Pratinjau PDF gagal dimuat." : "Pratinjau PDF siap."}
+          </p>
+        </div>
+      </div>
+    </dialog>
+  );
+}
+
 export default function CredentialsSection() {
+  const [selectedCertificate, setSelectedCertificate] = useState<Certificate | null>(null);
+
   return (
     <section
       id="credentials"
@@ -90,9 +310,10 @@ export default function CredentialsSection() {
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
             staggerChildren={0.08}
           >
-            {CERTIFICATIONS_DATA.map((cert) => (
-              <StaggerItem key={cert.id} className="flex">
-                <article className="w-full glass-card p-5 sm:p-6 rounded-2xl border border-white/10 hover:border-emerald-500/30 transition-all flex flex-col justify-between">
+            {CERTIFICATIONS_DATA.map((cert) => {
+              const hasCertificateUrl = Boolean(cert.url?.trim());
+              const cardContent = (
+                <>
                   <div>
                     <div className="flex items-start justify-between gap-3 mb-3">
                       <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0">
@@ -117,23 +338,46 @@ export default function CredentialsSection() {
                     </span>
                   </div>
 
-                  {cert.url?.trim() ? (
-                    <a
-                      href={cert.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="mt-4 min-h-[44px] inline-flex items-center justify-center gap-2 rounded-lg border border-emerald-500/30 px-3 py-2 text-xs font-semibold text-emerald-300 hover:bg-emerald-500/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
-                    >
-                      Verifikasi sertifikat
-                      <ExternalLink aria-hidden="true" className="w-3.5 h-3.5" />
-                    </a>
+                  {hasCertificateUrl ? (
+                    <span className="mt-4 min-h-[44px] inline-flex items-center justify-center gap-2 rounded-lg border border-emerald-500/30 px-3 py-2 text-xs font-semibold text-emerald-300">
+                      Lihat pratinjau sertifikat
+                      <Eye aria-hidden="true" className="w-3.5 h-3.5" />
+                    </span>
                   ) : null}
-                </article>
-              </StaggerItem>
-            ))}
+                </>
+              );
+
+              return (
+                <StaggerItem key={cert.id} className="flex">
+                  {hasCertificateUrl ? (
+                    <button
+                      type="button"
+                      onClick={() => setSelectedCertificate(cert)}
+                      aria-label={`Buka sertifikat: ${cert.title}`}
+                      aria-haspopup="dialog"
+                      aria-expanded={selectedCertificate?.id === cert.id}
+                      className="w-full glass-card p-5 sm:p-6 rounded-2xl border border-white/10 hover:border-emerald-500/30 transition-all flex flex-col justify-between text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+                    >
+                      {cardContent}
+                    </button>
+                  ) : (
+                    <article className="w-full glass-card p-5 sm:p-6 rounded-2xl border border-white/10 flex flex-col justify-between">
+                      {cardContent}
+                    </article>
+                  )}
+                </StaggerItem>
+              );
+            })}
           </StaggerContainer>
         </Reveal>
       </div>
+
+      {selectedCertificate ? (
+        <CertificateViewer
+          certificate={selectedCertificate}
+          onClose={() => setSelectedCertificate(null)}
+        />
+      ) : null}
     </section>
   );
 }

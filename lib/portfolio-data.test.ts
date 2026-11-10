@@ -131,16 +131,17 @@ test("all three projects provide purpose, scope, status, tech stack, and local p
   assert.match(PROJECTS_DATA[2].description, /layanan perawatan otomotif/);
 
   const arcrm = PROJECTS_DATA.find((project) => project.id === "arcrm");
-  assert.equal(arcrm?.screenshots.length, 1);
-  assert.equal(arcrm?.screenshots[0]?.title, "Tangkapan layar AR CRM");
-  assert.match(arcrm?.screenshots[0]?.caption ?? "", /^Tangkapan layar/);
-  assert.equal(arcrm?.previewModules?.length, 3);
-  assert.ok(arcrm?.previewModules?.every((module) => module.caption.startsWith("Ilustrasi")));
-  assert.deepEqual(arcrm?.previewModules?.map((module) => module.title), [
-    "Pipeline Kanban & Deal Tracking",
-    "Database Prospek & Lead Generation",
-    "Log Aktivitas & Follow-up Harian",
+  assert.equal(arcrm?.screenshots.length, 4);
+  assert.equal(arcrm?.coverScreenshot, "/assets/arcrm-dashboard-sanitized.png");
+  assert.equal(arcrm?.previewModules, undefined);
+  assert.deepEqual(arcrm?.screenshots.map((screenshot) => screenshot.src), [
+    "/assets/arcrm-dashboard-sanitized.png",
+    "/assets/arcrm-pipeline-sanitized.png",
+    "/assets/arcrm-leads-finder-sanitized.png",
+    "/assets/arcrm-activities-sanitized.png",
   ]);
+  assert.ok(arcrm?.screenshots.every((screenshot) => screenshot.caption.startsWith("Tangkapan layar asli")));
+  assert.equal(new Set(arcrm?.screenshots.map((screenshot) => screenshot.src)).size, 4);
   assert.match(arcrm?.accessNote ?? "", /autentikasi Google Sign-In/);
 });
 
@@ -232,13 +233,34 @@ test("copy-email control keeps its approved address and touch-sized accessible f
   assert.match(contactSource, /min-h-\[44px\]/);
 });
 
-test("role and certificate cards omit sequence badges and certificate links open safely", () => {
+test("role and certificate cards omit sequence badges and certificates use an internal accessible viewer", () => {
   const bento = readFileSync(join(projectRoot, "components/BentoGrid.tsx"), "utf8");
   const credentials = readFileSync(join(projectRoot, "components/CredentialsSection.tsx"), "utf8");
   assert.doesNotMatch(bento, /0\{idx \+ 1\}/);
   assert.doesNotMatch(credentials, /0\{idx \+ 1\}/);
-  assert.match(credentials, /target="_blank"/);
-  assert.match(credentials, /rel="noopener noreferrer"/);
+  assert.doesNotMatch(credentials, /<a\b|target="_blank"|\bdownload[=\s>]/);
+  assert.match(credentials, /<dialog/);
+  assert.match(credentials, /dialog\.showModal\(\)/);
+  assert.match(credentials, /aria-haspopup="dialog"/);
+  assert.match(credentials, /aria-labelledby="certificate-viewer-title"/);
+  assert.match(credentials, /<iframe/);
+  assert.match(credentials, /title=\{`Pratinjau PDF sertifikat:/);
+  assert.match(credentials, /src=\{verifiedUrl\}/);
+  assert.match(credentials, /method: "HEAD"/);
+  assert.match(credentials, /event\.key === "Escape"/);
+  assert.match(credentials, /event\.target === event\.currentTarget/);
+  assert.match(credentials, /previouslyFocusedRef\.current\?\.focus\(\)/);
+  assert.match(credentials, /Coba lagi/);
+});
+
+test("all SectionNavigation usage is removed while six content sections remain", () => {
+  const page = readFileSync(join(projectRoot, "app/page.tsx"), "utf8");
+  const layout = readFileSync(join(projectRoot, "app/layout.tsx"), "utf8");
+  assert.doesNotMatch(`${page}\n${layout}`, /SectionNavigation|Navigasi Samping/);
+  for (const section of ["HeroSection", "BentoGrid", "CareerSection", "ProjectShowcase", "CredentialsSection", "ContactSection"]) {
+    assert.match(page, new RegExp(`<${section}\\s*/>`));
+  }
+  assert.doesNotMatch(page, /7rem\+env\(safe-area-inset-bottom\)/);
 });
 
 test("sales workflow renders a keyboard-operable single active panel", () => {
