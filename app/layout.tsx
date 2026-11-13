@@ -20,10 +20,13 @@ export const viewport: Viewport = {
 const title = "Muhammad Angga Ramadhan | B2B Sales & Business Development";
 const description =
   "Portofolio profesional B2B Sales, Account Management, dan Business Development. Berpengalaman dalam pipeline management dan SaaS CRM.";
-const ogImage = "https://angga-ramadhan.vercel.app/assets/og-image.png";
+const ogImage = "https://www.anggaramadhan.my.id/assets/og-image.png";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://angga-ramadhan.vercel.app"),
+  metadataBase: new URL("https://www.anggaramadhan.my.id"),
+  alternates: {
+    canonical: "/",
+  },
   title,
   description,
   icons: {
@@ -35,7 +38,7 @@ export const metadata: Metadata = {
     title,
     description,
     type: "website",
-    url: "https://angga-ramadhan.vercel.app",
+    url: "https://www.anggaramadhan.my.id",
     siteName: "Muhammad Angga Ramadhan",
     locale: "id_ID",
     images: [

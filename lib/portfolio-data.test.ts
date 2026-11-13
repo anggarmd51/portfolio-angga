@@ -164,7 +164,10 @@ test("metadata and share card use the approved title and description", () => {
   const navigation = readFileSync(join(projectRoot, "components/SectionNavigation.tsx"), "utf8");
   assert.match(layout, /Muhammad Angga Ramadhan \| B2B Sales & Business Development/);
   assert.match(layout, /Portofolio profesional B2B Sales, Account Management, dan Business Development\. Berpengalaman dalam pipeline management dan SaaS CRM\./);
-  assert.match(layout, /https:\/\/angga-ramadhan\.vercel\.app\/assets\/og-image\.png/);
+  assert.match(layout, /https:\/\/www\.anggaramadhan\.my\.id\/assets\/og-image\.png/);
+  assert.match(layout, /metadataBase: new URL\("https:\/\/www\.anggaramadhan\.my\.id"\)/);
+  assert.match(layout, /canonical: "\/"/);
+  assert.match(layout, /url: "https:\/\/www\.anggaramadhan\.my\.id"/);
   assert.match(layout, /width: 1200/);
   assert.match(layout, /height: 630/);
   assert.match(layout, /alt: "Muhammad Angga Ramadhan B2B Sales Portfolio"/);
