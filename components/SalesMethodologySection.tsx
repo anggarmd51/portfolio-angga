@@ -3,9 +3,16 @@
 import { useRef, useState, type KeyboardEvent } from "react";
 import { SALES_WORKFLOW_STEPS } from "@/data/portfolio";
 
+const DETAIL_LABELS = [
+  { key: "objective", label: "Objective" },
+  { key: "activity", label: "Aktivitas Utama" },
+  { key: "output", label: "Output Proses" },
+] as const;
+
 export default function SalesMethodologySection() {
   const [activeIndex, setActiveIndex] = useState(0);
   const tabRefs = useRef<Array<HTMLButtonElement | null>>([]);
+  const activeStep = SALES_WORKFLOW_STEPS[activeIndex];
 
   const handleKeyDown = (event: KeyboardEvent<HTMLButtonElement>, currentIndex: number) => {
     let nextIndex: number | undefined;
@@ -25,8 +32,6 @@ export default function SalesMethodologySection() {
       tabRefs.current[nextIndex]?.focus();
     }
   };
-
-  const activeStep = SALES_WORKFLOW_STEPS[activeIndex];
 
   return (
     <section
@@ -50,65 +55,110 @@ export default function SalesMethodologySection() {
           </p>
         </header>
 
-        <div
-          role="tablist"
-          aria-label="Enam tahap alur penjualan B2B"
-          aria-orientation="horizontal"
-          className="grid grid-cols-2 border-y border-muted-text/20 sm:grid-cols-3 lg:grid-cols-6"
-        >
-          {SALES_WORKFLOW_STEPS.map((step, index) => {
-            const active = index === activeIndex;
-            return (
-              <button
-                key={step.id}
-                ref={(element) => {
-                  tabRefs.current[index] = element;
-                }}
-                id={`workflow-tab-${step.id}`}
-                type="button"
-                role="tab"
-                aria-selected={active}
-                aria-controls="sales-workflow-panel"
-                tabIndex={active ? 0 : -1}
-                onClick={() => setActiveIndex(index)}
-                onKeyDown={(event) => handleKeyDown(event, index)}
-                className={`min-h-[76px] border-b border-muted-text/15 px-3 py-3 text-left transition-colors focus-visible:z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signature-teal sm:px-4 lg:border-b-0 lg:border-r lg:last:border-r-0 ${
-                  active
-                    ? "bg-signature-teal/[0.08]"
-                    : "hover:bg-white/[0.035]"
-                }`}
+        <div className="sales-stepper-shell">
+          <div className="sales-stepper-scroll" aria-label="Jalur tahap penjualan, geser horizontal untuk melihat semua tahap">
+            <div
+              role="tablist"
+              aria-label="Enam tahap alur penjualan B2B"
+              aria-orientation="horizontal"
+              className="sales-stepper-track"
+            >
+              <svg
+                aria-hidden="true"
+                focusable="false"
+                viewBox="0 0 1000 4"
+                preserveAspectRatio="none"
+                className="sales-stepper-line"
               >
-                <span className="block font-mono text-[11px] tracking-wide text-muted-text">
-                  {step.number}
-                </span>
-                <span className={`mt-1 block text-xs font-semibold leading-5 sm:text-sm ${active ? "text-soft-white" : "text-soft-white/75"}`}>
-                  {step.label}
-                </span>
-              </button>
-            );
-          })}
+                <path d="M 0 2 H 1000" pathLength="1" className="sales-stepper-line-track" />
+                <path
+                  d="M 0 2 H 1000"
+                  pathLength="1"
+                  strokeDasharray="1"
+                  strokeDashoffset={1 - activeIndex / (SALES_WORKFLOW_STEPS.length - 1)}
+                  className="sales-stepper-line-progress"
+                />
+              </svg>
+
+              {SALES_WORKFLOW_STEPS.map((step, index) => {
+                const active = index === activeIndex;
+                const complete = index < activeIndex;
+                return (
+                  <button
+                    key={step.id}
+                    ref={(element) => {
+                      tabRefs.current[index] = element;
+                    }}
+                    id={`workflow-tab-${step.id}`}
+                    type="button"
+                    role="tab"
+                    aria-selected={active}
+                    aria-controls="sales-workflow-panel"
+                    aria-label={`Tahap ${step.number}: ${step.label}`}
+                    tabIndex={active ? 0 : -1}
+                    onClick={() => setActiveIndex(index)}
+                    onKeyDown={(event) => handleKeyDown(event, index)}
+                    className="sales-stepper-node focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signature-teal focus-visible:ring-offset-4 focus-visible:ring-offset-obsidian"
+                  >
+                    <span
+                      aria-hidden="true"
+                      className={`sales-stepper-number ${active ? "is-active" : complete ? "is-complete" : ""}`}
+                    >
+                      {step.number}
+                    </span>
+                    <span className={`sales-stepper-label ${active ? "is-active" : ""}`}>
+                      {step.label}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+          <p className="mt-3 text-center text-[11px] font-medium tracking-wide text-muted-text sm:hidden">
+            Geser untuk melihat semua tahapan
+          </p>
         </div>
 
-        {activeStep && (
+        {activeStep ? (
           <div
             key={activeStep.id}
             id="sales-workflow-panel"
             role="tabpanel"
             aria-labelledby={`workflow-tab-${activeStep.id}`}
+            aria-live="polite"
             tabIndex={0}
-            className="min-h-36 border-b border-muted-text/20 py-7 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signature-teal sm:py-9"
+            className="sales-journey-panel mt-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signature-teal sm:mt-10"
           >
-            <p className="text-xs font-semibold uppercase tracking-[0.13em] text-muted-text">
-              Tahap {activeStep.number}
-            </p>
-            <h3 className="mt-2 font-heading text-2xl font-bold tracking-[-0.03em] text-soft-white sm:text-3xl">
-              {activeStep.title.replace(/^\d+\s/, "")}
-            </h3>
-            <p className="mt-3 max-w-3xl text-sm leading-7 text-muted-text sm:text-base">
-              {activeStep.description}
-            </p>
+            <div className="mb-6 flex flex-wrap items-end justify-between gap-3 border-b border-white/10 pb-5 sm:mb-7">
+              <div>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-signature-teal">
+                  Tahap {activeStep.number} / 06
+                </p>
+                <h3 className="mt-2 font-heading text-2xl font-semibold tracking-[-0.03em] text-soft-white sm:text-3xl">
+                  {activeStep.label}
+                </h3>
+              </div>
+              <span className="font-mono text-sm text-muted-text">{activeStep.number} — 06</span>
+            </div>
+
+            <div className="grid gap-4 md:grid-cols-3 md:gap-5">
+              {DETAIL_LABELS.map(({ key, label }, index) => (
+                <article key={key} className="sales-journey-detail">
+                  <div className="mb-4 flex items-center gap-3">
+                    <span className="font-mono text-[11px] text-signature-teal">0{index + 1}</span>
+                    <span className="h-px flex-1 bg-white/10" />
+                  </div>
+                  <h4 className="text-[11px] font-bold uppercase tracking-[0.14em] text-muted-text">
+                    {label}
+                  </h4>
+                  <p className="mt-3 text-sm leading-7 text-soft-white/90">
+                    {activeStep[key]}
+                  </p>
+                </article>
+              ))}
+            </div>
           </div>
-        )}
+        ) : null}
       </div>
     </section>
   );

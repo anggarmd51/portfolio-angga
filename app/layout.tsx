@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Instrument_Serif, Inter, Manrope } from "next/font/google";
 import { MotionConfig } from "motion/react";
 import { Analytics } from "@vercel/analytics/next";
+import ScrollProgress from "@/components/ScrollProgress";
 import "./globals.css";
 
 const inter = Inter({
@@ -86,7 +87,8 @@ export default function RootLayout({
         suppressHydrationWarning
         className="min-h-screen bg-obsidian text-soft-white font-sans antialiased selection:bg-signature-teal/20 selection:text-soft-white"
       >
-        <MotionConfig reducedMotion="never">{children}</MotionConfig>
+        <ScrollProgress />
+        <MotionConfig reducedMotion="user">{children}</MotionConfig>
         {process.env.VERCEL === "1" ? <Analytics /> : null}
       </body>
     </html>

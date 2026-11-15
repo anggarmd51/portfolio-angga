@@ -207,6 +207,7 @@ function CertificateViewer({
 
 export default function CredentialsSection() {
   const [selectedCertificate, setSelectedCertificate] = useState<Certificate | null>(null);
+  const featuredCertificate = CERTIFICATIONS_DATA[0];
 
   return (
     <section
@@ -232,7 +233,7 @@ export default function CredentialsSection() {
           </p>
         </Reveal>
 
-        <Reveal y={22} duration={0.6}>
+        <Reveal y={22} duration={0.45}>
           <div className="mb-14 glass-card p-6 sm:p-8 rounded-3xl border border-white/10 shadow-xl relative overflow-hidden">
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
               <div className="flex items-center gap-5 min-w-0">
@@ -281,19 +282,58 @@ export default function CredentialsSection() {
           </div>
         </Reveal>
 
-        <Reveal y={20} duration={0.55}>
+        <Reveal y={20} duration={0.45}>
           <div className="flex items-center gap-2 mb-6">
             <Award className="w-4 h-4 text-emerald-400" />
             <h3 className="text-sm sm:text-base font-bold text-white uppercase tracking-wider">
-              Sertifikasi & Pelatihan ({CERTIFICATIONS_DATA.length} Sertifikat)
+              Credential Gallery · 6 Sertifikat
             </h3>
           </div>
+          {featuredCertificate ? (
+            <article className="featured-credential-card mb-6">
+              <div className="min-w-0 flex-1">
+                <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-signature-teal/25 bg-signature-teal/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-signature-teal">
+                  <Award aria-hidden="true" className="h-3.5 w-3.5" />
+                  Featured Credential
+                </div>
+                <h4 className="font-heading text-xl font-semibold tracking-[-0.025em] text-soft-white sm:text-2xl">
+                  {featuredCertificate.title}
+                </h4>
+                <p className="mt-1 text-sm font-semibold text-muted-text">
+                  {featuredCertificate.issuer}
+                </p>
+                <p className="mt-4 max-w-2xl text-sm leading-6 text-soft-white/85">
+                  Pemegang sertifikat dinyatakan kompeten dalam prinsip dasar manajemen penjualan; kredensial ini mencatat pengujian atas praktik terbaik dan kesiapan untuk tanggung jawab manajer penjualan.
+                </p>
+                <p className="mt-4 inline-flex items-center gap-2 text-xs text-muted-text">
+                  <Calendar aria-hidden="true" className="h-4 w-4 text-signature-teal" />
+                  <span className="font-semibold">Masa berlaku:</span>
+                  <span className="font-mono">{featuredCertificate.validity ?? featuredCertificate.period}</span>
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setSelectedCertificate(featuredCertificate)}
+                aria-label={`Lihat pratinjau sertifikat: ${featuredCertificate.title}`}
+                aria-haspopup="dialog"
+                aria-expanded={selectedCertificate?.id === featuredCertificate.id}
+                className="featured-credential-action"
+              >
+                Lihat Pratinjau Sertifikat
+                <Eye aria-hidden="true" className="h-4 w-4" />
+              </button>
+            </article>
+          ) : null}
+
+          <h4 className="mb-4 text-xs font-bold uppercase tracking-[0.14em] text-muted-text">
+            Sertifikat Pendukung · 5
+          </h4>
 
           <StaggerContainer
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
             staggerChildren={0.08}
           >
-            {CERTIFICATIONS_DATA.map((cert) => {
+            {CERTIFICATIONS_DATA.slice(1).map((cert) => {
               const hasCertificateUrl = Boolean(cert.url?.trim());
               const cardContent = (
                 <>

@@ -18,7 +18,7 @@ export function Reveal({
   className = "",
   delay = 0,
   y = 22,
-  duration = 0.55,
+  duration = 0.4,
   amount = 0.15,
   onMouseMove,
   onMouseLeave,
@@ -90,7 +90,7 @@ const itemVariants: Variants = {
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.55,
+      duration: 0.4,
       ease: [0.21, 0.47, 0.32, 0.98],
     },
   },

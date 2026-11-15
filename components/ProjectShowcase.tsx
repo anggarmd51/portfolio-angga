@@ -147,7 +147,7 @@ export default function ProjectShowcase() {
           {PROJECTS_DATA.map((project, projectIndex) => {
             const isArcrm = project.id === "arcrm";
             return (
-              <Reveal key={project.id} y={24} duration={0.6}>
+              <Reveal key={project.id} y={24} duration={0.45}>
                 <article className="group/project grid grid-cols-1 border-y border-muted-text/20 lg:grid-cols-12">
                   <div className={`${isArcrm ? "lg:col-span-7" : "lg:col-span-6"} border-b border-muted-text/15 py-5 lg:border-b-0 lg:border-r lg:py-8 lg:pr-8`}>
                     <div className="overflow-hidden rounded-xl border border-white/10 bg-[#0D121B] p-2.5 shadow-2xl sm:p-3">

@@ -11,6 +11,7 @@ import {
   CONTACT_DATA,
   NAVIGATION_SECTIONS,
   SALES_WORKFLOW_STEPS,
+  DIGITAL_ECOSYSTEM_CATEGORIES,
 } from "../data/portfolio";
 
 const projectRoot = process.cwd();
@@ -96,7 +97,11 @@ test("B2B sales workflow contains the six approved stages in order", () => {
       "06 Account Retention",
     ]
   );
-  assert.ok(SALES_WORKFLOW_STEPS.every((step) => step.description.trim().length > 0));
+  assert.ok(
+    SALES_WORKFLOW_STEPS.every((step) =>
+      [step.objective, step.activity, step.output].every((detail) => detail.trim().length > 0)
+    )
+  );
 });
 
 test("career history places the current Wavecomindo role above the six earlier roles", () => {
@@ -224,7 +229,7 @@ test("floating WhatsApp CTA is accessible, mobile-only, animated, and gated by s
   assert.match(cta, /aria-label=/);
   assert.match(cta, /focus-visible:ring/);
   assert.match(cta, /AnimatePresence/);
-  assert.match(layout, /MotionConfig reducedMotion="never"/);
+  assert.match(layout, /MotionConfig reducedMotion="user"/);
   assert.match(page, /<FloatingCTA \/>/);
 });
 
@@ -244,7 +249,7 @@ test("education and certifications preserve the six listed certificates and opti
   assert.equal(CERTIFICATIONS_DATA[3].period, "Oktober 2026");
   assert.equal(CERTIFICATIONS_DATA[4].title, "Frictionless Sales Certified");
   assert.equal(CERTIFICATIONS_DATA[4].issuer, "HubSpot Academy");
-  assert.ok(CERTIFICATIONS_DATA[0].validity);
+  assert.equal(CERTIFICATIONS_DATA[0].validity, "8 Okt 2026 – 6 Nov 2028");
   assert.ok(CERTIFICATIONS_DATA.every((certification) => certification.url?.trim()));
   for (const certification of CERTIFICATIONS_DATA) {
     assert.match(certification.url!, /\.webp$/i);
@@ -256,7 +261,9 @@ test("education and certifications preserve the six listed certificates and opti
 test("contact presents six actions in the approved order and career positioning", () => {
   assert.equal(CONTACT_DATA.panelTitle, "Peluang Karier & Kolaborasi");
   assert.equal(CONTACT_DATA.channels.length, 6);
-  assert.match(CONTACT_DATA.subheadline, /B2B Sales, Account Management, Sales Manager atau Business Development Manager/);
+  assert.equal(CONTACT_DATA.headline, "Membangun Pertumbuhan Bisnis Dimulai dari Kolaborasi yang Tepat.");
+  assert.match(CONTACT_DATA.subheadline, /B2B Sales, Account Management, Sales Manager, Business Development Manager/);
+  assert.match(CONTACT_DATA.subheadline, /kolaborasi solusi digital/);
   const labels = CONTACT_DATA.channels.map((channel) => channel.label);
   assert.deepEqual(labels, [
     "Chat via WhatsApp",
@@ -311,6 +318,11 @@ test("role and certificate cards omit sequence badges and certificates use an in
   assert.match(credentials, /Coba lagi/);
   assert.match(credentials, /animate-pulse/);
   assert.match(credentials, /priority/);
+  assert.match(credentials, /Featured Credential/);
+  assert.match(credentials, /Lihat Pratinjau Sertifikat/);
+  assert.match(credentials, /CERTIFICATIONS_DATA\.slice\(1\)/);
+  assert.match(credentials, /Masa berlaku:/);
+  assert.match(credentials, /pengujian atas praktik terbaik dan kesiapan untuk tanggung jawab manajer penjualan/);
 });
 
 test("page renders the nine requested content sections in exact order and preserves FloatingCTA", () => {
@@ -333,28 +345,32 @@ test("page renders the nine requested content sections in exact order and preser
   assert.doesNotMatch(page, /7rem\+env\(safe-area-inset-bottom\)/);
 });
 
-test("sales workflow renders a keyboard-operable single active panel", () => {
+test("sales journey and digital ecosystem render accessible interactive data", () => {
   const methodology = readFileSync(join(projectRoot, "components/SalesMethodologySection.tsx"), "utf8");
   const ecosystem = readFileSync(join(projectRoot, "components/DigitalEcosystemSection.tsx"), "utf8");
-  const marquee = readFileSync(join(projectRoot, "components/ToolMarquee.tsx"), "utf8");
   const showcase = readFileSync(join(projectRoot, "components/ProjectShowcase.tsx"), "utf8");
+  const css = readFileSync(join(projectRoot, "app/globals.css"), "utf8");
   assert.match(methodology, /role="tablist"/);
   assert.match(methodology, /role="tabpanel"/);
   assert.match(methodology, /ArrowRight/);
   assert.match(methodology, /event\.key === "Home"/);
-  assert.match(ecosystem, /<ToolMarquee\s*\/>/);
-  assert.equal((marquee.match(/slug: "/g) ?? []).length, 16);
-  assert.match(marquee, /slug: "linkedin"/);
-  assert.match(marquee, /slug: "visualstudiocode"/);
-  assert.match(marquee, /cdn\.simpleicons\.org/);
-  assert.match(marquee, /slug: "claude", color: "D97757", label: "Claude"/);
-  assert.match(marquee, /tool-marquee-item/);
-  assert.match(marquee, /<span>\{logo\.label\}<\/span>/);
-  assert.match(marquee, /<LogoGroup decorative \/>/);
-  assert.doesNotMatch(marquee, /prefers-reduced-motion|data-reduced-motion/);
-  for (const asset of ["apollo.png", "chatgpt.svg", "manus.svg", "antigravity.svg", "linkedin.svg", "visualstudiocode.svg"]) {
-    assert.ok(existsSync(join(projectRoot, "public", "assets", "tools", asset)), `${asset} logo asset exists`);
-  }
+  assert.match(methodology, /className="sales-stepper-line"/);
+  assert.match(methodology, /strokeDashoffset=\{1 - activeIndex \//);
+  assert.match(methodology, /Objective/);
+  assert.match(methodology, /Aktivitas Utama/);
+  assert.match(methodology, /Output Proses/);
+  assert.match(ecosystem, /role="tablist"/);
+  assert.match(ecosystem, /role="tabpanel"/);
+  assert.match(ecosystem, /aria-selected=\{active\}/);
+  assert.deepEqual(
+    DIGITAL_ECOSYSTEM_CATEGORIES.map(({ label }) => label),
+    ["Sales & Business Development", "AI & Productivity", "Digital Product & Development"]
+  );
+  assert.deepEqual(DIGITAL_ECOSYSTEM_CATEGORIES.map(({ items }) => items.length), [4, 5, 8]);
+  assert.ok(DIGITAL_ECOSYSTEM_CATEGORIES.every((category) =>
+    category.items.every((tool) => tool.name.trim() && tool.description.trim() && tool.icon.trim())
+  ));
+  assert.doesNotMatch(`${ecosystem}\n${css}`, /ToolMarquee|tool-marquee|@keyframes\s+tool-marquee/i);
   assert.match(showcase, /Tangkapan Layar Aplikasi/);
   assert.match(showcase, /Ilustrasi Modul Fitur/);
   assert.match(showcase, /Memuat pratinjau gambar/);
@@ -391,28 +407,23 @@ test("presentation scroll-snap uses proximity at all sizes and keeps mobile sect
   assert.match(css, /scrollbar-width: none/);
   assert.match(css, /min-height: 100svh/);
   assert.doesNotMatch(css, /scroll-snap-type: y mandatory/);
-  assert.doesNotMatch(css, /prefers-reduced-motion|animation:\s*none\s*!important/);
+  assert.match(css, /prefers-reduced-motion:\s*reduce/);
+  assert.match(css, /\.motion-reveal\s*\{\s*opacity: 1 !important;\s*transform: none !important;/);
 });
 
-test("all site motion is independent of the OS reduced-motion setting", () => {
-  const motionFiles = [
-    "components/ContactSection.tsx",
-    "components/ToolMarquee.tsx",
-    "components/MotionReveal.tsx",
-    "components/HeroSection.tsx",
-    "components/CareerSection.tsx",
-    "components/SalesMethodologySection.tsx",
-  ];
-  for (const file of motionFiles) {
-    const source = readFileSync(join(projectRoot, file), "utf8");
-    assert.doesNotMatch(source, /prefers-reduced-motion|shouldReduceMotion|prefersReducedMotion/, `${file} has no reduced-motion gate`);
-  }
+test("site motion respects reduced-motion and displays scroll progress", () => {
   const css = readFileSync(join(projectRoot, "app/globals.css"), "utf8");
-  assert.doesNotMatch(css, /prefers-reduced-motion/);
-  assert.match(css, /animation: tool-marquee 36s linear infinite/);
   const layout = readFileSync(join(projectRoot, "app/layout.tsx"), "utf8");
-  assert.match(layout, /MotionConfig reducedMotion="never"/);
+  assert.match(layout, /MotionConfig reducedMotion="user"/);
+  assert.match(layout, /<ScrollProgress \/>/);
+  const progress = readFileSync(join(projectRoot, "components/ScrollProgress.tsx"), "utf8");
+  assert.match(progress, /--scroll-progress/);
+  assert.match(progress, /className="scroll-progress-indicator"/);
+  assert.match(css, /height: 2px/);
+  assert.doesNotMatch(css, /tool-marquee|@keyframes\s+tool-marquee/i);
   const motionSource = readFileSync(join(projectRoot, "components/MotionReveal.tsx"), "utf8");
   assert.match(motionSource, /initial=\{\{ opacity: 0, y \}\}/);
   assert.match(motionSource, /whileInView=\{\{ opacity: 1, y: 0 \}\}/);
+  assert.match(motionSource, /duration = 0\.4/);
+  assert.match(motionSource, /duration: 0\.4/);
 });

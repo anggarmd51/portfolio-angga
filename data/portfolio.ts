@@ -99,43 +99,90 @@ export const SALES_WORKFLOW_STEPS = [
     id: "prospecting",
     number: "01",
     label: "Prospecting",
-    title: "01 Prospecting",
-    description: "Pemetaan pasar B2B & identifikasi akun potensial di sektor target.",
+    objective: "Menentukan segmen pasar dan akun yang paling relevan untuk dijangkau.",
+    activity: "Memetakan industri dan profil perusahaan, menelusuri akun potensial, mengidentifikasi pemangku kepentingan, lalu mencatat alasan kecocokan dan pintu masuk percakapan.",
+    output: "Daftar akun prioritas dengan konteks awal dan rencana pendekatan untuk discovery.",
   },
   {
     id: "discovery",
     number: "02",
     label: "Discovery",
-    title: "02 Discovery",
-    description: "Analisis kendala operasional klien (HR/Retail/Pembiayaan) & kualifikasi kebutuhan.",
+    objective: "Memahami kebutuhan bisnis, proses kerja saat ini, serta pihak yang terlibat dalam keputusan.",
+    activity: "Menggali kendala operasional melalui pertanyaan konsultatif; memvalidasi kebutuhan, kriteria keberhasilan, pengambil keputusan, dan proses persetujuan.",
+    output: "Ringkasan kebutuhan tervalidasi, pemangku kepentingan, kriteria solusi, dan langkah lanjutan yang disepakati.",
   },
   {
     id: "solution-demo",
     number: "03",
     label: "Solution Demo",
-    title: "03 Solution Demo",
-    description: "Presentasi produk terarah & simulasi penggunaan sistem kepada pengambil keputusan.",
+    objective: "Menghubungkan kebutuhan yang tervalidasi dengan solusi yang relevan.",
+    activity: "Menyusun alur demo berdasarkan konteks klien; memperagakan skenario penggunaan, menjawab pertanyaan, dan mengklarifikasi kesenjangan.",
+    output: "Kecocokan solusi dan pertanyaan terbuka yang terdokumentasi sebagai bahan penawaran.",
   },
   {
     id: "commercial-closing",
     number: "04",
     label: "Commercial & Closing",
-    title: "04 Commercial & Closing",
-    description: "Penyusunan proposal penawaran, negosiasi klausul, dan penutupan kontrak.",
+    objective: "Menyepakati ruang lingkup dan ketentuan kerja sama yang dapat dijalankan.",
+    activity: "Menyusun proposal, membahas ketentuan komersial, mengoordinasikan pemangku kepentingan, serta menindaklanjuti pertanyaan dan proses persetujuan.",
+    output: "Proposal dan pokok ketentuan ditinjau bersama, status keputusan terdokumentasi, serta serah-terima implementasi disepakati.",
   },
   {
     id: "onboarding",
     number: "05",
     label: "Onboarding",
-    title: "05 Onboarding",
-    description: "Pendampingan implementasi awal bersama tim teknis hingga sistem berjalan stabil.",
+    objective: "Menyiapkan transisi dari kesepakatan ke penggunaan awal yang jelas.",
+    activity: "Mengalihkan konteks kebutuhan, menyelaraskan pemilik aksi dan jadwal dengan tim implementasi atau teknis, lalu mendampingi penggunaan awal.",
+    output: "Rencana onboarding, penanggung jawab, ruang lingkup, dan tindak lanjut awal terdokumentasi.",
   },
   {
     id: "account-retention",
     number: "06",
     label: "Account Retention",
-    title: "06 Account Retention",
-    description: "Evaluasi berkala dan penjagaan relasi jangka panjang untuk mencegah churn.",
+    objective: "Menjaga nilai kerja sama dan hubungan setelah onboarding.",
+    activity: "Melakukan check-in berkala, meninjau umpan balik penggunaan, mengoordinasikan tindak lanjut kendala, serta membahas kebutuhan lanjutan.",
+    output: "Catatan evaluasi akun, isu atau risiko yang perlu ditangani, dan langkah tindak lanjut atau pembaruan yang disepakati.",
+  },
+] as const;
+
+export const DIGITAL_ECOSYSTEM_CATEGORIES = [
+  {
+    id: "sales-business-development",
+    number: "01",
+    label: "Sales & Business Development",
+    items: [
+      { id: "hubspot", name: "HubSpot CRM", icon: "briefcase", description: "Mengelola kontak, pipeline, dan aktivitas tindak lanjut prospek." },
+      { id: "linkedin-sales-navigator", name: "LinkedIn Sales Navigator", icon: "linkedin", description: "Menelusuri akun dan profesional untuk riset serta pemetaan prospek B2B." },
+      { id: "apollo", name: "Apollo.io", icon: "search", description: "Mendukung pencarian prospek dan riset akun untuk proses outbound B2B." },
+      { id: "google-workspace", name: "Google Workspace", icon: "mail", description: "Mendukung email, dokumen, kalender, dan kolaborasi kerja." },
+    ],
+  },
+  {
+    id: "ai-productivity",
+    number: "02",
+    label: "AI & Productivity",
+    items: [
+      { id: "chatgpt", name: "ChatGPT", icon: "sparkles", description: "Asisten AI untuk membantu riset, penyusunan draf, dan eksplorasi ide kerja." },
+      { id: "gemini", name: "Gemini", icon: "sparkles", description: "Asisten AI untuk membantu merangkum informasi dan mengembangkan ide." },
+      { id: "claude", name: "Claude", icon: "message", description: "Asisten AI untuk membantu analisis teks dan penyusunan materi." },
+      { id: "notion", name: "Notion", icon: "panels", description: "Menyusun catatan, dokumentasi, dan basis pengetahuan kerja." },
+      { id: "cue", name: "Cue", icon: "bot", description: "Asisten AI untuk membantu mengatur riset, penulisan, dan alur kerja." },
+    ],
+  },
+  {
+    id: "digital-product-development",
+    number: "03",
+    label: "Digital Product & Development",
+    items: [
+      { id: "github", name: "GitHub", icon: "github", description: "Mengelola source code dan kolaborasi perubahan proyek." },
+      { id: "firebase", name: "Firebase", icon: "flame", description: "Layanan backend untuk autentikasi dan data aplikasi." },
+      { id: "supabase", name: "Supabase", icon: "database", description: "Backend aplikasi dengan basis data dan layanan terkelola." },
+      { id: "vercel", name: "Vercel", icon: "triangle", description: "Meng-host aplikasi web dan menjalankan alur deployment." },
+      { id: "nextjs", name: "Next.js", icon: "layers", description: "Kerangka kerja React untuk membangun aplikasi web." },
+      { id: "react", name: "React", icon: "atom", description: "Pustaka antarmuka berbasis komponen untuk aplikasi web." },
+      { id: "tailwind-css", name: "Tailwind CSS", icon: "wind", description: "Menyusun tampilan web melalui utility CSS." },
+      { id: "visual-studio-code", name: "Visual Studio Code", icon: "code", description: "Editor kode untuk pengembangan dan peninjauan proyek." },
+    ],
   },
 ] as const;
 
@@ -374,8 +421,8 @@ export const CERTIFICATIONS_DATA: CertificationItem[] = [
     id: "cert-1",
     title: "Sales Management Certification",
     issuer: "HubSpot Academy",
-    period: "Okt 2026 – Nov 2028",
-    validity: "Okt 2026 – Nov 2028",
+    period: "8 Okt 2026 – 6 Nov 2028",
+    validity: "8 Okt 2026 – 6 Nov 2028",
     url: "/assets/sertifikat/Hubspot%20Academy%20-%20Sales%20Management.webp",
   },
   {
@@ -417,9 +464,9 @@ export const CERTIFICATIONS_DATA: CertificationItem[] = [
 ];
 
 export const CONTACT_DATA = {
-  headline: "Mari Diskusikan Peluang Kerja atau Kolaborasi Bisnis",
+  headline: "Membangun Pertumbuhan Bisnis Dimulai dari Kolaborasi yang Tepat.",
   subheadline:
-    "Saya terbuka untuk peran B2B Sales, Account Management, Sales Manager atau Business Development Manager di Medan maupun remote. Silakan hubungi saya melalui WhatsApp, email, atau LinkedIn, serta unduh CV terbaru saya untuk rincian lengkap.",
+    "Saya terbuka untuk peluang B2B Sales, Account Management, Sales Manager, Business Development Manager, serta kolaborasi solusi digital. Hubungi saya melalui enam kanal di bawah ini atau unduh CV untuk rincian lengkap.",
   panelTitle: "Peluang Karier & Kolaborasi",
   panelDescription: "Pilih kanal yang paling nyaman untuk menghubungi saya atau melihat profil profesional.",
   channels: [
