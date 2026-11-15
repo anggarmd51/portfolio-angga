@@ -1,9 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
 import { CAREER_ROLES, type CareerRole } from "@/data/portfolio";
 import { BriefcaseBusiness, CalendarDays, MapPin } from "lucide-react";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { useScrollLinkedProgress } from "@/hooks/useScrollLinkedProgress";
+import EditorialDivider from "./EditorialDivider";
 
 function RoleDetail({ role }: { role: CareerRole }) {
   return (
@@ -81,6 +84,9 @@ function RoleDetail({ role }: { role: CareerRole }) {
 }
 
 export default function CareerSection() {
+  const scrollPathRef = useRef<SVGPathElement | null>(null);
+  const scrollMotionEnabled = useMediaQuery("(prefers-reduced-motion: no-preference)");
+  const sectionRef = useScrollLinkedProgress<HTMLElement>(scrollPathRef, scrollMotionEnabled);
   const [selectedRoleId, setSelectedRoleId] = useState(CAREER_ROLES[0]?.id ?? "");
   const selectedIndex = Math.max(
     0,
@@ -93,6 +99,7 @@ export default function CareerSection() {
     <section
       id="career"
       aria-labelledby="career-heading"
+      ref={sectionRef}
       className="presentation-section relative border-t border-white/[0.08] bg-obsidian px-5 py-20 sm:px-8 md:py-28 lg:px-10"
     >
       <div className="mx-auto w-full max-w-[1240px]">
@@ -107,6 +114,7 @@ export default function CareerSection() {
           >
             From Credit Analysis to B2B SaaS &amp; Enterprise Connectivity
           </h2>
+          <EditorialDivider className="mt-5 max-w-xs" />
           <p className="mt-4 max-w-2xl text-sm leading-7 text-muted-text sm:text-base">
             Tujuh milestone karier yang bergerak dari survei kredit dan pembiayaan, menuju penjualan solusi digital, lalu konektivitas korporasi.
           </p>
@@ -126,6 +134,18 @@ export default function CareerSection() {
                 preserveAspectRatio="none"
               >
                 <path d="M12 0V640" pathLength="1" fill="none" stroke="rgba(166,176,189,0.24)" strokeWidth="1.5" />
+                <path
+                  ref={scrollPathRef}
+                  d="M12 0V640"
+                  pathLength="1"
+                  fill="none"
+                  stroke="rgba(25,198,154,0.48)"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeDasharray="1"
+                  strokeDashoffset="1"
+                  className="career-scroll-progress"
+                />
                 <path
                   d="M12 0V640"
                   pathLength="1"

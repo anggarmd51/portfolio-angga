@@ -21,6 +21,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { DIGITAL_ECOSYSTEM_CATEGORIES } from "@/data/portfolio";
+import EditorialDivider from "./EditorialDivider";
 
 const TOOL_ICONS: Record<string, LucideIcon> = {
   briefcase: Briefcase,
@@ -82,6 +83,7 @@ export default function DigitalEcosystemSection() {
           >
             Tools &amp; Tech
           </h2>
+          <EditorialDivider className="mt-5 max-w-xs" />
           <p className="mt-4 text-sm leading-7 text-muted-text sm:text-base">
             Perangkat kerja untuk riset prospek, pengelolaan akun, kolaborasi, dan pengembangan produk digital.
           </p>

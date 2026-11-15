@@ -2,6 +2,9 @@
 
 import { useRef, useState, type KeyboardEvent } from "react";
 import { SALES_WORKFLOW_STEPS } from "@/data/portfolio";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { useScrollLinkedProgress } from "@/hooks/useScrollLinkedProgress";
+import EditorialDivider from "./EditorialDivider";
 
 const DETAIL_LABELS = [
   { key: "objective", label: "Objective" },
@@ -12,6 +15,9 @@ const DETAIL_LABELS = [
 export default function SalesMethodologySection() {
   const [activeIndex, setActiveIndex] = useState(0);
   const tabRefs = useRef<Array<HTMLButtonElement | null>>([]);
+  const scrollPathRef = useRef<SVGPathElement | null>(null);
+  const scrollMotionEnabled = useMediaQuery("(prefers-reduced-motion: no-preference)");
+  const sectionRef = useScrollLinkedProgress<HTMLElement>(scrollPathRef, scrollMotionEnabled);
   const activeStep = SALES_WORKFLOW_STEPS[activeIndex];
 
   const handleKeyDown = (event: KeyboardEvent<HTMLButtonElement>, currentIndex: number) => {
@@ -37,6 +43,7 @@ export default function SalesMethodologySection() {
     <section
       id="methodology"
       aria-labelledby="methodology-heading"
+      ref={sectionRef}
       className="presentation-section border-t border-white/[0.08] bg-obsidian px-5 py-20 sm:px-8 md:py-28 lg:px-10"
     >
       <div className="mx-auto w-full max-w-[1240px]">
@@ -50,6 +57,7 @@ export default function SalesMethodologySection() {
           >
             Alur Penjualan B2B
           </h2>
+          <EditorialDivider className="mt-5 max-w-xs" />
           <p className="mt-4 text-sm leading-7 text-muted-text sm:text-base">
             Enam tahap konsultatif—dari pemetaan akun hingga retensi—dengan ruang untuk memahami konteks dan kebutuhan tiap klien.
           </p>
@@ -71,6 +79,14 @@ export default function SalesMethodologySection() {
                 className="sales-stepper-line"
               >
                 <path d="M 0 2 H 1000" pathLength="1" className="sales-stepper-line-track" />
+                <path
+                  ref={scrollPathRef}
+                  d="M 0 2 H 1000"
+                  pathLength="1"
+                  strokeDasharray="1"
+                  strokeDashoffset="1"
+                  className="sales-stepper-line-scroll"
+                />
                 <path
                   d="M 0 2 H 1000"
                   pathLength="1"

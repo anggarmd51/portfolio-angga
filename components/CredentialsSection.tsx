@@ -5,6 +5,7 @@ import { useEffect, useRef, useState, type KeyboardEvent, type MouseEvent } from
 import { EDUCATION_DATA, CERTIFICATIONS_DATA } from "@/data/portfolio";
 import { GraduationCap, Award, Calendar, Eye, X, ExternalLink } from "lucide-react";
 import { Reveal, StaggerContainer, StaggerItem } from "./MotionReveal";
+import EditorialDivider from "./EditorialDivider";
 
 type Certificate = (typeof CERTIFICATIONS_DATA)[number];
 
@@ -228,6 +229,7 @@ export default function CredentialsSection() {
           >
             Fondasi Akademik & Sertifikasi Profesional
           </h2>
+          <EditorialDivider className="mt-5 max-w-xs" />
           <p className="mt-3 text-sm sm:text-base text-slate-300">
             {EDUCATION_DATA.professionalSummary}
           </p>

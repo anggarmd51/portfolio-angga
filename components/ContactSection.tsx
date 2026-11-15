@@ -16,6 +16,8 @@ import {
   Check,
 } from "lucide-react";
 import { Reveal, StaggerContainer, StaggerItem } from "./MotionReveal";
+import EditorialDivider from "./EditorialDivider";
+import { MagneticAnchor } from "./MagneticElements";
 
 const ICON_MAP = {
   whatsapp: MessageCircle,
@@ -29,14 +31,15 @@ const ICON_MAP = {
 function ContactLink({ channel }: { channel: ContactChannel }) {
   const Icon = ICON_MAP[channel.iconName];
   const opensNewTab = channel.href.startsWith("https://");
-  return (
-    <a
-      href={channel.href}
-      target={opensNewTab ? "_blank" : undefined}
-      rel={opensNewTab ? "noopener noreferrer" : undefined}
-      download={channel.isDownload ? channel.downloadFilename : undefined}
-      className="min-h-[72px] w-full inline-flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-slate-200 hover:text-white hover:bg-white/10 hover:border-emerald-500/30 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
-    >
+  const linkProps = {
+    href: channel.href,
+    target: opensNewTab ? "_blank" : undefined,
+    rel: opensNewTab ? "noopener noreferrer" : undefined,
+    download: channel.isDownload ? channel.downloadFilename : undefined,
+    className: "min-h-[72px] w-full inline-flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-slate-200 hover:text-white hover:bg-white/10 hover:border-emerald-500/30 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400",
+  };
+  const content = (
+    <>
       <Icon aria-hidden="true" className="w-5 h-5 text-emerald-400 shrink-0" />
       <span className="min-w-0 flex-1 text-left">
         <span className="block text-sm font-semibold leading-snug">{channel.label}</span>
@@ -50,7 +53,12 @@ function ContactLink({ channel }: { channel: ContactChannel }) {
       {channel.isDownload && (
         <Download aria-hidden="true" className="w-4 h-4 text-slate-400 shrink-0" />
       )}
-    </a>
+    </>
+  );
+  return channel.isDownload ? (
+    <MagneticAnchor {...linkProps}>{content}</MagneticAnchor>
+  ) : (
+    <a {...linkProps}>{content}</a>
   );
 }
 
@@ -182,6 +190,7 @@ export default function ContactSection() {
           >
             {CONTACT_DATA.headline}
           </h2>
+          <EditorialDivider className="mx-auto mt-6 max-w-xs" />
         </Reveal>
         <Reveal delay={0.18} y={22}>
           <p className="mt-6 text-base sm:text-lg md:text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed">

@@ -471,3 +471,115 @@ html {
     transition-duration: 0.01ms !important;
   }
 }
+
+
+/* Interactive executive polish: all pointer-driven effects require a fine hover pointer. */
+.editorial-divider {
+  width: min(100%, 16rem);
+  height: 1px;
+  transform-origin: left center;
+  background: linear-gradient(90deg, var(--signature-teal), rgba(166, 176, 189, 0.24) 70%, transparent);
+}
+
+.hero-interactive-surface {
+  --mouse-x: -1000px;
+  --mouse-y: -1000px;
+}
+
+.hero-depth-frame {
+  --depth-x: 0px;
+  --depth-y: 0px;
+  pointer-events: none;
+}
+
+.career-scroll-progress {
+  opacity: 0.48;
+  transition: stroke-dashoffset 100ms linear;
+}
+
+.sales-stepper-line-scroll {
+  fill: none;
+  stroke: rgba(25, 198, 154, 0.48);
+  stroke-width: 2;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 100ms linear;
+}
+
+.gallery-slide {
+  position: absolute;
+  inset: 0;
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .hero-interactive-surface::before {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    content: "";
+    background: radial-gradient(
+      320px circle at var(--mouse-x) var(--mouse-y),
+      rgba(25, 198, 154, 0.105),
+      rgba(166, 176, 189, 0.035) 34%,
+      transparent 72%
+    );
+  }
+
+  .hero-depth-frame {
+    transform: translate3d(var(--depth-x), var(--depth-y), 0);
+    transition: transform 180ms cubic-bezier(0.21, 0.47, 0.32, 0.98);
+    background: linear-gradient(145deg, rgba(25, 198, 154, 0.045), transparent 60%);
+  }
+
+  .project-mockup-frame {
+    transform-style: preserve-3d;
+    transition: transform 240ms cubic-bezier(0.21, 0.47, 0.32, 0.98);
+  }
+
+  .project-mockup-frame[data-pointer-active="true"] {
+    transform: perspective(1000px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+  }
+
+  .project-mockup-frame::after {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    pointer-events: none;
+    border: 1px solid rgba(25, 198, 154, 0.28);
+    border-radius: inherit;
+    content: "";
+    opacity: 0;
+    background: radial-gradient(
+      340px circle at var(--shine-x, 50%) var(--shine-y, 50%),
+      rgba(25, 198, 154, 0.1),
+      transparent 68%
+    );
+    transition: opacity 180ms ease;
+  }
+
+  .project-mockup-frame[data-pointer-active="true"]::after {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .editorial-divider {
+    transform: none !important;
+  }
+
+  #home .hero-motion,
+  #home .hero-motion-item,
+  .project-showcase-reveal,
+  .recruiter-qa-answer {
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .career-scroll-progress,
+  .sales-stepper-line-scroll {
+    transition: none !important;
+  }
+}

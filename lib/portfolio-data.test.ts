@@ -422,8 +422,8 @@ test("site motion respects reduced-motion and displays scroll progress", () => {
   assert.match(css, /height: 2px/);
   assert.doesNotMatch(css, /tool-marquee|@keyframes\s+tool-marquee/i);
   const motionSource = readFileSync(join(projectRoot, "components/MotionReveal.tsx"), "utf8");
-  assert.match(motionSource, /initial=\{\{ opacity: 0, y \}\}/);
-  assert.match(motionSource, /whileInView=\{\{ opacity: 1, y: 0 \}\}/);
+  assert.match(motionSource, /initial=\{\{[\s\S]*?opacity: 0,[\s\S]*?\by,[\s\S]*?\}\}/);
+  assert.match(motionSource, /whileInView=\{\{[\s\S]*?opacity: 1,[\s\S]*?y: 0,[\s\S]*?\}\}/);
   assert.match(motionSource, /duration = 0\.4/);
   assert.match(motionSource, /duration: 0\.4/);
 });

@@ -1,3 +1,6 @@
+import EditorialDivider from "./EditorialDivider";
+import RecruiterQASection from "./RecruiterQASection";
+
 const SNAPSHOT = [
   { value: "Sejak 2019", label: "Pengalaman Profesional Lintas Industri" },
   { value: "7 Peran", label: "Perbankan, Pembiayaan, B2B SaaS & Konektivitas" },
@@ -23,6 +26,7 @@ export default function ExecutiveProfileSection() {
           >
             Dari Analisis Kredit hingga B2B SaaS &amp; Konektivitas Korporasi
           </h2>
+          <EditorialDivider className="mt-5 max-w-xs" />
           <div className="mt-7 max-w-3xl space-y-4 text-base leading-8 text-muted-text sm:text-lg">
             <p>
               Perjalanan profesional saya dimulai sebagai Surveyor di PT Astra Sedaya Finance pada 2019, membangun pemahaman atas verifikasi lapangan dan proses analisis kredit. Pengalaman berlanjut ke penjualan pembiayaan dan layanan perbankan.
@@ -59,6 +63,7 @@ export default function ExecutiveProfileSection() {
             </div>
           ))}
         </dl>
+        <RecruiterQASection />
       </div>
     </section>
   );

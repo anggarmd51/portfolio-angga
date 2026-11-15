@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "test": "tsx --test lib/portfolio-data.test.ts",
+    "test": "tsx --test lib/*.test.ts",
     "clean": "next clean"
   },
   "dependencies": {

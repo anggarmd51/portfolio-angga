@@ -1,3 +1,5 @@
+import EditorialDivider from "./EditorialDivider";
+
 const COMPETENCIES = [
   {
     number: "01",
@@ -43,6 +45,7 @@ export default function CoreCompetenciesSection() {
           >
             Core Competencies
           </h2>
+          <EditorialDivider className="mt-5 max-w-xs" />
         </div>
 
         <ol className="grid grid-cols-1 border-t border-muted-text/20 md:grid-cols-2">

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
 import Image from "next/image";
 import { PROJECTS_DATA, type ProjectItem } from "@/data/portfolio";
 import {
@@ -13,7 +13,14 @@ import {
   ChevronRight,
   ArrowUpRight,
 } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { Reveal } from "./MotionReveal";
+import EditorialDivider from "./EditorialDivider";
+import { MagneticButton } from "./MagneticElements";
+
+const POINTER_EFFECT_QUERY =
+  "(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)";
 
 type GallerySlide =
   | { kind: "image"; src: string; title: string; caption: string }
@@ -41,6 +48,40 @@ export default function ProjectShowcase() {
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
   const galleryTriggerRef = useRef<HTMLElement | null>(null);
   const touchStartX = useRef<number | null>(null);
+  const pointerEffectsEnabled = useMediaQuery(POINTER_EFFECT_QUERY);
+  const reducedMotionEnabled = useMediaQuery("(prefers-reduced-motion: reduce)");
+  const tiltFrameRef = useRef<number | null>(null);
+  const pendingTiltRef = useRef<{ target: HTMLDivElement; x: number; y: number } | null>(null);
+
+  const handleMockupPointerMove = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (!pointerEffectsEnabled || event.pointerType === "touch") return;
+    pendingTiltRef.current = { target: event.currentTarget, x: event.clientX, y: event.clientY };
+    if (tiltFrameRef.current !== null) return;
+    tiltFrameRef.current = window.requestAnimationFrame(() => {
+      tiltFrameRef.current = null;
+      const pointer = pendingTiltRef.current;
+      if (!pointer) return;
+      const bounds = pointer.target.getBoundingClientRect();
+      if (!bounds.width || !bounds.height) return;
+      const normalizedX = (pointer.x - bounds.left) / bounds.width - 0.5;
+      const normalizedY = (pointer.y - bounds.top) / bounds.height - 0.5;
+      pointer.target.style.setProperty("--tilt-x", `${-normalizedY * 7}deg`);
+      pointer.target.style.setProperty("--tilt-y", `${normalizedX * 7}deg`);
+      pointer.target.style.setProperty("--shine-x", `${(normalizedX + 0.5) * 100}%`);
+      pointer.target.style.setProperty("--shine-y", `${(normalizedY + 0.5) * 100}%`);
+      pointer.target.dataset.pointerActive = "true";
+    });
+  };
+
+  const resetMockupTilt = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (!pointerEffectsEnabled) return;
+    if (tiltFrameRef.current !== null) window.cancelAnimationFrame(tiltFrameRef.current);
+    tiltFrameRef.current = null;
+    pendingTiltRef.current = null;
+    event.currentTarget.style.setProperty("--tilt-x", "0deg");
+    event.currentTarget.style.setProperty("--tilt-y", "0deg");
+    event.currentTarget.dataset.pointerActive = "false";
+  };
 
   const openGallery = (project: ProjectItem) => {
     galleryTriggerRef.current = document.activeElement as HTMLElement;
@@ -69,6 +110,13 @@ export default function ProjectShowcase() {
       if (!current || current.slides.length < 2) return current;
       return { ...current, currentIndex: (current.currentIndex + 1) % current.slides.length };
     });
+
+  useEffect(
+    () => () => {
+      if (tiltFrameRef.current !== null) window.cancelAnimationFrame(tiltFrameRef.current);
+    },
+    []
+  );
 
   useEffect(() => {
     if (!isGalleryOpen) return;
@@ -138,6 +186,7 @@ export default function ProjectShowcase() {
           >
             Featured Projects
           </h2>
+          <EditorialDivider className="mt-5 max-w-xs" />
           <p className="mt-4 text-sm leading-7 text-muted-text sm:text-base">
             Tiga studi kasus produk digital yang memperlihatkan cara saya merancang alur kerja dan mengembangkan solusi untuk kebutuhan nyata.
           </p>
@@ -147,10 +196,15 @@ export default function ProjectShowcase() {
           {PROJECTS_DATA.map((project, projectIndex) => {
             const isArcrm = project.id === "arcrm";
             return (
-              <Reveal key={project.id} y={24} duration={0.45}>
+              <Reveal key={project.id} y={24} duration={0.45} maskReveal className="project-showcase-reveal">
                 <article className="group/project grid grid-cols-1 border-y border-muted-text/20 lg:grid-cols-12">
                   <div className={`${isArcrm ? "lg:col-span-7" : "lg:col-span-6"} border-b border-muted-text/15 py-5 lg:border-b-0 lg:border-r lg:py-8 lg:pr-8`}>
-                    <div className="overflow-hidden rounded-xl border border-white/10 bg-[#0D121B] p-2.5 shadow-2xl sm:p-3">
+                    <div
+                      className="project-mockup-frame relative overflow-hidden rounded-xl border border-white/10 bg-[#0D121B] p-2.5 shadow-2xl sm:p-3"
+                      data-pointer-active="false"
+                      onPointerMove={pointerEffectsEnabled ? handleMockupPointerMove : undefined}
+                      onPointerLeave={pointerEffectsEnabled ? resetMockupTilt : undefined}
+                    >
                       <div aria-hidden="true" className="flex h-7 items-center gap-1.5 border-b border-white/[0.08] px-1 pb-2">
                         <span className="h-2.5 w-2.5 rounded-full bg-[#ED6A5E]" />
                         <span className="h-2.5 w-2.5 rounded-full bg-[#F4BF4F]" />
@@ -243,14 +297,14 @@ export default function ProjectShowcase() {
                     )}
 
                     <div className="mt-6 flex flex-col gap-2 sm:flex-row">
-                      <button
+                      <MagneticButton
                         type="button"
                         onClick={() => openGallery(project)}
                         className="group/gallery inline-flex min-h-[44px] flex-1 items-center justify-center gap-2 rounded-lg bg-signature-teal px-4 py-3 text-sm font-bold text-obsidian transition-colors hover:bg-[#35d7ad] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signature-teal focus-visible:ring-offset-2 focus-visible:ring-offset-graphite"
                       >
                         Lihat Galeri / Preview
                         <Maximize2 aria-hidden="true" className="h-4 w-4" />
-                      </button>
+                      </MagneticButton>
                       <a
                         href={project.websiteUrl}
                         target="_blank"
@@ -375,23 +429,34 @@ export default function ProjectShowcase() {
                       </div>
                     )}
                     {failedImageSrc === activeSlide.src && <p role="alert" className="absolute inset-0 z-20 flex items-center justify-center bg-obsidian/90 text-sm text-muted-text">Pratinjau gagal dimuat.</p>}
-                    <Image
-                      src={activeSlide.src}
-                      alt={activeSlide.title}
-                      fill
-                      priority
-                      sizes="(max-width: 1024px) 94vw, 1280px"
-                      className={`object-contain transition-opacity duration-200 ${loadedImageSrc === activeSlide.src ? "opacity-100" : "opacity-0"}`}
-                      referrerPolicy="no-referrer"
-                      onLoad={() => {
-                        setLoadedImageSrc(activeSlide.src);
-                        setFailedImageSrc(null);
-                      }}
-                      onError={() => {
-                        setLoadedImageSrc(activeSlide.src);
-                        setFailedImageSrc(activeSlide.src);
-                      }}
-                    />
+                    <AnimatePresence initial={false} mode="sync">
+                      <motion.div
+                        key={activeSlide.src}
+                        initial={reducedMotionEnabled ? false : { opacity: 0 }}
+                        animate={{ opacity: loadedImageSrc === activeSlide.src ? 1 : 0 }}
+                        exit={reducedMotionEnabled ? undefined : { opacity: 0 }}
+                        transition={{ duration: reducedMotionEnabled ? 0 : 0.24, ease: "easeOut" }}
+                        className="gallery-slide absolute inset-0"
+                      >
+                        <Image
+                          src={activeSlide.src}
+                          alt={activeSlide.title}
+                          fill
+                          priority
+                          sizes="(max-width: 1024px) 94vw, 1280px"
+                          className="object-contain"
+                          referrerPolicy="no-referrer"
+                          onLoad={() => {
+                            setLoadedImageSrc(activeSlide.src);
+                            setFailedImageSrc(null);
+                          }}
+                          onError={() => {
+                            setLoadedImageSrc(activeSlide.src);
+                            setFailedImageSrc(activeSlide.src);
+                          }}
+                        />
+                      </motion.div>
+                    </AnimatePresence>
                   </div>
                 ) : (
                   <div className="w-full max-w-3xl min-h-[280px] sm:min-h-[420px] rounded-2xl border border-emerald-500/20 bg-[linear-gradient(rgba(16,185,129,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(16,185,129,0.04)_1px,transparent_1px)] bg-[size:28px_28px] flex items-center justify-center p-8 sm:p-12">
