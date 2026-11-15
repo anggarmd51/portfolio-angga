@@ -11,7 +11,6 @@ import {
   X,
   ChevronLeft,
   ChevronRight,
-  Code2,
   ArrowUpRight,
 } from "lucide-react";
 import { Reveal } from "./MotionReveal";
@@ -126,180 +125,160 @@ export default function ProjectShowcase() {
     <section
       id="projects"
       aria-labelledby="projects-heading"
-      className="py-20 md:py-28 px-4 sm:px-6 lg:px-8 border-t border-white/5 relative bg-graphite presentation-section"
+      className="relative border-t border-white/[0.08] bg-graphite px-5 py-20 sm:px-8 md:py-28 lg:px-10 presentation-section"
     >
       <div className="mx-auto w-full max-w-[1240px]">
-        <Reveal className="mb-12 md:mb-16 text-left max-w-3xl">
-          <div className="inline-flex items-center gap-2 rounded-full border border-muted-text/15 bg-white/[0.035] px-3 py-1 text-xs font-semibold uppercase tracking-wider text-muted-text mb-3">
-            <Layers aria-hidden="true" className="w-3.5 h-3.5 text-muted-text" />
-            <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-signature-teal" />
-            Inisiatif Digital & Web
-          </div>
+        <Reveal className="mb-12 max-w-3xl text-left md:mb-16">
+          <p className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-muted-text">
+            Digital Product Showcase
+          </p>
           <h2
             id="projects-heading"
-            className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white tracking-tight"
+            className="font-heading text-3xl font-semibold tracking-[-0.04em] text-soft-white sm:text-4xl md:text-5xl"
           >
-            Aplikasi & Solusi Digital Mandiri
+            Featured Projects
           </h2>
-          <p className="mt-3 text-sm sm:text-base text-slate-300">
-            Tiga proyek aplikasi dan web yang saya bangun secara mandiri dengan bantuan AI coding untuk kebutuhan bursa lowongan kerja, pencatatan pipeline penjualan pribadi, dan katalog layanan otomotif.
+          <p className="mt-4 text-sm leading-7 text-muted-text sm:text-base">
+            Tiga studi kasus produk digital yang memperlihatkan cara saya merancang alur kerja dan mengembangkan solusi untuk kebutuhan nyata.
           </p>
         </Reveal>
 
-        <div className="space-y-12">
+        <div className="space-y-14">
           {PROJECTS_DATA.map((project, projectIndex) => {
             const isArcrm = project.id === "arcrm";
             return (
               <Reveal key={project.id} y={24} duration={0.6}>
-                <article className="glass-card rounded-3xl border border-white/10 overflow-hidden shadow-2xl grid grid-cols-1 lg:grid-cols-12 gap-0">
-                  <div className="lg:col-span-7 bg-slate-950/60 p-4 sm:p-6 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-white/5">
-                    <div className="relative w-full aspect-[16/10] rounded-2xl overflow-hidden bg-slate-900 border border-white/10 group">
-                      <Image
-                        src={project.coverScreenshot}
-                        alt={`Pratinjau proyek ${project.title}`}
-                        fill
-                        sizes="(max-width: 1024px) 100vw, 60vw"
-                        className="object-cover object-top transition-transform duration-300 group-hover:scale-[1.02]"
-                        referrerPolicy="no-referrer"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => openGallery(project)}
-                        aria-label={`Buka galeri pratinjau ${project.title}`}
-                        className="absolute bottom-3 right-3 min-h-[44px] min-w-[44px] rounded-xl bg-slate-950/90 backdrop-blur-md border border-white/20 text-white hover:bg-emerald-500 hover:text-slate-950 transition-all sm:opacity-0 group-hover:opacity-100 shadow-lg inline-flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
-                      >
-                        <Maximize2 aria-hidden="true" className="w-4 h-4" />
-                      </button>
+                <article className="group/project grid grid-cols-1 border-y border-muted-text/20 lg:grid-cols-12">
+                  <div className={`${isArcrm ? "lg:col-span-7" : "lg:col-span-6"} border-b border-muted-text/15 py-5 lg:border-b-0 lg:border-r lg:py-8 lg:pr-8`}>
+                    <div className="overflow-hidden rounded-xl border border-white/10 bg-[#0D121B] p-2.5 shadow-2xl sm:p-3">
+                      <div aria-hidden="true" className="flex h-7 items-center gap-1.5 border-b border-white/[0.08] px-1 pb-2">
+                        <span className="h-2.5 w-2.5 rounded-full bg-[#ED6A5E]" />
+                        <span className="h-2.5 w-2.5 rounded-full bg-[#F4BF4F]" />
+                        <span className="h-2.5 w-2.5 rounded-full bg-[#61C454]" />
+                        <span className="ml-3 min-w-0 flex-1 truncate rounded-md bg-white/[0.045] px-3 py-1 text-center font-mono text-[10px] text-muted-text">
+                          {project.websiteUrl.replace(/^https?:\/\//, "").replace(/\/$/, "")}
+                        </span>
+                      </div>
+                      <div className="relative aspect-[16/10] overflow-hidden bg-[#090D14]">
+                        <Image
+                          src={project.coverScreenshot}
+                          alt={`Pratinjau proyek ${project.title}`}
+                          fill
+                          sizes="(max-width: 1024px) 100vw, 60vw"
+                          className={`${isArcrm ? "object-contain" : "object-cover object-top"} transition-transform duration-[220ms] ease-out group-hover/project:scale-[1.025]`}
+                          referrerPolicy="no-referrer"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => openGallery(project)}
+                          aria-label={`Buka galeri pratinjau ${project.title}`}
+                          className="absolute bottom-3 right-3 inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg border border-white/20 bg-obsidian/90 text-white shadow-lg transition-colors hover:bg-signature-teal hover:text-obsidian focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signature-teal"
+                        >
+                          <Maximize2 aria-hidden="true" className="h-4 w-4" />
+                        </button>
+                      </div>
                     </div>
-                    <div className="mt-3 flex flex-wrap items-center justify-between gap-3 text-xs text-muted-text">
-                      <span>{project.screenshots[0]?.title ?? `Pratinjau ${project.title}`}</span>
+                    <div className="mt-3 flex flex-wrap items-center justify-between gap-2 text-xs text-muted-text">
+                      <span>{project.screenshots[0]?.title ?? `Preview ${project.title}`}</span>
                       <button
                         type="button"
                         onClick={() => openGallery(project)}
-                        className="min-h-[44px] inline-flex items-center gap-2 text-muted-text hover:text-signature-teal font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signature-teal rounded-lg px-2"
+                        className="inline-flex min-h-[44px] items-center gap-2 rounded-lg px-2 font-semibold text-soft-white/80 transition-colors hover:text-signature-teal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signature-teal"
                       >
-                        Lihat galeri
-                        <Maximize2 aria-hidden="true" className="w-3.5 h-3.5" />
+                        Lihat Galeri / Preview
+                        <Maximize2 aria-hidden="true" className="h-3.5 w-3.5" />
                       </button>
                     </div>
                   </div>
 
-                  <div className="lg:col-span-5 p-6 sm:p-8 flex flex-col justify-between min-w-0">
-                    <div>
-                      <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
-                        <span className="inline-flex items-center gap-1.5 rounded-full border border-muted-text/15 bg-white/[0.035] px-3 py-1 text-xs font-semibold text-muted-text">
-                          <Code2 aria-hidden="true" className="w-3.5 h-3.5 text-muted-text" />
-                          {project.role}
-                        </span>
-                        <span className="text-xs font-mono font-bold text-muted-text">
-                          PROYEK 0{projectIndex + 1}
-                        </span>
+                  <div className={`${isArcrm ? "lg:col-span-5" : "lg:col-span-6"} flex min-w-0 flex-col justify-center py-7 lg:py-8 lg:pl-8`}>
+                    <div className="flex flex-wrap items-center justify-between gap-3">
+                      <span className="text-[11px] font-semibold uppercase tracking-[0.15em] text-muted-text">
+                        {isArcrm ? "FEATURED PRODUCT" : project.status ?? "PROJECT CASE STUDY"}
+                      </span>
+                      <span className="font-mono text-xs text-muted-text">
+                        PROYEK 0{projectIndex + 1}
+                      </span>
+                    </div>
+                    <h3 className="mt-3 font-heading text-2xl font-bold tracking-[-0.035em] text-soft-white sm:text-3xl">
+                      {project.title}
+                    </h3>
+                    <p className="mt-1 text-sm font-medium text-muted-text sm:text-base">
+                      {project.subtitle}
+                    </p>
+                    <p className="mt-3 text-xs font-semibold text-signature-teal/90">
+                      {project.role}
+                    </p>
+
+                    <dl className="mt-6 divide-y divide-muted-text/15 border-y border-muted-text/15">
+                      <div className="py-3.5">
+                        <dt className="text-[10px] font-semibold uppercase tracking-[0.13em] text-muted-text">Business Problem</dt>
+                        <dd className="mt-1.5 text-sm leading-6 text-soft-white/90">{project.businessProblem}</dd>
                       </div>
-
-                      <div className="flex flex-wrap items-center gap-2">
-                        <h3 className="text-2xl font-extrabold text-white">{project.title}</h3>
-                        {project.status && (
-                          <span className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[11px] font-semibold text-slate-200">
-                            {project.status}
-                          </span>
-                        )}
+                      <div className="py-3.5">
+                        <dt className="text-[10px] font-semibold uppercase tracking-[0.13em] text-muted-text">Objective</dt>
+                        <dd className="mt-1.5 text-sm leading-6 text-soft-white/90">{project.objective}</dd>
                       </div>
-                      <p className="text-sm font-semibold text-slate-200 mt-1">{project.subtitle}</p>
-                      <p className="text-sm text-slate-300 mt-4 leading-relaxed">{project.description}</p>
+                      <div className="py-3.5">
+                        <dt className="text-[10px] font-semibold uppercase tracking-[0.13em] text-muted-text">My Contribution</dt>
+                        <dd className="mt-1.5 text-sm leading-6 text-soft-white/90">{project.myContribution}</dd>
+                      </div>
+                      <div className="py-3.5">
+                        <dt className="text-[10px] font-semibold uppercase tracking-[0.13em] text-muted-text">Solution</dt>
+                        <dd className="mt-1.5 text-sm leading-6 text-soft-white/90">{project.solution}</dd>
+                      </div>
+                      <div className="py-3.5">
+                        <dt className="text-[10px] font-semibold uppercase tracking-[0.13em] text-muted-text">Technology</dt>
+                        <dd className="mt-1.5 text-sm leading-6 text-soft-white/90">
+                          {project.techStack?.join(" · ") ?? ""}
+                        </dd>
+                      </div>
+                    </dl>
 
-                      {(project.objective || project.contribution) && (
-                        <dl className="mt-5 space-y-3 border-t border-white/5 pt-4">
-                          {project.objective && (
-                            <div>
-                              <dt className="text-xs font-bold uppercase tracking-wide text-muted-text">Tujuan</dt>
-                              <dd className="mt-1 text-sm text-slate-200 leading-relaxed">{project.objective}</dd>
-                            </div>
-                          )}
-                          {project.contribution && (
-                            <div>
-                              <dt className="text-xs font-bold uppercase tracking-wide text-muted-text">Yang dibangun</dt>
-                              <dd className="mt-1 text-sm text-slate-200 leading-relaxed">{project.contribution}</dd>
-                            </div>
-                          )}
-                        </dl>
-                      )}
+                    {project.accessNote && (
+                      <p className="mt-4 flex items-start gap-2.5 text-xs leading-5 text-muted-text">
+                        <Lock aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0 text-muted-text" />
+                        <span>{project.accessNote}</span>
+                      </p>
+                    )}
 
-                      {project.techStack && project.techStack.length > 0 && (
-                        <div className="mt-4">
-                          <h4 className="text-xs font-bold uppercase tracking-wide text-muted-text mb-2">Teknologi</h4>
-                          <ul className="flex flex-wrap gap-2" aria-label={`Teknologi ${project.title}`}>
-                            {project.techStack.map((technology) => (
-                              <li key={technology} className="rounded-lg bg-white/5 border border-white/10 px-2.5 py-1.5 text-xs font-medium text-slate-200">
-                                {technology}
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-
-                      {project.accessNote && (
-                        <div className="mt-4 p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-start gap-2.5 text-xs text-amber-200 leading-snug">
-                          <Lock aria-hidden="true" className="w-4 h-4 text-amber-300 shrink-0 mt-0.5" />
-                          <span>{project.accessNote}</span>
-                        </div>
-                      )}
-
-                      {project.socials && project.socials.length > 0 && (
-                        <div className="mt-5 pt-4 border-t border-white/5">
-                          <span className="text-xs font-semibold text-slate-300 block mb-2">
-                            Kanal media sosial proyek
-                          </span>
-                          <div className="flex flex-wrap gap-2">
-                            {project.socials.map((social) => (
-                              <a
-                                key={social.platform}
-                                href={social.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="min-h-[44px] inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-white/5 border border-white/10 hover:border-emerald-500/30 text-xs text-slate-200 hover:text-white transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
-                              >
-                                {social.platform}
-                                <ExternalLink aria-hidden="true" className="w-3 h-3 text-slate-300" />
-                              </a>
-                            ))}
-                          </div>
-                        </div>
-                      )}
+                    <div className="mt-6 flex flex-col gap-2 sm:flex-row">
+                      <button
+                        type="button"
+                        onClick={() => openGallery(project)}
+                        className="group/gallery inline-flex min-h-[44px] flex-1 items-center justify-center gap-2 rounded-lg bg-signature-teal px-4 py-3 text-sm font-bold text-obsidian transition-colors hover:bg-[#35d7ad] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signature-teal focus-visible:ring-offset-2 focus-visible:ring-offset-graphite"
+                      >
+                        Lihat Galeri / Preview
+                        <Maximize2 aria-hidden="true" className="h-4 w-4" />
+                      </button>
+                      <a
+                        href={project.websiteUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group/site inline-flex min-h-[44px] flex-1 items-center justify-center gap-2 rounded-lg border border-muted-text/25 px-4 py-3 text-sm font-semibold text-soft-white transition-colors hover:border-signature-teal/60 hover:text-signature-teal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signature-teal"
+                      >
+                        Kunjungi Website
+                        <ArrowUpRight aria-hidden="true" className="h-4 w-4 transition-transform duration-200 group-hover/site:translate-x-0.5 group-hover/site:-translate-y-0.5" />
+                      </a>
                     </div>
 
-                    <div className="mt-8 pt-6 border-t border-white/5">
-                      {isArcrm ? (
-                        <>
-                          <button
-                            type="button"
-                            onClick={() => openGallery(project)}
-                            className="min-h-[44px] w-full inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl bg-emerald-500 text-slate-950 font-bold text-sm hover:bg-emerald-400 transition-all shadow-lg shadow-emerald-500/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
-                          >
-                            Lihat Galeri Screenshot
-                            <Maximize2 aria-hidden="true" className="w-4 h-4" />
-                          </button>
+                    {project.socials && project.socials.length > 0 && (
+                      <div className="mt-4 flex flex-wrap items-center gap-2">
+                        <span className="mr-1 text-xs text-muted-text">Social</span>
+                        {project.socials.map((social) => (
                           <a
-                            href={project.websiteUrl}
+                            key={social.platform}
+                            href={social.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="mt-3 min-h-[44px] inline-flex items-center justify-center gap-2 w-full rounded-xl px-4 py-2 text-xs font-medium text-slate-300 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+                            className="inline-flex min-h-[44px] items-center gap-1.5 rounded-md px-2 text-xs text-muted-text transition-colors hover:text-soft-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signature-teal"
                           >
-                            Buka Web App (Login Internal)
-                            <ArrowUpRight aria-hidden="true" className="w-3.5 h-3.5" />
+                            {social.platform}
+                            <ExternalLink aria-hidden="true" className="h-3 w-3" />
                           </a>
-                        </>
-                      ) : (
-                        <a
-                          href={project.websiteUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="min-h-[44px] w-full inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl bg-emerald-500 text-slate-950 font-bold text-sm hover:bg-emerald-400 transition-all shadow-lg shadow-emerald-500/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300 group"
-                        >
-                          <span>Kunjungi Website</span>
-                          <ExternalLink aria-hidden="true" className="w-4 h-4 stroke-[2.5] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                        </a>
-                      )}
-                    </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </article>
               </Reveal>

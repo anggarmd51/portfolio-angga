@@ -1,42 +1,35 @@
 import HeroSection from "@/components/HeroSection";
-import BentoGrid from "@/components/BentoGrid";
+import ExecutiveProfileSection from "@/components/ExecutiveProfileSection";
+import CoreCompetenciesSection from "@/components/CoreCompetenciesSection";
 import CareerSection from "@/components/CareerSection";
 import ProjectShowcase from "@/components/ProjectShowcase";
+import SalesMethodologySection from "@/components/SalesMethodologySection";
+import DigitalEcosystemSection from "@/components/DigitalEcosystemSection";
 import CredentialsSection from "@/components/CredentialsSection";
 import ContactSection from "@/components/ContactSection";
 import FloatingCTA from "@/components/FloatingCTA";
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-obsidian text-soft-white flex flex-col relative selection:bg-signature-teal/20 selection:text-soft-white overflow-x-hidden">
-      {/* Subtle Geometric Grid & Depth Accents behind all content */}
+    <div className="relative flex min-h-screen flex-col overflow-x-hidden bg-obsidian text-soft-white selection:bg-signature-teal/20 selection:text-soft-white">
       <div
         aria-hidden="true"
-        className="fixed inset-0 pointer-events-none z-0 bg-subtle-grid [mask-image:radial-gradient(ellipse_at_center,black_55%,transparent_90%)]"
+        className="pointer-events-none fixed inset-0 z-0 bg-subtle-grid [mask-image:radial-gradient(ellipse_at_center,black_55%,transparent_90%)]"
       />
       <div
         aria-hidden="true"
-        className="fixed -top-40 left-1/2 -translate-x-1/2 w-[900px] h-[450px] bg-signature-teal/[0.025] blur-[140px] rounded-full pointer-events-none z-0"
+        className="pointer-events-none fixed -top-40 left-1/2 z-0 h-[450px] w-[900px] -translate-x-1/2 rounded-full bg-signature-teal/[0.025] blur-[140px]"
       />
 
-      {/* Main Content: 6 sections in continuous smooth flow */}
-      <main className="flex-1 w-full pb-28 md:pb-12 relative z-10">
-        {/* Section 1: Hero */}
+      <main className="relative z-10 w-full flex-1 pb-28 md:pb-12">
         <HeroSection />
-
-        {/* Section 2: Executive Profile & Bento Grid */}
-        <BentoGrid />
-
-        {/* Section 3: Career Track Record */}
+        <ExecutiveProfileSection />
+        <CoreCompetenciesSection />
         <CareerSection />
-
-        {/* Section 4: Digital Initiatives & Portfolio */}
         <ProjectShowcase />
-
-        {/* Section 5: Education & Credentials */}
+        <SalesMethodologySection />
+        <DigitalEcosystemSection />
         <CredentialsSection />
-
-        {/* Section 6: Closing Pitch & Contact */}
         <ContactSection />
       </main>
       <FloatingCTA />

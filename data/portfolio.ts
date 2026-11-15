@@ -2,16 +2,6 @@ export interface FloatingBadge {
   text: string;
 }
 
-export interface BentoPillar {
-  title: string;
-  description: string;
-}
-
-export interface CompetencyCategory {
-  title: string;
-  skills: string[];
-}
-
 export interface CareerRole {
   id: string;
   company: string;
@@ -21,6 +11,7 @@ export interface CareerRole {
   logo: string;
   logoAlt: string;
   bullets: string[];
+  coreDevelopment: string;
   industry?: string;
   location?: string;
   isCurrentRole?: boolean;
@@ -42,14 +33,15 @@ export interface ProjectItem {
   title: string;
   subtitle: string;
   role: string;
-  description: string;
+  businessProblem: string;
+  solution: string;
+  myContribution: string;
   websiteUrl: string;
   screenshots: ProjectScreenshot[];
   coverScreenshot: string;
   socials?: { platform: string; url: string }[];
   accessNote?: string;
-  objective?: string;
-  contribution?: string;
+  objective: string;
   techStack?: string[];
   status?: "Personal Project" | "Project Showcase";
   previewModules?: ProjectPreviewModule[];
@@ -99,77 +91,6 @@ export const HERO_DATA = {
   ctaSecondary: {
     label: "Diskusikan Peluang",
     href: "#contact",
-  },
-};
-
-export const BENTO_DATA = {
-  sectionTitle: "Dari Survei Kredit ke Penjualan B2B SaaS",
-  sectionSubtitle:
-    "Perjalanan karier yang dimulai sebagai surveyor pembiayaan di Astra Credit Companies (2019), berlanjut ke penjualan produk perbankan dan pembiayaan, hingga menangani penjualan perangkat lunak B2B.",
-  box1: {
-    headline: "Pengalaman Pembiayaan & Penjualan Solusi B2B",
-    body: "Saya menangani proses penjualan dari pencarian prospek, pemetaan kebutuhan, presentasi solusi, hingga negosiasi kontrak dan pendampingan klien baru. Di luar pekerjaan utama, saya juga membangun aplikasi AR CRM pribadi untuk mencatat prospek dan aktivitas penjualan harian.",
-  },
-  box2: {
-    label: "FOKUS PERAN",
-    roles: ["Sales Manager", "B2B Sales", "Business Development Manager", "Account Manager"],
-  },
-  box3: {
-    title: "Area Pengalaman",
-    pillars: [
-      {
-        title: "Penjualan & Pengelolaan Akun",
-        description:
-          "Pencarian prospek, pemetaan kebutuhan, presentasi solusi, negosiasi, dan tindak lanjut klien.",
-      },
-      {
-        title: "Pembiayaan & Layanan Keuangan",
-        description:
-          "Survei dan verifikasi calon debitur, serta penanganan produk pembiayaan reguler dan syariah.",
-      },
-      {
-        title: "Koordinasi Mitra & Onboarding",
-        description:
-          "Koordinasi dengan dealer atau mitra usaha dan pendampingan klien baru saat implementasi.",
-      },
-    ],
-  },
-  box4: {
-    competencyCategories: [
-      {
-        title: "Penjualan & Pengembangan Bisnis",
-        skills: [
-          "B2B Sales",
-          "Account Management",
-          "Business Development",
-          "Presentasi & Demo Produk",
-          "Negosiasi Kontrak",
-          "Pengelolaan Pipeline & Tindak Lanjut Prospek",
-        ],
-      },
-      {
-        title: "Pembiayaan & Analisis Risiko",
-        skills: [
-          "Credit Survey & Verification",
-          "Analisis Kelayakan Kredit",
-          "Pembiayaan Reguler & Syariah",
-          "Customer Retention",
-          "Manajemen Relasi Dealer/Mitra",
-          "Pembiayaan Ulang (Repeat Order/Refinancing)",
-        ],
-      },
-      {
-        title: "CRM, Digital & Alat Kerja",
-        skills: [
-          "CRM Pipeline Tracking",
-          "Pipeline Management",
-          "AI-Assisted Web Development (Vibe Coding)",
-          "Riset Prospek B2B",
-          "Next.js & Tailwind CSS Dasar",
-          "Pembuatan Aplikasi CRM Pribadi (AR CRM)",
-        ],
-      },
-    ] satisfies CompetencyCategory[],
   },
 };
 
@@ -234,6 +155,7 @@ export const CAREER_ROLES: CareerRole[] = [
       "Melakukan pemetaan kebutuhan teknis bersama tim IT dan manajemen klien, menyusun proposal komersial, serta memimpin negosiasi kontrak layanan.",
       "Mengawal proses onboarding instalasi bersama tim teknis serta menjaga retensi dan hubungan strategis jangka panjang dengan klien.",
     ],
+    coreDevelopment: "Menautkan kebutuhan jaringan korporasi dengan proposal komersial, koordinasi instalasi, onboarding, dan retensi akun.",
   },
   {
     id: "role-1",
@@ -242,11 +164,13 @@ export const CAREER_ROLES: CareerRole[] = [
     period: "Okt 2025 – Jun 2026",
     logo: "/assets/PT%20Media%20Antar%20Nusa%20(Nusawork%20HRIS).jpg",
     logoAlt: "Logo PT Media Antar Nusa - Nusawork HRIS",
+    industry: "B2B SaaS · HRIS",
     bullets: [
       "Memetakan akun B2B dan mengkualifikasi kebutuhan operasional bersama HR Manager serta Kepala Operasional, lalu mendemonstrasikan Nusawork HRIS kepada calon klien.",
       "Menyusun penawaran dan bernegosiasi dengan pengambil keputusan hingga penutupan kontrak.",
       "Mendampingi onboarding bersama tim teknis sampai klien mulai menggunakan sistem HRIS.",
     ],
+    coreDevelopment: "Mengembangkan keterampilan discovery, demo HRIS, negosiasi dengan pengambil keputusan, dan pendampingan onboarding.",
   },
   {
     id: "role-2",
@@ -255,11 +179,13 @@ export const CAREER_ROLES: CareerRole[] = [
     period: "Apr 2024 – Okt 2025",
     logo: "/assets/PT%20Sarana%20Digital%20Retail%20(Dretail%20POS).png",
     logoAlt: "Logo PT Sarana Digital Retail - Dretail POS",
+    industry: "B2B SaaS · Retail POS",
     bullets: [
       "Mengoordinasi penjualan POS Dretail bersama tim Business Development Officer untuk merchant ritel dan F&B di Medan dan sekitarnya.",
       "Berdiskusi dengan pemilik bisnis dan pengelola operasional, mendemonstrasikan sistem POS, serta menyusun penawaran komersial.",
       "Mendampingi implementasi awal pada merchant baru dan menjaga tindak lanjut setelah penerapan.",
     ],
+    coreDevelopment: "Mengoordinasikan tim akuisisi dan memperkuat proses demo POS, penawaran komersial, onboarding merchant, serta tindak lanjut.",
   },
   {
     id: "role-3",
@@ -268,11 +194,13 @@ export const CAREER_ROLES: CareerRole[] = [
     period: "Mei 2023 – Apr 2024",
     logo: "/assets/PT%20Astra%20Sedaya%20Finance%20(Astra%20Credit%20Companies).webp",
     logoAlt: "Logo PT Astra Sedaya Finance - ACC",
+    industry: "Pembiayaan · Layanan Syariah",
     bullets: [
       "Mendampingi nasabah existing untuk kebutuhan produk pembiayaan syariah (Talangan Haji) dan menindaklanjuti pertanyaan layanan.",
       "Menangani pengajuan pembiayaan ulang (repeat order/refinancing) serta memeriksa kelengkapan dokumen administrasi.",
       "Melakukan tindak lanjut kepada nasabah sesuai proses layanan dan ketentuan pembiayaan yang berlaku.",
     ],
+    coreDevelopment: "Mendalami layanan nasabah existing, administrasi pembiayaan syariah, dan tindak lanjut repeat order/refinancing.",
   },
   {
     id: "role-4",
@@ -281,11 +209,13 @@ export const CAREER_ROLES: CareerRole[] = [
     period: "Nov 2022 – Mei 2023",
     logo: "/assets/PT%20Bank%20Mega%20Tbk.png",
     logoAlt: "Logo PT Bank Mega Tbk",
+    industry: "Perbankan · Akuisisi Produk",
     bullets: [
       "Menangani akuisisi nasabah untuk produk kartu kredit dan dana pihak ketiga melalui direct sales, canvassing, serta booth event.",
       "Menjelaskan fitur produk, manfaat promosi, dan ketentuan kepada calon nasabah.",
       "Mengawal kelengkapan berkas pengajuan untuk proses verifikasi dan persetujuan.",
     ],
+    coreDevelopment: "Mengasah akuisisi melalui direct sales, canvassing, dan event, disertai penjelasan produk serta kelengkapan pengajuan.",
   },
   {
     id: "role-5",
@@ -294,11 +224,13 @@ export const CAREER_ROLES: CareerRole[] = [
     period: "Sep 2021 – Okt 2022",
     logo: "/assets/PT%20CIMB%20Niaga%20Auto%20Finance%20(CNAF).png",
     logoAlt: "Logo PT CIMB Niaga Auto Finance - CNAF",
+    industry: "Pembiayaan Otomotif",
     bullets: [
       "Mempromosikan produk pembiayaan otomotif kepada calon debitur di Medan.",
       "Mengoordinasi pengajuan pembiayaan dengan showroom dan dealer rekanan serta mendampingi pengumpulan dokumen.",
       "Menindaklanjuti aplikasi pembiayaan selama proses verifikasi hingga keputusan.",
     ],
+    coreDevelopment: "Membangun pengalaman penjualan pembiayaan otomotif melalui relasi dealer, pengumpulan dokumen, dan tindak lanjut aplikasi.",
   },
   {
     id: "role-6",
@@ -307,57 +239,30 @@ export const CAREER_ROLES: CareerRole[] = [
     period: "Okt 2019 – Apr 2021",
     logo: "/assets/PT%20Astra%20Sedaya%20Finance%20(Astra%20Credit%20Companies).webp",
     logoAlt: "Logo PT Astra Sedaya Finance - ACC Surveyor",
+    industry: "Pembiayaan Konsumen · Analisis Kredit",
     bullets: [
-      "Melakukan survei lapangan dan verifikasi informasi calon debitur, termasuk alamat tempat tinggal dan kapasitas usaha.",
+      "Melakukan survei lapangan terhadap calon debitur.",
+      "Memverifikasi informasi calon debitur, termasuk alamat tempat tinggal dan kapasitas usaha.",
       "Menyusun laporan hasil survei sebagai bahan pertimbangan proses analisis dan keputusan kredit.",
     ],
+    coreDevelopment: "Membangun fondasi analisis kredit melalui survei lapangan, verifikasi informasi, dan pelaporan untuk proses keputusan.",
   },
 ];
 
 export const PROJECTS_DATA: ProjectItem[] = [
   {
-    id: "lokerresmi",
-    title: "LokerResmi.id",
-    subtitle: "Platform Bursa Lowongan Kerja",
-    role: "Web Developer & Inisiator Proyek",
-    description:
-      "Platform direktori bursa kerja terstruktur dengan pemetaan posisi, filter lokasi spesifik, dan transparansi sumber rekrutmen.",
-    objective:
-      "Memangkas waktu pencarian kerja dengan menyatukan informasi lowongan yang tersebar ke dalam satu antarmuka yang mudah difilter.",
-    contribution:
-      "Arsitektur web direktori dengan pencarian instan, filter kategori/wilayah berlapis, serta halaman detail lowongan berbasis Supabase.",
-    techStack: ["Supabase", "Vercel"],
-    status: "Personal Project",
-    websiteUrl: "https://lokerresmi.vercel.app",
-    coverScreenshot: "/assets/Tangkapan%20Layar%20Proyek%20LokerResmi.id.png",
-    screenshots: [
-      {
-        src: "/assets/Tangkapan%20Layar%20Proyek%20LokerResmi.id.png",
-        title: "Beranda LokerResmi.id",
-        caption:
-          "Tampilan pencarian lowongan, kategori, dan informasi posisi kerja.",
-      },
-    ],
-    socials: [
-      { platform: "Instagram", url: "https://www.instagram.com/lokerresmi_id" },
-      { platform: "TikTok", url: "https://www.tiktok.com/@lokerresmi_id" },
-      {
-        platform: "LinkedIn",
-        url: "https://www.linkedin.com/company/lokerresmi.id/",
-      },
-    ],
-  },
-  {
     id: "arcrm",
     title: "AR CRM",
-    subtitle: "Personal B2B Sales Pipeline App",
-    role: "Web Developer & Inisiator Proyek",
-    description:
-      "Progressive Web App (PWA) CRM internal untuk mendigitalisasi pelacakan prospek dan tahapan pipeline penjualan B2B harian.",
+    subtitle: "Personal B2B Sales Pipeline Application",
+    role: "Inisiator Produk & Pengembang",
+    businessProblem:
+      "Pencatatan prospek, tahapan pipeline, dan tindak lanjut penjualan masih tersebar pada spreadsheet manual.",
     objective:
-      "Menggantikan pencatatan prospek manual di spreadsheet agar jadwal tindak lanjut (follow-up) dan riwayat interaksi klien tercatat rapi.",
-    contribution:
-      "Aplikasi CRM berbasis Firebase dengan autentikasi Google Sign-In khusus workspace, papan pipeline Kanban, database prospek, dan log aktivitas.",
+      "Mendigitalisasi pencatatan prospek, jadwal follow-up, dan riwayat interaksi untuk alur penjualan B2B harian.",
+    myContribution:
+      "Menginisiasi produk, merancang workflow pipeline dan aktivitas penjualan, serta mengembangkan aplikasi berbantuan AI.",
+    solution:
+      "CRM internal berbasis PWA dengan Google Sign-In workspace, database prospek, pipeline Kanban, Leads Finder, dan log aktivitas.",
     techStack: ["Firebase", "Progressive Web App"],
     status: "Personal Project",
     websiteUrl: "https://arcrmapp.vercel.app/",
@@ -392,16 +297,52 @@ export const PROJECTS_DATA: ProjectItem[] = [
       "Akses live aplikasi memerlukan autentikasi Google Sign-In internal workspace.",
   },
   {
+    id: "lokerresmi",
+    title: "LokerResmi.id",
+    subtitle: "Platform Direktori Bursa Kerja Terstruktur",
+    role: "Inisiator Proyek & Web Developer",
+    businessProblem:
+      "Informasi lowongan kerja tersebar dan sulit dibandingkan menurut posisi, lokasi, serta sumber rekrutmen.",
+    objective:
+      "Menyatukan informasi lowongan ke dalam antarmuka terstruktur yang mudah dicari dan difilter.",
+    myContribution:
+      "Menginisiasi produk, merancang arsitektur direktori dan alur pencarian, serta mengembangkan website berbantuan AI.",
+    solution:
+      "Direktori lowongan dengan pemetaan posisi, filter kategori dan wilayah, halaman detail berbasis Supabase, serta sumber rekrutmen yang transparan.",
+    techStack: ["Supabase", "Vercel"],
+    status: "Personal Project",
+    websiteUrl: "https://lokerresmi.vercel.app",
+    coverScreenshot: "/assets/Tangkapan%20Layar%20Proyek%20LokerResmi.id.png",
+    screenshots: [
+      {
+        src: "/assets/Tangkapan%20Layar%20Proyek%20LokerResmi.id.png",
+        title: "Beranda LokerResmi.id",
+        caption:
+          "Tampilan pencarian lowongan, kategori, dan informasi posisi kerja.",
+      },
+    ],
+    socials: [
+      { platform: "Instagram", url: "https://www.instagram.com/lokerresmi_id" },
+      { platform: "TikTok", url: "https://www.tiktok.com/@lokerresmi_id" },
+      {
+        platform: "LinkedIn",
+        url: "https://www.linkedin.com/company/lokerresmi.id/",
+      },
+    ],
+  },
+  {
     id: "thirteen-project",
     title: "Thirteen Project",
-    subtitle: "Katalog Layanan & Portofolio Otomotif",
+    subtitle: "Katalog Layanan & Etalase Digital Otomotif",
     role: "Web Developer",
-    description:
-      "Situs katalog komersial untuk layanan perawatan otomotif (auto detailing & custom lighting) serta inventori mobil bekas.",
+    businessProblem:
+      "Informasi layanan perawatan otomotif, galeri hasil pengerjaan, dan inventori kendaraan membutuhkan etalase digital yang mudah diakses.",
     objective:
-      "Meningkatkan kredibilitas visual bengkel di mata pelanggan dan mempercepat alur konsultasi maupun pemesanan jadwal via WhatsApp.",
-    contribution:
-      "Katalog web responsif yang memuat spesifikasi layanan, galeri hasil pengerjaan, etalase stok kendaraan, dan integrasi kontak langsung.",
+      "Meningkatkan kredibilitas visual bengkel dan mempermudah konsultasi maupun pemesanan jadwal via WhatsApp.",
+    myContribution:
+      "Menyusun struktur katalog layanan, portofolio, dan inventori kendaraan serta mengembangkan website berbantuan AI.",
+    solution:
+      "Katalog web responsif berisi spesifikasi layanan, galeri hasil pengerjaan, etalase stok kendaraan, dan integrasi kontak langsung.",
     techStack: ["Supabase", "Vercel"],
     status: "Project Showcase",
     websiteUrl: "https://thirteenproject.vercel.app",
@@ -527,8 +468,11 @@ export const CONTACT_DATA = {
 export const NAVIGATION_SECTIONS = [
   { id: "home", label: "Beranda", shortLabel: "Home" },
   { id: "profile", label: "Profil", shortLabel: "Profil" },
+  { id: "competencies", label: "Kompetensi", shortLabel: "Keahlian" },
   { id: "career", label: "Riwayat Kerja", shortLabel: "Karir" },
   { id: "projects", label: "Proyek", shortLabel: "Proyek" },
+  { id: "methodology", label: "Metodologi Penjualan", shortLabel: "Metode" },
+  { id: "ecosystem", label: "Ekosistem Digital", shortLabel: "Ekosistem" },
   { id: "credentials", label: "Pendidikan & Sertifikasi", shortLabel: "Kredensial" },
   { id: "contact", label: "Kontak & Diskusi", shortLabel: "Kontak" },
 ] as const;

@@ -90,11 +90,12 @@ export default function HeroSection() {
             variants={headlineSequence}
             initial="hidden"
             animate="visible"
-            className="mt-5 max-w-[13ch] font-heading text-[2.65rem] font-bold leading-[1.04] tracking-[-0.06em] text-soft-white sm:max-w-[15ch] sm:text-5xl md:text-6xl lg:max-w-[12ch] lg:text-[clamp(3.5rem,5vw,4.5rem)]"
+            className="mt-5 max-w-none font-heading text-[2.65rem] font-bold leading-[1.04] tracking-[-0.06em] text-soft-white sm:text-5xl md:text-6xl lg:text-[clamp(2.5rem,4vw,3.75rem)]"
           >
             <motion.span variants={headlineLine} className="block">Driving Business Growth</motion.span>
-            <motion.span variants={headlineLine} className="block">Through <span className="editorial-accent">Strategic B2B Sales</span></motion.span>
-            <motion.span variants={headlineLine} className="block">&amp; Account Management.</motion.span>
+            <motion.span variants={headlineLine} className="block">Through Strategic</motion.span>
+            <motion.span variants={headlineLine} className="block"><span className="editorial-accent">B2B Sales</span> &amp; Account</motion.span>
+            <motion.span variants={headlineLine} className="block">Management.</motion.span>
           </motion.h2>
 
           <motion.p

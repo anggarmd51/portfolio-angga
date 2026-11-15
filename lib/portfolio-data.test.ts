@@ -4,7 +4,6 @@ import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import {
   HERO_DATA,
-  BENTO_DATA,
   CAREER_ROLES,
   PROJECTS_DATA,
   EDUCATION_DATA,
@@ -29,11 +28,11 @@ test("Executive Editorial design tokens, fonts, and protected integrations are p
   assert.match(layout, /process\.env\.VERCEL === "1" \? <Analytics \/> : null/);
 });
 
-test("navigation contains exactly 6 sections with valid anchor IDs", () => {
-  assert.equal(NAVIGATION_SECTIONS.length, 6);
+test("navigation contains the nine requested sections in architectural order", () => {
+  assert.equal(NAVIGATION_SECTIONS.length, 9);
   assert.deepEqual(
     NAVIGATION_SECTIONS.map((section) => section.id),
-    ["home", "profile", "career", "projects", "credentials", "contact"]
+    ["home", "profile", "competencies", "career", "projects", "methodology", "ecosystem", "credentials", "contact"]
   );
 });
 
@@ -55,28 +54,34 @@ test("hero uses the approved role copy and keeps portrait fallback assets", () =
   assert.ok(existsSync(join(projectRoot, "public/profile-placeholder.png")));
 });
 
-test("profile uses factual positioning, four target roles, and balanced competency groups", () => {
-  assert.equal(BENTO_DATA.sectionTitle, "Dari Survei Kredit ke Penjualan B2B SaaS");
-  assert.equal(BENTO_DATA.box1.headline, "Pengalaman Pembiayaan & Penjualan Solusi B2B");
-  assert.deepEqual(BENTO_DATA.box2.roles, [
-    "Sales Manager",
-    "B2B Sales",
-    "Business Development Manager",
-    "Account Manager",
-  ]);
-  assert.equal(BENTO_DATA.box3.pillars.length, 3);
-  assert.deepEqual(
-    BENTO_DATA.box4.competencyCategories.map((category) => category.title),
-    [
-      "Penjualan & Pengembangan Bisnis",
-      "Pembiayaan & Analisis Risiko",
-      "CRM, Digital & Alat Kerja",
-    ]
-  );
-  assert.deepEqual(
-    BENTO_DATA.box4.competencyCategories.map((category) => category.skills.length),
-    [6, 6, 6]
-  );
+test("executive profile and core competencies use four verified snapshot facts and editorial rows", () => {
+  const profile = readFileSync(join(projectRoot, "components/ExecutiveProfileSection.tsx"), "utf8");
+  const competencies = readFileSync(join(projectRoot, "components/CoreCompetenciesSection.tsx"), "utf8");
+  for (const fact of [
+    "Sejak 2019",
+    "7 Peran",
+    "B2B & SaaS",
+    "3 Produk",
+    "Pengalaman Profesional Lintas Industri",
+    "Perbankan, Pembiayaan, B2B SaaS & Konektivitas",
+    "Spesialisasi Akuisisi, Pipeline & Retensi Akun",
+    "Inisiator Aplikasi Web & CRM Mandiri",
+  ]) {
+    assert.ok(profile.includes(fact), `profile snapshot contains ${fact}`);
+  }
+  for (const skill of [
+    "B2B Sales & Prospecting",
+    "Business Development",
+    "Account Management & Retention",
+    "Sales Operations & CRM",
+    "kualifikasi prospek pengambil keputusan",
+    "koordinasi tim akuisisi lapangan",
+    "retensi dan pertumbuhan akun jangka panjang",
+    "pengembangan sistem CRM internal berbantuan AI",
+  ]) {
+    assert.ok(competencies.includes(skill), `competencies include ${skill}`);
+  }
+  assert.doesNotMatch(`${profile}\n${competencies}`, /<li[^>]*rounded-|glass-card|flex-wrap gap-2/i);
 });
 
 test("B2B sales workflow contains the six approved stages in order", () => {
@@ -108,7 +113,9 @@ test("career history places the current Wavecomindo role above the six earlier r
       ["PT Astra Sedaya Finance (Astra Credit Companies)", "Surveyor", "Okt 2019 – Apr 2021"],
     ]
   );
-  assert.ok(CAREER_ROLES.every((role) => role.bullets.length > 0));
+  assert.ok(CAREER_ROLES.every((role) => role.bullets.length === 3));
+  assert.ok(CAREER_ROLES.every((role) => role.coreDevelopment.trim().length > 0));
+  assert.ok(CAREER_ROLES.every((role) => role.industry?.trim()));
   assert.equal(CAREER_ROLES[0].industry, "B2B Connectivity & Enterprise Network");
   assert.equal(CAREER_ROLES[0].location, "Medan, Sumatera Utara");
   assert.equal(CAREER_ROLES[0].isCurrentRole, true);
@@ -118,18 +125,20 @@ test("career history places the current Wavecomindo role above the six earlier r
   assert.doesNotMatch(JSON.stringify(CAREER_ROLES), /mentransformasi|\b\d+%/i);
 });
 
-test("all three projects provide purpose, scope, status, tech stack, and local preview assets", () => {
+test("featured project order is AR CRM, LokerResmi.id, and Thirteen Project with complete case studies", () => {
   assert.equal(PROJECTS_DATA.length, 3);
-  assert.equal(PROJECTS_DATA[0].title, "LokerResmi.id");
-  assert.equal(PROJECTS_DATA[0].websiteUrl, "https://lokerresmi.vercel.app");
-  assert.equal(PROJECTS_DATA[1].title, "AR CRM");
-  assert.equal(PROJECTS_DATA[1].websiteUrl, "https://arcrmapp.vercel.app/");
+  assert.equal(PROJECTS_DATA[0].title, "AR CRM");
+  assert.equal(PROJECTS_DATA[0].websiteUrl, "https://arcrmapp.vercel.app/");
+  assert.equal(PROJECTS_DATA[1].title, "LokerResmi.id");
+  assert.equal(PROJECTS_DATA[1].websiteUrl, "https://lokerresmi.vercel.app");
   assert.equal(PROJECTS_DATA[2].title, "Thirteen Project");
   assert.equal(PROJECTS_DATA[2].websiteUrl, "https://thirteenproject.vercel.app");
 
   for (const project of PROJECTS_DATA) {
     assert.ok(project.objective);
-    assert.ok(project.contribution);
+    assert.ok(project.businessProblem);
+    assert.ok(project.myContribution);
+    assert.ok(project.solution);
     assert.ok(project.status);
     assert.ok(project.techStack?.length);
     assert.ok(project.screenshots.length > 0);
@@ -139,19 +148,17 @@ test("all three projects provide purpose, scope, status, tech stack, and local p
       assert.ok(screenshot.title);
       assert.ok(screenshot.caption);
     }
-    assert.notEqual(project.description, project.objective, `${project.title} copy is distinct`);
+    assert.notEqual(project.businessProblem, project.objective, `${project.title} copy is distinct`);
   }
 
-  assert.equal(
-    PROJECTS_DATA[0].description,
-    "Platform direktori bursa kerja terstruktur dengan pemetaan posisi, filter lokasi spesifik, dan transparansi sumber rekrutmen."
-  );
-  assert.match(PROJECTS_DATA[0].objective ?? "", /Memangkas waktu pencarian kerja/);
-  assert.match(PROJECTS_DATA[1].description, /Progressive Web App \(PWA\) CRM internal/);
-  assert.match(PROJECTS_DATA[1].objective ?? "", /pencatatan prospek manual di spreadsheet/);
-  assert.match(PROJECTS_DATA[2].description, /layanan perawatan otomotif/);
+  assert.match(PROJECTS_DATA[0].businessProblem, /spreadsheet manual/);
+  assert.match(PROJECTS_DATA[0].objective, /Mendigitalisasi pencatatan prospek/);
+  assert.match(PROJECTS_DATA[0].solution, /pipeline Kanban/);
+  assert.match(PROJECTS_DATA[1].businessProblem, /Informasi lowongan kerja tersebar/);
+  assert.match(PROJECTS_DATA[1].objective, /Menyatukan informasi lowongan/);
+  assert.match(PROJECTS_DATA[2].businessProblem, /layanan perawatan otomotif/);
 
-  const arcrm = PROJECTS_DATA.find((project) => project.id === "arcrm");
+  const arcrm = PROJECTS_DATA[0];
   assert.equal(arcrm?.screenshots.length, 4);
   assert.equal(arcrm?.coverScreenshot, "/assets/arcrm-dashboard-sanitized.png");
   assert.equal(arcrm?.previewModules, undefined);
@@ -169,7 +176,6 @@ test("all three projects provide purpose, scope, status, tech stack, and local p
 test("public portfolio data contains no Rupiah amounts", () => {
   const publicCopy = JSON.stringify({
     HERO_DATA,
-    BENTO_DATA,
     CAREER_ROLES,
     PROJECTS_DATA,
     EDUCATION_DATA,
@@ -286,9 +292,7 @@ test("copy-email control keeps its approved address and touch-sized accessible f
 });
 
 test("role and certificate cards omit sequence badges and certificates use an internal accessible image viewer", () => {
-  const bento = readFileSync(join(projectRoot, "components/BentoGrid.tsx"), "utf8");
   const credentials = readFileSync(join(projectRoot, "components/CredentialsSection.tsx"), "utf8");
-  assert.doesNotMatch(bento, /0\{idx \+ 1\}/);
   assert.doesNotMatch(credentials, /0\{idx \+ 1\}/);
   assert.match(credentials, /<a href={imageUrl} target="_blank" rel="noopener noreferrer"/);
   assert.match(credentials, /Buka Gambar Ukuran Penuh/);
@@ -309,25 +313,36 @@ test("role and certificate cards omit sequence badges and certificates use an in
   assert.match(credentials, /priority/);
 });
 
-test("all SectionNavigation usage is removed while six content sections remain", () => {
+test("page renders the nine requested content sections in exact order and preserves FloatingCTA", () => {
   const page = readFileSync(join(projectRoot, "app/page.tsx"), "utf8");
   const layout = readFileSync(join(projectRoot, "app/layout.tsx"), "utf8");
   assert.doesNotMatch(`${page}\n${layout}`, /SectionNavigation|Navigasi Samping/);
-  for (const section of ["HeroSection", "BentoGrid", "CareerSection", "ProjectShowcase", "CredentialsSection", "ContactSection"]) {
-    assert.match(page, new RegExp(`<${section}\\s*/>`));
-  }
+  const renderedComponents = [...page.matchAll(/<([A-Z][A-Za-z]+)\s*\/>/g)].map((match) => match[1]);
+  assert.deepEqual(renderedComponents, [
+    "HeroSection",
+    "ExecutiveProfileSection",
+    "CoreCompetenciesSection",
+    "CareerSection",
+    "ProjectShowcase",
+    "SalesMethodologySection",
+    "DigitalEcosystemSection",
+    "CredentialsSection",
+    "ContactSection",
+    "FloatingCTA",
+  ]);
   assert.doesNotMatch(page, /7rem\+env\(safe-area-inset-bottom\)/);
 });
 
 test("sales workflow renders a keyboard-operable single active panel", () => {
-  const bento = readFileSync(join(projectRoot, "components/BentoGrid.tsx"), "utf8");
+  const methodology = readFileSync(join(projectRoot, "components/SalesMethodologySection.tsx"), "utf8");
+  const ecosystem = readFileSync(join(projectRoot, "components/DigitalEcosystemSection.tsx"), "utf8");
   const marquee = readFileSync(join(projectRoot, "components/ToolMarquee.tsx"), "utf8");
   const showcase = readFileSync(join(projectRoot, "components/ProjectShowcase.tsx"), "utf8");
-  assert.match(bento, /lg:col-span-12 lg:row-start-4/);
-  assert.match(bento, /role="tablist"/);
-  assert.match(bento, /role="tabpanel"/);
-  assert.match(bento, /ArrowRight/);
-  assert.match(bento, /<ToolMarquee\s*\/>/);
+  assert.match(methodology, /role="tablist"/);
+  assert.match(methodology, /role="tabpanel"/);
+  assert.match(methodology, /ArrowRight/);
+  assert.match(methodology, /event\.key === "Home"/);
+  assert.match(ecosystem, /<ToolMarquee\s*\/>/);
   assert.equal((marquee.match(/slug: "/g) ?? []).length, 16);
   assert.match(marquee, /slug: "linkedin"/);
   assert.match(marquee, /slug: "visualstudiocode"/);
@@ -347,20 +362,26 @@ test("sales workflow renders a keyboard-operable single active panel", () => {
   assert.match(showcase, /h-\[90dvh\]/);
   assert.match(showcase, /event.key === "ArrowLeft"/);
   assert.match(showcase, /event.key === "ArrowRight"/);
+  assert.match(showcase, /group-hover\/project:scale-\[1\.025\]/);
+  assert.match(showcase, /Lihat Galeri \/ Preview/);
+  assert.match(showcase, /Kunjungi Website/);
+  assert.match(showcase, /Business Problem/);
+  assert.match(showcase, /My Contribution/);
 });
 
-test("career details have no sequence numbers and close through modal/history controls", () => {
+test("career timeline presents seven accessible interactive milestones with complete role detail", () => {
   const career = readFileSync(join(projectRoot, "components/CareerSection.tsx"), "utf8");
-  const morphCard = readFileSync(join(projectRoot, "components/MorphCard.tsx"), "utf8");
   assert.ok(CAREER_ROLES.every((role) => role.bullets.every((bullet) => !/^\d{2}[\s.)]/.test(bullet))));
-  assert.doesNotMatch(`${career}\n${morphCard}`, /0\{(?:idx|index)\s*\+\s*1\}/);
-  assert.match(morphCard, /layoutId=\{`career-card-\$\{role\.id\}`\}/);
-  assert.match(career, /onClick=\{closeRole\}/);
-  assert.match(career, /window\.addEventListener\("popstate"/);
-  assert.match(career, /CAREER_ACCORDION_HISTORY_KEY/);
-  assert.match(career, /event\.key === "Escape"/);
-  assert.doesNotMatch(career, /Tutup Dialog/);
-  assert.doesNotMatch(`${career}\n${morphCard}`, /prefers-reduced-motion/);
+  assert.match(career, /Daftar tujuh milestone karier/);
+  assert.match(career, /<svg/);
+  assert.match(career, /strokeDashoffset=\{1 - progress\}/);
+  assert.match(career, /aria-pressed=\{active\}/);
+  assert.match(career, /onFocus=\{\(\) => setSelectedRoleId\(role\.id\)\}/);
+  assert.match(career, /md:sticky md:top-8/);
+  assert.match(career, /Core Development/);
+  assert.match(career, /Ruang Lingkup Pekerjaan/);
+  assert.match(career, /md:hidden/);
+  assert.ok(CAREER_ROLES.every((role) => role.industry && role.coreDevelopment));
 });
 
 test("presentation scroll-snap uses proximity at all sizes and keeps mobile sections natural", () => {
@@ -379,9 +400,8 @@ test("all site motion is independent of the OS reduced-motion setting", () => {
     "components/ToolMarquee.tsx",
     "components/MotionReveal.tsx",
     "components/HeroSection.tsx",
-    "components/BentoGrid.tsx",
     "components/CareerSection.tsx",
-    "components/MorphCard.tsx",
+    "components/SalesMethodologySection.tsx",
   ];
   for (const file of motionFiles) {
     const source = readFileSync(join(projectRoot, file), "utf8");

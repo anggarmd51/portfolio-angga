@@ -1,450 +1,203 @@
 "use client";
 
-import { useCallback, useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import Image from "next/image";
-import { CAREER_ROLES, CareerRole } from "@/data/portfolio";
-import { useMediaQuery } from "@/hooks/useMediaQuery";
-import MorphCard from "./MorphCard";
-import { Reveal } from "./MotionReveal";
-import { motion, AnimatePresence, LayoutGroup } from "motion/react";
-import {
-  Briefcase,
-  Calendar,
-  X,
-  CheckCircle2,
-  ChevronDown,
-} from "lucide-react";
+import { CAREER_ROLES, type CareerRole } from "@/data/portfolio";
+import { BriefcaseBusiness, CalendarDays, MapPin } from "lucide-react";
 
-const CAREER_COMPANY_COUNT = new Set(CAREER_ROLES.map((role) => role.company)).size;
-
-const CAREER_DIALOG_HISTORY_KEY = "__careerRoleDialog";
-const CAREER_ACCORDION_HISTORY_KEY = "__careerAccordionRole";
-
-function getHistoryState(): Record<string, unknown> {
-  const state: unknown = window.history.state;
-  return state && typeof state === "object"
-    ? { ...(state as Record<string, unknown>) }
-    : {};
-}
-
-function hasHistoryEntry(key: string, roleId: string): boolean {
-  return getHistoryState()[key] === roleId;
-}
-
-function writeHistoryEntry(key: string, roleId: string, replace = false) {
-  const nextState = { ...getHistoryState(), [key]: roleId };
-  if (replace) {
-    window.history.replaceState(nextState, "", window.location.href);
-  } else {
-    window.history.pushState(nextState, "", window.location.href);
-  }
-}
-
-/**
- * Desktop Career Experience View (>= 768px).
- * Unmounts completely when the viewport is mobile, ensuring zero leftover state,
- * zero lingering modal dialogs, and clean body scroll restoration on breakpoint crossing.
- */
-function DesktopCareerView() {
-  const [selectedRole, setSelectedRole] = useState<CareerRole | null>(null);
-  const morphTransition = { type: "spring" as const, stiffness: 350, damping: 30 };
-  const dialogRef = useRef<HTMLDivElement | null>(null);
-  const triggerCardRef = useRef<HTMLElement | null>(null);
-  const previousBodyOverflow = useRef("");
-
-  const openRole = (role: CareerRole) => {
-    triggerCardRef.current = document.activeElement as HTMLElement;
-    writeHistoryEntry(CAREER_DIALOG_HISTORY_KEY, role.id);
-    setSelectedRole(role);
-  };
-
-  const closeRole = useCallback(() => {
-    if (selectedRole && hasHistoryEntry(CAREER_DIALOG_HISTORY_KEY, selectedRole.id)) {
-      window.history.back();
-      return;
-    }
-    setSelectedRole(null);
-  }, [selectedRole]);
-
-  // Reset selected role on matchMedia change as an event subscription
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(min-width: 768px)");
-    const handleMediaChange = (e: MediaQueryListEvent) => {
-      if (!e.matches) {
-        setSelectedRole(null);
-      }
-    };
-
-    mediaQuery.addEventListener("change", handleMediaChange);
-    return () => {
-      mediaQuery.removeEventListener("change", handleMediaChange);
-    };
-  }, []);
-
-  // Handle focus trap, ESC key, body scroll lock, and focus restoration
-  useEffect(() => {
-    if (!selectedRole) {
-      document.body.style.overflow = previousBodyOverflow.current;
-      return;
-    }
-
-    previousBodyOverflow.current = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-
-    // Set initial focus to the first focusable element inside the modal
-    const focusTimer = setTimeout(() => {
-      if (dialogRef.current) {
-        const focusable = dialogRef.current.querySelectorAll<HTMLElement>(
-          'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
-        );
-        if (focusable.length > 0) {
-          focusable[0].focus();
-        }
-      }
-    }, 40);
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        e.preventDefault();
-        closeRole();
-        return;
-      }
-
-      if (e.key === "Tab") {
-        if (!dialogRef.current) return;
-
-        const focusable = Array.from(
-          dialogRef.current.querySelectorAll<HTMLElement>(
-            'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
-          )
-        ).filter((el) => el.offsetParent !== null || el === document.activeElement);
-
-        if (focusable.length === 0) {
-          e.preventDefault();
-          return;
-        }
-
-        const firstElement = focusable[0];
-        const lastElement = focusable[focusable.length - 1];
-
-        if (e.shiftKey) {
-          // Shift + Tab: if focused on first element or outside, cycle to last element
-          if (document.activeElement === firstElement || !dialogRef.current.contains(document.activeElement)) {
-            e.preventDefault();
-            lastElement.focus();
-          }
-        } else {
-          // Tab forward: if focused on last element or outside, cycle to first element
-          if (document.activeElement === lastElement || !dialogRef.current.contains(document.activeElement)) {
-            e.preventDefault();
-            firstElement.focus();
-          }
-        }
-      }
-    };
-
-    const handleHistoryBack = () => setSelectedRole(null);
-
-    window.addEventListener("keydown", handleKeyDown);
-    window.addEventListener("popstate", handleHistoryBack);
-    return () => {
-      clearTimeout(focusTimer);
-      document.body.style.overflow = previousBodyOverflow.current;
-      window.removeEventListener("keydown", handleKeyDown);
-      window.removeEventListener("popstate", handleHistoryBack);
-      // Restore focus to the triggering card
-      triggerCardRef.current?.focus();
-    };
-  }, [selectedRole, closeRole]);
-
+function RoleDetail({ role }: { role: CareerRole }) {
   return (
-    <LayoutGroup id="career-morph-group">
-      <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
-        {CAREER_ROLES.map((role) => (
-          <MorphCard
-            key={role.id}
-            role={role}
-            isSelected={selectedRole?.id === role.id}
-            onSelect={() => openRole(role)}
+    <article
+      aria-live="polite"
+      className="border-l-2 border-signature-teal/70 bg-slate-surface/35 p-5 sm:p-7"
+    >
+      <div className="flex items-start gap-4">
+        <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl border border-white/15 bg-white p-1.5">
+          <Image
+            src={role.logo}
+            alt={role.logoAlt}
+            fill
+            sizes="56px"
+            className="object-contain p-1"
           />
-        ))}
+        </div>
+        <div className="min-w-0 pt-0.5">
+          <p className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-text">
+            {role.isCurrentRole ? "Peran saat ini" : "Pengalaman profesional"}
+          </p>
+          <h3 className="mt-2 font-heading text-2xl font-bold leading-tight tracking-[-0.035em] text-soft-white sm:text-3xl">
+            {role.role}
+          </h3>
+          <p className="mt-1.5 text-sm font-medium leading-6 text-muted-text sm:text-base">
+            {role.company}
+          </p>
+        </div>
       </div>
 
-      {/* DESKTOP DETAIL DIALOG (Shared Layout Morph) */}
-      <AnimatePresence>
-        {selectedRole && (
-          <div
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="dialog-role-title"
-          >
-            {/* Backdrop blur */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.25 }}
-              onClick={closeRole}
-              className="fixed inset-0 bg-slate-950/80 backdrop-blur-md"
-            />
-
-            {/* Morph Dialog Container with matching layoutId */}
-            <motion.div
-              ref={dialogRef}
-              layoutId={`career-card-${selectedRole.id}`}
-              transition={morphTransition}
-              className="relative w-full max-w-2xl bg-slate-900 border border-white/20 rounded-3xl p-6 sm:p-8 shadow-2xl z-10 max-h-[90vh] overflow-y-auto"
-            >
-              {/* Close button (First focusable element) */}
-              <button
-                type="button"
-                onClick={closeRole}
-                aria-label="Tutup rincian karir"
-                className="absolute top-5 right-5 min-h-[44px] min-w-[44px] rounded-full bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white flex items-center justify-center transition focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
-              >
-                <X className="w-5 h-5" />
-              </button>
-
-              {/* Header info with coordinated sub-layout elements */}
-              <div className="flex items-start gap-4 mb-6 pr-10">
-                <motion.div
-                  layoutId={`career-logo-${selectedRole.id}`}
-                  transition={morphTransition}
-                  className="relative w-16 h-16 rounded-2xl bg-white p-2 flex items-center justify-center shrink-0 border border-slate-200 overflow-hidden shadow-sm"
-                >
-                  <Image
-                    src={selectedRole.logo}
-                    alt={selectedRole.logoAlt}
-                    fill
-                    sizes="64px"
-                    className="object-contain p-1"
-                    referrerPolicy="no-referrer"
-                  />
-                </motion.div>
-                <div>
-                  <div className="inline-flex flex-wrap items-center gap-1.5 rounded-full border border-muted-text/15 bg-white/[0.035] px-2.5 py-1 text-xs font-mono font-semibold text-muted-text mb-1">
-                    <Calendar aria-hidden="true" className="w-3 h-3 text-muted-text" />
-                    {selectedRole.period}
-                    {selectedRole.isCurrentRole && <span className="ml-1 rounded-full bg-signature-teal/10 px-2 py-0.5 font-sans text-[10px] uppercase tracking-wide text-signature-teal">Aktif</span>}
-                  </div>
-                  <motion.h3
-                    id="dialog-role-title"
-                    layoutId={`career-company-${selectedRole.id}`}
-                    transition={morphTransition}
-                    className="text-xl sm:text-2xl font-bold text-white"
-                  >
-                    {selectedRole.company}
-                  </motion.h3>
-                  <motion.p
-                    layoutId={`career-role-${selectedRole.id}`}
-                    transition={morphTransition}
-                    className="text-base font-semibold text-emerald-400"
-                  >
-                    {selectedRole.role}
-                  </motion.p>
-                </div>
-              </div>
-
-              {/* Body Bullets */}
-              <div className="border-t border-white/10 pt-5">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">
-                  Ruang Lingkup Pekerjaan
-                </h4>
-                <ul className="space-y-3.5">
-                  {selectedRole.bullets.map((bullet, idx) => (
-                    <li
-                      key={idx}
-                      className="flex items-start gap-3 text-sm text-slate-200 leading-relaxed"
-                    >
-                      <div className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 mt-0.5">
-                        <CheckCircle2 className="w-3.5 h-3.5" />
-                      </div>
-                      <span>{bullet}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="mt-8 space-y-2 border-t border-white/5 pt-4 text-xs text-muted-text">
-                {selectedRole.industry && <p>Industri: <span className="text-soft-white">{selectedRole.industry}</span></p>}
-                <p>Penempatan: <span className="text-soft-white">{selectedRole.location ?? "Medan, Sumatera Utara"}</span></p>
-              </div>
-            </motion.div>
-          </div>
+      <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 border-y border-muted-text/15 py-3 text-xs text-muted-text sm:text-sm">
+        <span className="inline-flex items-center gap-2">
+          <CalendarDays aria-hidden="true" className="h-4 w-4 text-signature-teal" />
+          {role.period}
+        </span>
+        {role.location && (
+          <span className="inline-flex items-center gap-2">
+            <MapPin aria-hidden="true" className="h-4 w-4 text-signature-teal" />
+            {role.location}
+          </span>
         )}
-      </AnimatePresence>
-    </LayoutGroup>
-  );
-}
+      </div>
 
-/**
- * Mobile Career Accordion View (< 768px).
- * Accessible native accordion with zero layoutId, zero morph modal, and no desktop branch in DOM.
- */
-function MobileCareerView() {
-  const [mobileExpandedId, setMobileExpandedId] = useState<string | null>("role-wavecomindo");
-  const mobileHistoryEntry = useRef(false);
+      {role.industry && (
+        <p className="mt-5 text-sm text-muted-text">
+          Industri <span className="px-1.5 text-muted-text/60">/</span>
+          <span className="font-medium text-soft-white">{role.industry}</span>
+        </p>
+      )}
 
-  const closeMobileDetails = useCallback(() => {
-    if (
-      mobileExpandedId &&
-      mobileHistoryEntry.current &&
-      hasHistoryEntry(CAREER_ACCORDION_HISTORY_KEY, mobileExpandedId)
-    ) {
-      window.history.back();
-      return;
-    }
-    mobileHistoryEntry.current = false;
-    setMobileExpandedId(null);
-  }, [mobileExpandedId]);
+      <div className="mt-6">
+        <h4 className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-text">
+          Ruang Lingkup Pekerjaan
+        </h4>
+        <ul className="mt-3 space-y-3">
+          {role.bullets.map((bullet) => (
+            <li key={bullet} className="flex items-start gap-3 text-sm leading-7 text-soft-white/90 sm:text-base">
+              <span aria-hidden="true" className="mt-[0.72rem] h-1.5 w-1.5 shrink-0 rounded-full bg-signature-teal" />
+              <span>{bullet}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
 
-  useEffect(() => {
-    if (!mobileExpandedId) return;
-
-    if (!mobileHistoryEntry.current) {
-      writeHistoryEntry(CAREER_ACCORDION_HISTORY_KEY, mobileExpandedId);
-      mobileHistoryEntry.current = true;
-    } else if (!hasHistoryEntry(CAREER_ACCORDION_HISTORY_KEY, mobileExpandedId)) {
-      writeHistoryEntry(CAREER_ACCORDION_HISTORY_KEY, mobileExpandedId, true);
-    }
-
-    const handleHistoryBack = () => {
-      if (!mobileHistoryEntry.current) return;
-      mobileHistoryEntry.current = false;
-      setMobileExpandedId(null);
-    };
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        event.preventDefault();
-        closeMobileDetails();
-      }
-    };
-
-    window.addEventListener("popstate", handleHistoryBack);
-    window.addEventListener("keydown", handleKeyDown);
-    return () => {
-      window.removeEventListener("popstate", handleHistoryBack);
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [mobileExpandedId, closeMobileDetails]);
-
-  return (
-    <div className="space-y-4">
-      {CAREER_ROLES.map((role) => {
-        const isExpanded = mobileExpandedId === role.id;
-        return (
-          <div
-            key={role.id}
-            className="glass-card rounded-2xl border border-white/10 overflow-hidden"
-          >
-            <button
-              type="button"
-              onClick={() =>
-                isExpanded ? closeMobileDetails() : setMobileExpandedId(role.id)
-              }
-              aria-expanded={isExpanded}
-              aria-controls={`role-content-${role.id}`}
-              className="w-full p-4 flex items-center justify-between text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
-            >
-              <div className="flex items-center gap-3 min-w-0 pr-2">
-                <div className="relative w-12 h-12 rounded-xl bg-white p-1 flex items-center justify-center shrink-0 border border-slate-200 overflow-hidden">
-                  <Image
-                    src={role.logo}
-                    alt={role.logoAlt}
-                    fill
-                    sizes="48px"
-                    className="object-contain p-1"
-                    referrerPolicy="no-referrer"
-                  />
-                </div>
-                <div className="min-w-0">
-                  <span className="mb-0.5 inline-flex items-center gap-1.5 text-[10px] font-mono font-bold text-muted-text">
-                    {role.isCurrentRole && <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-signature-teal" />}
-                    {role.period}
-                  </span>
-                  <h3 className="text-sm font-bold text-white truncate">
-                    {role.company}
-                  </h3>
-                  <p className="text-xs font-semibold text-slate-300 truncate">
-                    {role.role}
-                  </p>
-                </div>
-              </div>
-
-              <div
-                className={`w-7 h-7 rounded-full bg-white/5 flex items-center justify-center text-slate-400 shrink-0 transition-transform ${
-                  isExpanded ? "rotate-180 text-emerald-400" : ""
-                }`}
-              >
-                <ChevronDown className="w-4 h-4" />
-              </div>
-            </button>
-
-            {/* Accordion Content */}
-            {isExpanded && (
-              <div
-                id={`role-content-${role.id}`}
-                className="px-4 pb-5 pt-2 border-t border-white/5 space-y-3"
-              >
-                {role.industry && <p className="text-xs leading-relaxed text-muted-text">Industri: <span className="text-soft-white">{role.industry}</span></p>}
-                {role.location && <p className="text-xs leading-relaxed text-muted-text">Penempatan: <span className="text-soft-white">{role.location}</span></p>}
-                <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
-                  Ruang Lingkup Pekerjaan
-                </div>
-                <ul className="space-y-2.5">
-                  {role.bullets.map((bullet, bIdx) => (
-                    <li
-                      key={bIdx}
-                      className="flex items-start gap-2.5 text-xs text-slate-300 leading-relaxed"
-                    >
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
-                      <span>{bullet}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </div>
-        );
-      })}
-    </div>
+      <div className="mt-7 border-t border-muted-text/15 pt-5">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-text">
+          Core Development
+        </p>
+        <p className="mt-2 text-sm leading-7 text-soft-white sm:text-base">
+          {role.coreDevelopment}
+        </p>
+      </div>
+    </article>
   );
 }
 
 export default function CareerSection() {
-  const isDesktop = useMediaQuery("(min-width: 768px)");
+  const [selectedRoleId, setSelectedRoleId] = useState(CAREER_ROLES[0]?.id ?? "");
+  const selectedIndex = Math.max(
+    0,
+    CAREER_ROLES.findIndex((role) => role.id === selectedRoleId)
+  );
+  const selectedRole = CAREER_ROLES[selectedIndex];
+  const progress = CAREER_ROLES.length > 1 ? selectedIndex / (CAREER_ROLES.length - 1) : 1;
 
   return (
     <section
       id="career"
       aria-labelledby="career-heading"
-      className="py-20 md:py-28 px-4 sm:px-6 lg:px-8 border-t border-white/5 relative bg-obsidian presentation-section"
+      className="presentation-section relative border-t border-white/[0.08] bg-obsidian px-5 py-20 sm:px-8 md:py-28 lg:px-10"
     >
       <div className="mx-auto w-full max-w-[1240px]">
-        {/* Section Header with Reveal */}
-        <Reveal className="mb-12 md:mb-16 text-left max-w-3xl">
-          <div className="inline-flex items-center gap-2 rounded-full border border-muted-text/15 bg-white/[0.035] px-3 py-1 text-xs font-semibold uppercase tracking-wider text-muted-text mb-3">
-            <Briefcase aria-hidden="true" className="w-3.5 h-3.5 text-muted-text" />
-            <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-signature-teal" />
-            Rekam Jejak Karir & Eksekusi Lapangan
-          </div>
+        <header className="mb-12 max-w-4xl md:mb-16">
+          <p className="mb-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-muted-text">
+            <BriefcaseBusiness aria-hidden="true" className="h-4 w-4 text-signature-teal" />
+            The Growth Journey
+          </p>
           <h2
             id="career-heading"
-            className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white tracking-tight"
+            className="font-heading text-3xl font-semibold leading-tight tracking-[-0.04em] text-soft-white sm:text-4xl md:text-5xl"
           >
-            Riwayat Kerja
+            From Credit Analysis to B2B SaaS &amp; Enterprise Connectivity
           </h2>
-          <p className="mt-3 text-sm sm:text-base text-slate-400">
-            {CAREER_ROLES.length} posisi di {CAREER_COMPANY_COUNT} perusahaan sejak 2019, mulai dari analisis kredit lapangan hingga Account Manager B2B SaaS.
+          <p className="mt-4 max-w-2xl text-sm leading-7 text-muted-text sm:text-base">
+            Tujuh milestone karier yang bergerak dari survei kredit dan pembiayaan, menuju penjualan solusi digital, lalu konektivitas korporasi.
           </p>
-        </Reveal>
+        </header>
 
-        {/* DESKTOP VIEW (>= 768px): Mounted conditionally; unmounts completely on mobile */}
-        {isDesktop && <DesktopCareerView />}
+        <div className="grid grid-cols-1 gap-10 md:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] md:gap-12 lg:gap-20">
+          <div>
+            <h3 className="mb-5 text-xs font-semibold uppercase tracking-[0.14em] text-muted-text">
+              {CAREER_ROLES.length} Milestone Karier
+            </h3>
+            <div className="relative">
+              <svg
+                aria-hidden="true"
+                focusable="false"
+                className="pointer-events-none absolute left-0 top-[2.75rem] h-[calc(100%-5.5rem)] w-6"
+                viewBox="0 0 24 640"
+                preserveAspectRatio="none"
+              >
+                <path d="M12 0V640" pathLength="1" fill="none" stroke="rgba(166,176,189,0.24)" strokeWidth="1.5" />
+                <path
+                  d="M12 0V640"
+                  pathLength="1"
+                  fill="none"
+                  stroke="#19C69A"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeDasharray="1"
+                  strokeDashoffset={1 - progress}
+                  className="transition-[stroke-dashoffset] duration-300"
+                />
+              </svg>
 
-        {/* MOBILE VIEW (< 768px): Accessible Native Accordion */}
-        {!isDesktop && <MobileCareerView />}
+              <ol aria-label="Daftar tujuh milestone karier" className="relative">
+                {CAREER_ROLES.map((role, index) => {
+                  const active = role.id === selectedRoleId;
+                  const latest = index < 2;
+                  return (
+                    <li key={role.id} className="min-h-[5.5rem] border-b border-white/[0.08] last:border-b-0">
+                      <button
+                        type="button"
+                        aria-pressed={active}
+                        onClick={() => setSelectedRoleId(role.id)}
+                        onFocus={() => setSelectedRoleId(role.id)}
+                        className={`group relative flex min-h-[5.5rem] w-full items-center pl-8 pr-2 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signature-teal focus-visible:ring-inset ${
+                          active ? "bg-white/[0.035]" : "hover:bg-white/[0.025]"
+                        }`}
+                      >
+                        <span
+                          aria-hidden="true"
+                          className={`absolute left-[7px] top-1/2 z-10 h-[10px] w-[10px] -translate-y-1/2 rounded-full border transition-colors ${
+                            active || role.isCurrentRole
+                              ? "border-signature-teal bg-signature-teal shadow-[0_0_0_4px_rgba(25,198,154,0.10)]"
+                              : "border-muted-text/60 bg-obsidian group-hover:border-signature-teal/70"
+                          }`}
+                        />
+                        <span className="min-w-0 flex-1 py-3">
+                          <span className="flex items-center gap-2 text-[11px] font-medium tracking-wide text-muted-text">
+                            <span>{role.period}</span>
+                            {latest && (
+                              <span className="rounded-sm border border-signature-teal/30 px-1.5 py-0.5 text-[9px] uppercase tracking-[0.12em] text-signature-teal">
+                                {role.isCurrentRole ? "Aktif" : "Terbaru"}
+                              </span>
+                            )}
+                          </span>
+                          <span className={`mt-1 block truncate text-sm font-semibold sm:text-base ${active ? "text-soft-white" : "text-soft-white/80"}`}>
+                            {role.company}
+                          </span>
+                          <span className="mt-0.5 block truncate text-xs text-muted-text">
+                            {role.role}
+                          </span>
+                        </span>
+                      </button>
+
+                      {active && (
+                        <div className="pb-5 pl-8 md:hidden">
+                          <RoleDetail role={role} />
+                        </div>
+                      )}
+                    </li>
+                  );
+                })}
+              </ol>
+            </div>
+          </div>
+
+          {selectedRole && (
+            <div className="hidden md:block md:sticky md:top-8 md:self-start">
+              <RoleDetail role={selectedRole} />
+            </div>
+          )}
+        </div>
       </div>
     </section>
   );
