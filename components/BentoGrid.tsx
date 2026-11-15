@@ -67,12 +67,13 @@ export default function BentoGrid() {
     <section
       id="profile"
       aria-labelledby="bento-heading"
-      className="py-20 md:py-28 px-4 sm:px-6 lg:px-8 border-t border-white/5 relative bg-[#0B0F19] presentation-section"
+      className="py-20 md:py-28 px-4 sm:px-6 lg:px-8 border-t border-white/5 relative bg-graphite presentation-section"
     >
-      <div className="max-w-7xl mx-auto">
+      <div className="mx-auto w-full max-w-[1240px]">
         <Reveal className="mb-12 md:mb-16 text-left max-w-3xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold uppercase tracking-wider mb-3">
-            <Compass className="w-3.5 h-3.5" />
+          <div className="inline-flex items-center gap-2 rounded-full border border-muted-text/15 bg-white/[0.035] px-3 py-1 text-xs font-semibold uppercase tracking-wider text-muted-text mb-3">
+            <Compass aria-hidden="true" className="w-3.5 h-3.5 text-muted-text" />
+            <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-signature-teal" />
             Profil & Fokus Peran
           </div>
           <h2
@@ -99,7 +100,7 @@ export default function BentoGrid() {
               <div>
                 <div className="flex items-center gap-3 mb-5">
                   <span className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
-                  <span className="text-xs font-bold uppercase tracking-wider text-emerald-400">
+                  <span className="text-xs font-bold uppercase tracking-wider text-muted-text">
                     Ringkasan Pengalaman
                   </span>
                 </div>
@@ -134,7 +135,7 @@ export default function BentoGrid() {
               <div>
                 <div className="flex items-center gap-2 mb-4">
                   <Briefcase className="w-4 h-4 text-emerald-400" />
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-emerald-400">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-muted-text">
                     {BENTO_DATA.box2.label}
                   </h3>
                 </div>
@@ -170,7 +171,7 @@ export default function BentoGrid() {
               onMouseLeave={pointerFine ? resetSpotlight : undefined}
             >
               <div className="mb-6">
-                <span className="text-xs font-bold uppercase tracking-wider text-emerald-400">
+                <span className="text-xs font-bold uppercase tracking-wider text-muted-text">
                   {BENTO_DATA.box3.title}
                 </span>
                 <p className="text-sm text-slate-300 mt-1">
@@ -248,7 +249,7 @@ export default function BentoGrid() {
             >
               <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 mb-5">
                 <div>
-                  <span className="text-xs font-bold uppercase tracking-wider text-emerald-400">
+                  <span className="text-xs font-bold uppercase tracking-wider text-muted-text">
                     Proses Kerja
                   </span>
                   <h3 className="mt-1 text-lg sm:text-xl font-bold text-white">

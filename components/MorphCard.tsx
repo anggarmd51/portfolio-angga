@@ -51,7 +51,8 @@ export default function MorphCard({
             />
           </motion.div>
 
-          <div className="flex items-center">
+          <div className="flex items-center gap-2">
+            {role.isCurrentRole && <span className="rounded-full border border-signature-teal/25 bg-signature-teal/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-signature-teal">Peran aktif</span>}
             <div className="w-7 h-7 rounded-full bg-white/5 group-hover:bg-emerald-500/20 group-hover:text-emerald-400 text-slate-400 flex items-center justify-center transition">
               <ArrowUpRight className="w-4 h-4" />
             </div>
@@ -62,14 +63,14 @@ export default function MorphCard({
         <motion.h3
           layoutId={`career-company-${role.id}`}
           transition={cardTransition}
-          className="text-base font-bold text-white group-hover:text-emerald-300 transition-colors line-clamp-2"
+          className="text-base font-bold text-white group-hover:text-soft-white transition-colors line-clamp-2"
         >
           {role.company}
         </motion.h3>
         <motion.p
           layoutId={`career-role-${role.id}`}
           transition={cardTransition}
-          className="text-sm font-semibold text-emerald-400 mt-1"
+          className="text-sm font-semibold text-muted-text mt-1"
         >
           {role.role}
         </motion.p>
@@ -78,7 +79,7 @@ export default function MorphCard({
       {/* Period & Snippet */}
       <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between text-xs text-slate-400">
         <span className="font-medium text-slate-300">{role.period}</span>
-        <span className="text-emerald-400/90 font-medium group-hover:underline">
+        <span className="text-muted-text font-medium group-hover:text-signature-teal group-hover:underline">
           Detail Peran →
         </span>
       </div>

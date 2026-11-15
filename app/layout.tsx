@@ -1,20 +1,33 @@
 import type { Metadata, Viewport } from "next";
-import { Plus_Jakarta_Sans } from "next/font/google";
+import { Instrument_Serif, Inter, Manrope } from "next/font/google";
 import { MotionConfig } from "motion/react";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
-const plusJakartaSans = Plus_Jakarta_Sans({
+const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-sans",
+  variable: "--font-inter",
   display: "swap",
-  weight: ["400", "500", "600", "700", "800"],
+});
+
+const manrope = Manrope({
+  subsets: ["latin"],
+  variable: "--font-manrope",
+  display: "swap",
+});
+
+const instrumentSerif = Instrument_Serif({
+  subsets: ["latin"],
+  variable: "--font-instrument-serif",
+  display: "swap",
+  weight: ["400"],
+  style: ["normal", "italic"],
 });
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#0B0F19",
+  themeColor: "#0A0F18",
 };
 
 const title = "Muhammad Angga Ramadhan | B2B Sales & Business Development";
@@ -67,11 +80,11 @@ export default function RootLayout({
     <html
       lang="id"
       suppressHydrationWarning
-      className={`${plusJakartaSans.variable} font-sans scroll-smooth`}
+      className={`${inter.variable} ${manrope.variable} ${instrumentSerif.variable} font-sans scroll-smooth`}
     >
       <body
         suppressHydrationWarning
-        className="min-h-screen bg-[#0B0F19] text-slate-100 antialiased selection:bg-emerald-500/20 selection:text-emerald-300"
+        className="min-h-screen bg-obsidian text-soft-white font-sans antialiased selection:bg-signature-teal/20 selection:text-soft-white"
       >
         <MotionConfig reducedMotion="never">{children}</MotionConfig>
         {process.env.VERCEL === "1" ? <Analytics /> : null}

@@ -16,6 +16,19 @@ import {
 
 const projectRoot = process.cwd();
 
+test("Executive Editorial design tokens, fonts, and protected integrations are present", () => {
+  const css = readFileSync(join(projectRoot, "app/globals.css"), "utf8");
+  const design = readFileSync(join(projectRoot, "DESIGN.md"), "utf8");
+  const layout = readFileSync(join(projectRoot, "app/layout.tsx"), "utf8");
+  for (const token of ["#0A0F18", "#151D29", "#202B39", "#F1F3F5", "#A6B0BD", "#19C69A"]) {
+    assert.ok(css.toLowerCase().includes(token.toLowerCase()), `${token} is in the CSS theme`);
+    assert.ok(design.toLowerCase().includes(token.toLowerCase()), `${token} is documented`);
+  }
+  assert.match(layout, /Instrument_Serif, Inter, Manrope/);
+  assert.match(css, /--radius-2xl: 14px/);
+  assert.match(layout, /process\.env\.VERCEL === "1" \? <Analytics \/> : null/);
+});
+
 test("navigation contains exactly 6 sections with valid anchor IDs", () => {
   assert.equal(NAVIGATION_SECTIONS.length, 6);
   assert.deepEqual(
@@ -27,12 +40,15 @@ test("navigation contains exactly 6 sections with valid anchor IDs", () => {
 test("hero uses the approved role copy and keeps portrait fallback assets", () => {
   assert.equal(HERO_DATA.name, "Muhammad Angga Ramadhan");
   assert.equal(HERO_DATA.secondaryName, "(Angga)");
-  assert.equal(HERO_DATA.eyebrow, "SALES, BUSINESS DEVELOPMENT & ACCOUNT MANAGEMENT");
+  assert.equal(HERO_DATA.eyebrow, "B2B SALES · BUSINESS DEVELOPMENT · ACCOUNT MANAGEMENT");
   assert.equal(
     HERO_DATA.tagline,
-    "Menangani Penjualan B2B, Pengelolaan Akun, dan Pengembangan Hubungan Bisnis di Sektor Pembiayaan & SaaS."
+    "Driving Business Growth Through Strategic B2B Sales & Account Management."
   );
-  assert.match(HERO_DATA.subTagline, /Berpengalaman sejak 2019/);
+  assert.equal(
+    HERO_DATA.subTagline,
+    "Mengembangkan peluang bisnis, mengelola hubungan strategis dengan klien, dan mengoptimalkan proses penjualan melalui pendekatan konsultatif serta pemanfaatan teknologi."
+  );
   assert.equal(HERO_DATA.portraitUrl, "/muhammad-angga-ramadhan-profile.png");
   assert.equal(HERO_DATA.floatingBadges.length, 1);
   assert.ok(existsSync(join(projectRoot, "public/muhammad-angga-ramadhan-profile.png")));
@@ -78,11 +94,12 @@ test("B2B sales workflow contains the six approved stages in order", () => {
   assert.ok(SALES_WORKFLOW_STEPS.every((step) => step.description.trim().length > 0));
 });
 
-test("career history retains the exact six roles, companies, and periods through June 2026", () => {
-  assert.equal(CAREER_ROLES.length, 6);
+test("career history places the current Wavecomindo role above the six earlier roles", () => {
+  assert.equal(CAREER_ROLES.length, 7);
   assert.deepEqual(
     CAREER_ROLES.map(({ company, role, period }) => [company, role, period]),
     [
+      ["PT Wave Communication Indonesia (Wavecomindo)", "Account Manager", "Okt 2026 – Sekarang"],
       ["PT Media Antar Nusa (Nusawork HRIS)", "Account Manager", "Okt 2025 – Jun 2026"],
       ["PT Sarana Digital Retail (Dretail POS)", "Business Development Manager", "Apr 2024 – Okt 2025"],
       ["PT Astra Sedaya Finance (Astra Credit Companies)", "Customer Retention Processing Syariah", "Mei 2023 – Apr 2024"],
@@ -92,8 +109,12 @@ test("career history retains the exact six roles, companies, and periods through
     ]
   );
   assert.ok(CAREER_ROLES.every((role) => role.bullets.length > 0));
-  assert.match(CAREER_ROLES[0].bullets[0], /mendemonstrasikan Nusawork HRIS/);
-  assert.match(CAREER_ROLES[1].bullets[0], /Business Development Officer/);
+  assert.equal(CAREER_ROLES[0].industry, "B2B Connectivity & Enterprise Network");
+  assert.equal(CAREER_ROLES[0].location, "Medan, Sumatera Utara");
+  assert.equal(CAREER_ROLES[0].isCurrentRole, true);
+  assert.equal(CAREER_ROLES[0].logo, "/assets/wavecomindo-monogram.svg");
+  assert.match(CAREER_ROLES[1].bullets[0], /mendemonstrasikan Nusawork HRIS/);
+  assert.match(CAREER_ROLES[2].bullets[0], /Business Development Officer/);
   assert.doesNotMatch(JSON.stringify(CAREER_ROLES), /mentransformasi|\b\d+%/i);
 });
 
@@ -269,7 +290,8 @@ test("role and certificate cards omit sequence badges and certificates use an in
   const credentials = readFileSync(join(projectRoot, "components/CredentialsSection.tsx"), "utf8");
   assert.doesNotMatch(bento, /0\{idx \+ 1\}/);
   assert.doesNotMatch(credentials, /0\{idx \+ 1\}/);
-  assert.doesNotMatch(credentials, /<a\b|target="_blank"|\bdownload[=\s>]/);
+  assert.match(credentials, /<a href={imageUrl} target="_blank" rel="noopener noreferrer"/);
+  assert.match(credentials, /Buka Gambar Ukuran Penuh/);
   assert.match(credentials, /<dialog/);
   assert.match(credentials, /dialog\.showModal\(\)/);
   assert.match(credentials, /aria-haspopup="dialog"/);
@@ -283,6 +305,8 @@ test("role and certificate cards omit sequence badges and certificates use an in
   assert.match(credentials, /event\.target === event\.currentTarget/);
   assert.match(credentials, /previouslyFocusedRef\.current\?\.focus\(\)/);
   assert.match(credentials, /Coba lagi/);
+  assert.match(credentials, /animate-pulse/);
+  assert.match(credentials, /priority/);
 });
 
 test("all SectionNavigation usage is removed while six content sections remain", () => {
@@ -318,6 +342,11 @@ test("sales workflow renders a keyboard-operable single active panel", () => {
   }
   assert.match(showcase, /Tangkapan Layar Aplikasi/);
   assert.match(showcase, /Ilustrasi Modul Fitur/);
+  assert.match(showcase, /Memuat pratinjau gambar/);
+  assert.match(showcase, /max-h-\[72vh\]/);
+  assert.match(showcase, /h-\[90dvh\]/);
+  assert.match(showcase, /event.key === "ArrowLeft"/);
+  assert.match(showcase, /event.key === "ArrowRight"/);
 });
 
 test("career details have no sequence numbers and close through modal/history controls", () => {

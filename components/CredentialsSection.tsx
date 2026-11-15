@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useEffect, useRef, useState, type KeyboardEvent, type MouseEvent } from "react";
 import { EDUCATION_DATA, CERTIFICATIONS_DATA } from "@/data/portfolio";
-import { GraduationCap, Award, Calendar, Eye, X } from "lucide-react";
+import { GraduationCap, Award, Calendar, Eye, X, ExternalLink } from "lucide-react";
 import { Reveal, StaggerContainer, StaggerItem } from "./MotionReveal";
 
 type Certificate = (typeof CERTIFICATIONS_DATA)[number];
@@ -108,7 +108,7 @@ function CertificateViewer({
       onClick={handleBackdropClick}
       className="fixed inset-0 m-0 h-full w-full max-h-none max-w-none bg-black/75 p-4 backdrop:bg-black/75 sm:p-6"
     >
-      <div className="mx-auto flex h-full w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-white/15 bg-[#111827] shadow-2xl">
+      <div className="mx-auto flex h-full w-full max-w-5xl flex-col overflow-hidden rounded-[14px] border border-muted-text/15 bg-graphite shadow-2xl">
         <div className="flex shrink-0 items-center justify-between gap-4 border-b border-white/10 px-4 py-3 sm:px-6">
           <div className="min-w-0">
             <h2 id="certificate-viewer-title" className="text-sm font-bold text-white sm:text-base">
@@ -131,9 +131,15 @@ function CertificateViewer({
 
         <div className="relative flex min-h-0 flex-1 items-center justify-center overflow-hidden bg-slate-900 p-2 sm:p-4" aria-busy={isLoading && !hasPreviewError}>
           {isLoading && !hasPreviewError ? (
-            <p className="absolute inset-0 z-10 flex items-center justify-center px-6 text-center text-sm text-slate-300" aria-live="polite">
-              Memuat pratinjau sertifikat…
-            </p>
+            <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 bg-slate-surface/75 px-6" role="status" aria-live="polite">
+              <div aria-hidden="true" className="w-full max-w-2xl aspect-[1.42] rounded-xl border border-muted-text/15 bg-gradient-to-br from-white/[0.045] via-white/[0.02] to-white/[0.04] p-6 shadow-inner sm:p-10">
+                <div className="h-3 w-1/3 animate-pulse rounded bg-white/10" />
+                <div className="mt-5 h-2 w-2/3 animate-pulse rounded bg-white/[0.08]" />
+                <div className="mt-2 h-2 w-1/2 animate-pulse rounded bg-white/[0.06]" />
+                <div className="mt-8 h-12 animate-pulse rounded-lg bg-white/[0.045] sm:mt-12 sm:h-20" />
+              </div>
+              <span className="text-sm text-muted-text">Memuat pratinjau sertifikat…</span>
+            </div>
           ) : null}
           {hasPreviewError ? (
             <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 px-6 text-center" aria-live="assertive">
@@ -147,7 +153,7 @@ function CertificateViewer({
                   setIsLoading(true);
                   setViewerKey((key) => key + 1);
                 }}
-                className="min-h-[44px] rounded-lg border border-emerald-500/30 px-4 py-2 text-sm font-semibold text-emerald-300 hover:bg-emerald-500/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+                className="min-h-[44px] rounded-lg border border-muted-text/15 px-4 py-2 text-sm font-semibold text-muted-text transition-colors hover:border-signature-teal/30 hover:text-signature-teal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signature-teal"
               >
                 Coba lagi
               </button>
@@ -186,6 +192,14 @@ function CertificateViewer({
             {isLoading && !hasPreviewError ? "Memuat gambar sertifikat." : hasPreviewError ? "Gambar sertifikat gagal dimuat." : "Gambar sertifikat siap."}
           </p>
         </div>
+        {imageUrl ? (
+          <div className="flex shrink-0 justify-center border-t border-muted-text/10 px-4 py-3">
+            <a href={imageUrl} target="_blank" rel="noopener noreferrer" className="min-h-[44px] inline-flex items-center gap-2 rounded-[10px] border border-muted-text/15 px-4 py-2 text-sm font-semibold text-soft-white transition-colors hover:border-signature-teal/40 hover:text-signature-teal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signature-teal">
+              Buka Gambar Ukuran Penuh
+              <ExternalLink aria-hidden="true" className="h-4 w-4" />
+            </a>
+          </div>
+        ) : null}
       </div>
     </dialog>
   );
@@ -198,12 +212,13 @@ export default function CredentialsSection() {
     <section
       id="credentials"
       aria-labelledby="credentials-heading"
-      className="py-20 md:py-28 px-4 sm:px-6 lg:px-8 border-t border-white/5 relative bg-[#0B0F19] presentation-section"
+      className="py-20 md:py-28 px-4 sm:px-6 lg:px-8 border-t border-white/5 relative bg-obsidian presentation-section"
     >
-      <div className="max-w-7xl mx-auto">
+      <div className="mx-auto w-full max-w-[1240px]">
         <Reveal className="mb-12 md:mb-16 text-left max-w-3xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold uppercase tracking-wider mb-3">
-            <GraduationCap className="w-3.5 h-3.5" />
+          <div className="inline-flex items-center gap-2 rounded-full border border-muted-text/15 bg-white/[0.035] px-3 py-1 text-xs font-semibold uppercase tracking-wider text-muted-text mb-3">
+            <GraduationCap aria-hidden="true" className="w-3.5 h-3.5 text-muted-text" />
+            <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-signature-teal" />
             Pendidikan & Kredensial Profesional
           </div>
           <h2
@@ -232,7 +247,7 @@ export default function CredentialsSection() {
                   />
                 </div>
                 <div className="min-w-0">
-                  <span className="text-xs font-bold uppercase tracking-wider text-emerald-400 block mb-1">
+                  <span className="text-xs font-bold uppercase tracking-wider text-muted-text block mb-1">
                     Pendidikan Formal
                   </span>
                   <h3 className="text-lg sm:text-2xl font-extrabold text-white">
@@ -253,11 +268,11 @@ export default function CredentialsSection() {
                     {EDUCATION_DATA.graduationYear}
                   </div>
                 </div>
-                <div className="px-4 py-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-left">
-                  <div className="text-[11px] text-emerald-300 uppercase tracking-wider font-semibold">
+                <div className="px-4 py-2.5 rounded-xl bg-white/[0.035] border border-muted-text/15 text-left">
+                  <div className="text-[11px] text-muted-text uppercase tracking-wider font-semibold">
                     Indeks Prestasi Kumulatif (IPK)
                   </div>
-                  <div className="text-base sm:text-lg font-bold text-emerald-300 mt-0.5">
+                  <div className="text-base sm:text-lg font-bold text-soft-white mt-0.5">
                     {EDUCATION_DATA.gpa} / 4.00
                   </div>
                 </div>
@@ -291,7 +306,7 @@ export default function CredentialsSection() {
                     <h4 className="text-sm sm:text-base font-bold text-white leading-snug">
                       {cert.title}
                     </h4>
-                    <p className="text-xs sm:text-sm font-semibold text-emerald-300 mt-1">
+                    <p className="text-xs sm:text-sm font-semibold text-muted-text mt-1">
                       {cert.issuer}
                     </p>
                   </div>
@@ -307,7 +322,7 @@ export default function CredentialsSection() {
                   </div>
 
                   {hasCertificateUrl ? (
-                    <span className="mt-4 min-h-[44px] inline-flex items-center justify-center gap-2 rounded-lg border border-emerald-500/30 px-3 py-2 text-xs font-semibold text-emerald-300">
+                    <span className="mt-4 min-h-[44px] inline-flex items-center justify-center gap-2 rounded-lg border border-muted-text/15 px-3 py-2 text-xs font-semibold text-muted-text">
                       Lihat pratinjau sertifikat
                       <Eye aria-hidden="true" className="w-3.5 h-3.5" />
                     </span>

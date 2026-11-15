@@ -2,11 +2,27 @@
 
 import Image from "next/image";
 import { HERO_DATA } from "@/data/portfolio";
-import { ArrowDown, MessageSquare, TrendingUp } from "lucide-react";
+import { ArrowRight, MessageSquare, TrendingUp } from "lucide-react";
 import { motion, useMotionValue, useSpring } from "motion/react";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import type { MouseEvent } from "react";
-import { Reveal } from "./MotionReveal";
+
+const ease = [0.21, 0.47, 0.32, 0.98] as const;
+
+const reveal = {
+  hidden: { opacity: 0, y: 16 },
+  visible: { opacity: 1, y: 0 },
+};
+
+const headlineSequence = {
+  hidden: {},
+  visible: { transition: { delayChildren: 0.43, staggerChildren: 0.05 } },
+};
+
+const headlineLine = {
+  hidden: { opacity: 0, y: 18 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.16, ease } },
+};
 
 export default function HeroSection() {
   const pointerFine = useMediaQuery("(pointer: fine)");
@@ -18,7 +34,7 @@ export default function HeroSection() {
   const handlePrimaryCtaMouseMove = (event: MouseEvent<HTMLAnchorElement>) => {
     if (!pointerFine) return;
     const bounds = event.currentTarget.getBoundingClientRect();
-    const maxOffset = 12;
+    const maxOffset = 8;
     const x = ((event.clientX - bounds.left) / bounds.width - 0.5) * maxOffset * 2;
     const y = ((event.clientY - bounds.top) / bounds.height - 0.5) * maxOffset * 2;
     magnetX.set(Math.max(-maxOffset, Math.min(maxOffset, x)));
@@ -34,113 +50,145 @@ export default function HeroSection() {
     <section
       id="home"
       aria-labelledby="hero-name"
-      className="relative min-h-screen flex items-center justify-center pt-20 pb-16 md:pt-28 md:pb-24 px-4 sm:px-6 lg:px-8 overflow-hidden bg-radial-gradient presentation-section"
+      className="relative min-h-screen min-h-[100svh] flex items-center px-5 py-24 sm:px-8 lg:px-10 overflow-hidden bg-radial-gradient presentation-section"
     >
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-emerald-500/[0.025] blur-[100px] rounded-full pointer-events-none -z-10" />
-      <div className="absolute bottom-10 right-10 w-96 h-96 bg-blue-500/[0.025] blur-[90px] rounded-full pointer-events-none -z-10" />
+      <motion.div
+        aria-hidden="true"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.28, ease }}
+        className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_73%_48%,rgba(25,198,154,0.055),transparent_38%)]"
+      />
+      <div aria-hidden="true" className="pointer-events-none absolute -top-28 right-[8%] -z-10 h-[30rem] w-[30rem] rounded-full bg-signature-teal/[0.035] blur-[140px]" />
 
-      <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-        <div className="lg:col-span-7 flex flex-col justify-center text-left">
-          <Reveal delay={0.05} y={16}>
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[10px] sm:text-xs font-semibold tracking-wider uppercase mb-6 max-w-full">
-              <span aria-hidden="true" className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
-              <span>{HERO_DATA.eyebrow}</span>
+      <div className="mx-auto grid w-full max-w-[1240px] grid-cols-1 items-center gap-8 lg:grid-cols-12 lg:gap-5">
+        <div className="relative z-10 flex flex-col justify-center lg:col-span-7">
+          <motion.div
+            variants={reveal}
+            initial="hidden"
+            animate="visible"
+            transition={{ duration: 0.18, delay: 0.1, ease }}
+            className="mb-5 inline-flex w-fit max-w-full items-center gap-2.5 border-b border-muted-text/20 pb-2 text-[11px] font-semibold tracking-[0.15em] text-muted-text sm:text-xs"
+          >
+            <span aria-hidden="true" className="h-1.5 w-1.5 shrink-0 rounded-full bg-signature-teal" />
+            <span>{HERO_DATA.eyebrow}</span>
+          </motion.div>
+
+          <motion.div
+            variants={reveal}
+            initial="hidden"
+            animate="visible"
+            transition={{ duration: 0.18, delay: 0.25, ease }}
+          >
+            <h1 id="hero-name" className="font-heading text-2xl font-semibold tracking-[-0.035em] text-soft-white sm:text-3xl lg:text-[2rem]">
+              {HERO_DATA.name} <span className="font-medium text-muted-text">{HERO_DATA.secondaryName}</span>
+            </h1>
+          </motion.div>
+
+          <motion.h2
+            aria-label={HERO_DATA.tagline}
+            variants={headlineSequence}
+            initial="hidden"
+            animate="visible"
+            className="mt-5 max-w-[13ch] font-heading text-[2.65rem] font-bold leading-[1.04] tracking-[-0.06em] text-soft-white sm:max-w-[15ch] sm:text-5xl md:text-6xl lg:max-w-[12ch] lg:text-[clamp(3.5rem,5vw,4.5rem)]"
+          >
+            <motion.span variants={headlineLine} className="block">Driving Business Growth</motion.span>
+            <motion.span variants={headlineLine} className="block">Through <span className="editorial-accent">Strategic B2B Sales</span></motion.span>
+            <motion.span variants={headlineLine} className="block">&amp; Account Management.</motion.span>
+          </motion.h2>
+
+          <motion.p
+            variants={reveal}
+            initial="hidden"
+            animate="visible"
+            transition={{ duration: 0.16, delay: 0.68, ease }}
+            className="mt-5 max-w-[62ch] text-base leading-7 text-muted-text sm:text-lg sm:leading-8"
+          >
+            {HERO_DATA.subTagline}
+          </motion.p>
+
+          <motion.div
+            variants={reveal}
+            initial="hidden"
+            animate="visible"
+            transition={{ duration: 0.14, delay: 0.72, ease }}
+            className="mt-7 grid max-w-[600px] grid-cols-[0.82fr_0.72fr_1.46fr] gap-3 border-t border-muted-text/15 pt-4 sm:gap-6"
+            aria-label="Ringkasan pengalaman profesional"
+          >
+            <div>
+              <div className="font-heading text-xl font-bold tracking-tight text-soft-white sm:text-2xl">Sejak 2019</div>
+              <div className="mt-1 text-[11px] leading-4 text-muted-text sm:text-xs">Pengalaman profesional</div>
             </div>
-          </Reveal>
-
-          <Reveal delay={0.12} y={20}>
-            <div className="mb-5">
-              <h1
-                id="hero-name"
-                className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight"
-              >
-                {HERO_DATA.name}{" "}
-                <span className="text-emerald-400 font-semibold text-2xl sm:text-3xl md:text-4xl">
-                  {HERO_DATA.secondaryName}
-                </span>
-              </h1>
+            <div>
+              <div className="font-heading text-xl font-bold tracking-tight text-soft-white sm:text-2xl">Medan</div>
+              <div className="mt-1 text-[11px] leading-4 text-muted-text sm:text-xs">Sumatera Utara</div>
             </div>
-          </Reveal>
-
-          <Reveal delay={0.18} y={22}>
-            <p className="text-lg sm:text-xl md:text-2xl font-bold text-slate-100 leading-snug mb-5 border-l-2 border-emerald-500/60 pl-4">
-              {HERO_DATA.tagline}
-            </p>
-          </Reveal>
-
-          <Reveal delay={0.24} y={22}>
-            <p className="text-sm sm:text-base text-slate-300 leading-relaxed max-w-2xl mb-6">
-              {HERO_DATA.subTagline}
-            </p>
-          </Reveal>
-
-          <Reveal delay={0.3} y={20}>
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 pt-1">
-              <motion.a
-                href={HERO_DATA.ctaPrimary.href}
-                style={{ x: springX, y: springY }}
-                onMouseMove={pointerFine ? handlePrimaryCtaMouseMove : undefined}
-                onMouseLeave={pointerFine ? resetPrimaryCta : undefined}
-                className="min-h-[44px] inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl bg-emerald-500 text-slate-950 font-bold text-sm hover:bg-emerald-400 transition-all shadow-lg shadow-emerald-500/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
-              >
-                <span>{HERO_DATA.ctaPrimary.label}</span>
-                <ArrowDown className="w-4 h-4 stroke-[2.5]" />
-              </motion.a>
-
-              <a
-                href={HERO_DATA.ctaSecondary.href}
-                className="min-h-[44px] inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl bg-white/5 border border-white/10 text-slate-200 font-medium text-sm hover:bg-white/10 hover:text-white transition-all backdrop-blur-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
-              >
-                <MessageSquare className="w-4 h-4 text-emerald-400" />
-                <span>{HERO_DATA.ctaSecondary.label}</span>
-              </a>
-            </div>
-          </Reveal>
-
-          <Reveal delay={0.36} y={20}>
-            <div className="grid grid-cols-2 gap-6 pt-8 border-t border-white/5 mt-7 max-w-md">
-              <div>
-                <div className="text-2xl sm:text-3xl font-extrabold text-white">Sejak 2019</div>
-                <div className="text-xs text-slate-300 font-medium mt-0.5">Pengalaman profesional</div>
+            <div>
+              <div className="font-heading text-base font-bold leading-6 tracking-tight text-soft-white sm:text-lg">Account Manager</div>
+              <div className="mt-1 inline-flex items-center gap-1.5 text-[11px] leading-4 text-muted-text sm:text-xs">
+                <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-signature-teal" />
+                Wavecomindo · peran aktif
               </div>
-              <div>
-                <div className="text-2xl sm:text-3xl font-extrabold text-emerald-400">Medan</div>
-                <div className="text-xs text-slate-300 font-medium mt-0.5">Domisili</div>
-              </div>
             </div>
-          </Reveal>
+          </motion.div>
+
+          <motion.div
+            variants={reveal}
+            initial="hidden"
+            animate="visible"
+            transition={{ duration: 0.14, delay: 0.86, ease }}
+            className="mt-7 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center"
+          >
+            <motion.a
+              href={HERO_DATA.ctaPrimary.href}
+              style={{ x: springX, y: springY }}
+              onMouseMove={pointerFine ? handlePrimaryCtaMouseMove : undefined}
+              onMouseLeave={pointerFine ? resetPrimaryCta : undefined}
+              className="group min-h-[44px] inline-flex items-center justify-center gap-2.5 rounded-[12px] bg-signature-teal px-5 py-3 font-semibold text-obsidian shadow-lg shadow-signature-teal/15 transition-colors duration-200 hover:bg-[#35d7ad] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signature-teal focus-visible:ring-offset-2 focus-visible:ring-offset-obsidian sm:justify-start"
+            >
+              <span>{HERO_DATA.ctaPrimary.label}</span>
+              <ArrowRight aria-hidden="true" className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
+            </motion.a>
+
+            <a
+              href={HERO_DATA.ctaSecondary.href}
+              className="group min-h-[44px] inline-flex items-center justify-center gap-2 rounded-[12px] border border-muted-text/20 bg-white/[0.025] px-5 py-3 font-medium text-soft-white transition-colors duration-200 hover:border-muted-text/35 hover:bg-white/[0.055] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signature-teal sm:justify-start"
+            >
+              <MessageSquare aria-hidden="true" className="h-4 w-4 text-muted-text" />
+              <span>{HERO_DATA.ctaSecondary.label}</span>
+              <ArrowRight aria-hidden="true" className="h-4 w-4 text-muted-text transition-transform duration-200 group-hover:translate-x-1" />
+            </a>
+          </motion.div>
         </div>
 
-        <div className="lg:col-span-5 flex justify-center items-center relative">
+        <div className="relative flex items-center justify-center lg:col-span-5 lg:justify-end">
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.15, ease: [0.21, 0.47, 0.32, 0.98] }}
-            className="motion-reveal relative w-full max-w-[380px] sm:max-w-[420px] lg:max-w-none aspect-[4/5] rounded-3xl overflow-hidden glass-card p-2 border border-white/10 shadow-2xl"
+            initial={{ opacity: 0, clipPath: "inset(0 0 0 100%)" }}
+            animate={{ opacity: 1, clipPath: "inset(0 0 0 0%)" }}
+            transition={{ duration: 0.12, delay: 0.84, ease }}
+            className="relative mx-auto aspect-square w-full max-w-[420px] sm:max-w-[500px] lg:mx-0 lg:aspect-[0.86/1] lg:max-w-[520px]"
           >
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent z-10 pointer-events-none" />
-            <div className="relative w-full h-full rounded-2xl overflow-hidden bg-slate-900/80">
-              <Image
-                src={HERO_DATA.portraitUrl}
-                alt="Muhammad Angga Ramadhan — Sales & Business Development"
-                fill
-                priority
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 45vw, 420px"
-                className="object-cover object-top"
-                referrerPolicy="no-referrer"
-              />
-            </div>
-
+            <div aria-hidden="true" className="absolute inset-[8%] rounded-full bg-[radial-gradient(ellipse_at_center,rgba(25,198,154,0.16),rgba(25,198,154,0.035)_44%,transparent_72%)] blur-2xl" />
+            <div aria-hidden="true" className="absolute right-[5%] top-[11%] h-[68%] w-px bg-gradient-to-b from-transparent via-signature-teal/70 to-transparent" />
+            <Image
+              src={HERO_DATA.portraitUrl}
+              alt="Muhammad Angga Ramadhan — Account Manager dan profesional B2B Sales"
+              fill
+              priority
+              sizes="(max-width: 768px) 92vw, (max-width: 1200px) 45vw, 520px"
+              className="object-cover object-top [mask-image:linear-gradient(to_bottom,black_0%,black_84%,transparent_100%)]"
+              referrerPolicy="no-referrer"
+            />
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
+              initial={{ opacity: 0, x: -12 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.4, ease: "easeOut" }}
-              className="motion-reveal absolute bottom-4 left-4 right-4 z-20 max-w-[calc(100%-2rem)] glass-pill px-3.5 py-2.5 rounded-xl shadow-xl flex items-center gap-2.5"
+              transition={{ duration: 0.1, delay: 0.9, ease }}
+              className="glass-pill absolute bottom-[7%] left-0 z-10 flex max-w-[calc(100%-1rem)] items-center gap-2.5 rounded-[12px] px-3.5 py-2.5 shadow-xl sm:left-2 lg:-left-7"
             >
-              <div className="w-8 h-8 rounded-lg bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center shrink-0">
-                <TrendingUp className="w-4 h-4 text-emerald-400" />
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-signature-teal/30 bg-signature-teal/10">
+                <TrendingUp aria-hidden="true" className="h-4 w-4 text-signature-teal" />
               </div>
-              <span className="text-xs font-semibold text-slate-100 leading-tight">
+              <span className="text-xs font-semibold leading-tight text-soft-white">
                 {HERO_DATA.floatingBadges[0].text}
               </span>
             </motion.div>

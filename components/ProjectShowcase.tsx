@@ -35,6 +35,8 @@ function getGallerySlides(project: ProjectItem): GallerySlide[] {
 
 export default function ProjectShowcase() {
   const [gallery, setGallery] = useState<ActiveGallery | null>(null);
+  const [loadedImageSrc, setLoadedImageSrc] = useState<string | null>(null);
+  const [failedImageSrc, setFailedImageSrc] = useState<string | null>(null);
   const isGalleryOpen = gallery !== null;
   const dialogRef = useRef<HTMLDivElement | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
@@ -43,6 +45,8 @@ export default function ProjectShowcase() {
 
   const openGallery = (project: ProjectItem) => {
     galleryTriggerRef.current = document.activeElement as HTMLElement;
+    setLoadedImageSrc(null);
+    setFailedImageSrc(null);
     setGallery({
       projectTitle: project.title,
       slides: getGallerySlides(project),
@@ -122,12 +126,13 @@ export default function ProjectShowcase() {
     <section
       id="projects"
       aria-labelledby="projects-heading"
-      className="py-20 md:py-28 px-4 sm:px-6 lg:px-8 border-t border-white/5 relative bg-[#0B0F19] presentation-section"
+      className="py-20 md:py-28 px-4 sm:px-6 lg:px-8 border-t border-white/5 relative bg-graphite presentation-section"
     >
-      <div className="max-w-7xl mx-auto">
+      <div className="mx-auto w-full max-w-[1240px]">
         <Reveal className="mb-12 md:mb-16 text-left max-w-3xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold uppercase tracking-wider mb-3">
-            <Layers aria-hidden="true" className="w-3.5 h-3.5" />
+          <div className="inline-flex items-center gap-2 rounded-full border border-muted-text/15 bg-white/[0.035] px-3 py-1 text-xs font-semibold uppercase tracking-wider text-muted-text mb-3">
+            <Layers aria-hidden="true" className="w-3.5 h-3.5 text-muted-text" />
+            <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-signature-teal" />
             Inisiatif Digital & Web
           </div>
           <h2
@@ -166,12 +171,12 @@ export default function ProjectShowcase() {
                         <Maximize2 aria-hidden="true" className="w-4 h-4" />
                       </button>
                     </div>
-                    <div className="mt-3 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-300">
+                    <div className="mt-3 flex flex-wrap items-center justify-between gap-3 text-xs text-muted-text">
                       <span>{project.screenshots[0]?.title ?? `Pratinjau ${project.title}`}</span>
                       <button
                         type="button"
                         onClick={() => openGallery(project)}
-                        className="min-h-[44px] inline-flex items-center gap-2 text-emerald-300 hover:text-emerald-200 font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 rounded-lg px-2"
+                        className="min-h-[44px] inline-flex items-center gap-2 text-muted-text hover:text-signature-teal font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signature-teal rounded-lg px-2"
                       >
                         Lihat galeri
                         <Maximize2 aria-hidden="true" className="w-3.5 h-3.5" />
@@ -182,11 +187,11 @@ export default function ProjectShowcase() {
                   <div className="lg:col-span-5 p-6 sm:p-8 flex flex-col justify-between min-w-0">
                     <div>
                       <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
-                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-semibold">
-                          <Code2 aria-hidden="true" className="w-3.5 h-3.5" />
+                        <span className="inline-flex items-center gap-1.5 rounded-full border border-muted-text/15 bg-white/[0.035] px-3 py-1 text-xs font-semibold text-muted-text">
+                          <Code2 aria-hidden="true" className="w-3.5 h-3.5 text-muted-text" />
                           {project.role}
                         </span>
-                        <span className="text-xs font-mono font-bold text-slate-300">
+                        <span className="text-xs font-mono font-bold text-muted-text">
                           PROYEK 0{projectIndex + 1}
                         </span>
                       </div>
@@ -206,13 +211,13 @@ export default function ProjectShowcase() {
                         <dl className="mt-5 space-y-3 border-t border-white/5 pt-4">
                           {project.objective && (
                             <div>
-                              <dt className="text-xs font-bold uppercase tracking-wide text-emerald-300">Tujuan</dt>
+                              <dt className="text-xs font-bold uppercase tracking-wide text-muted-text">Tujuan</dt>
                               <dd className="mt-1 text-sm text-slate-200 leading-relaxed">{project.objective}</dd>
                             </div>
                           )}
                           {project.contribution && (
                             <div>
-                              <dt className="text-xs font-bold uppercase tracking-wide text-emerald-300">Yang dibangun</dt>
+                              <dt className="text-xs font-bold uppercase tracking-wide text-muted-text">Yang dibangun</dt>
                               <dd className="mt-1 text-sm text-slate-200 leading-relaxed">{project.contribution}</dd>
                             </div>
                           )}
@@ -221,7 +226,7 @@ export default function ProjectShowcase() {
 
                       {project.techStack && project.techStack.length > 0 && (
                         <div className="mt-4">
-                          <h4 className="text-xs font-bold uppercase tracking-wide text-slate-300 mb-2">Teknologi</h4>
+                          <h4 className="text-xs font-bold uppercase tracking-wide text-muted-text mb-2">Teknologi</h4>
                           <ul className="flex flex-wrap gap-2" aria-label={`Teknologi ${project.title}`}>
                             {project.techStack.map((technology) => (
                               <li key={technology} className="rounded-lg bg-white/5 border border-white/10 px-2.5 py-1.5 text-xs font-medium text-slate-200">
@@ -304,7 +309,7 @@ export default function ProjectShowcase() {
 
         {gallery && activeSlide && (
           <div
-            className="fixed inset-0 z-[60] flex items-center justify-center p-3 sm:p-6 bg-slate-950/95 backdrop-blur-md"
+            className="fixed inset-0 z-[60] flex items-center justify-center p-2 sm:p-5 bg-slate-950/95 backdrop-blur-md"
             onClick={(event) => {
               if (event.target === event.currentTarget) closeGallery();
             }}
@@ -315,7 +320,7 @@ export default function ProjectShowcase() {
               aria-modal="true"
               aria-labelledby="project-gallery-title"
               aria-describedby="project-gallery-caption"
-              className="relative w-full max-w-5xl max-h-[92dvh] rounded-2xl sm:rounded-3xl bg-[#101622] border border-white/15 shadow-2xl p-4 sm:p-6 flex flex-col"
+              className="relative flex h-[90dvh] max-h-[94dvh] w-[min(94vw,1280px)] max-w-6xl flex-col rounded-[14px] border border-muted-text/15 bg-graphite p-3 shadow-2xl sm:p-5"
             >
               <div className="flex items-start justify-between gap-4 mb-4">
                 <div className="min-w-0">
@@ -327,11 +332,7 @@ export default function ProjectShowcase() {
                   </p>
                   {gallery.projectTitle === "AR CRM" && (
                     <span
-                      className={`mt-2 inline-flex items-center rounded-full border px-2.5 py-1 text-[11px] font-semibold ${
-                        activeSlide.kind === "image"
-                          ? "border-sky-400/30 bg-sky-400/10 text-sky-200"
-                          : "border-amber-400/30 bg-amber-400/10 text-amber-200"
-                      }`}
+                      className="mt-2 inline-flex items-center rounded-full border border-muted-text/15 bg-white/[0.035] px-2.5 py-1 text-[11px] font-semibold text-muted-text"
                     >
                       {activeSlide.kind === "image"
                         ? "Tangkapan Layar Aplikasi"
@@ -387,14 +388,30 @@ export default function ProjectShowcase() {
                 )}
 
                 {activeSlide.kind === "image" ? (
-                  <div className="relative w-full h-full min-h-[260px] max-h-[65vh]">
+                  <div className="relative h-full min-h-[260px] max-h-[72vh] w-full" aria-busy={loadedImageSrc !== activeSlide.src}>
+                    {loadedImageSrc !== activeSlide.src && (
+                      <div role="status" className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 rounded-xl bg-slate-surface/70 px-6" aria-live="polite">
+                        <span aria-hidden="true" className="h-9 w-9 animate-pulse rounded-full bg-signature-teal/20 ring-1 ring-signature-teal/25" />
+                        <span className="text-sm text-muted-text">Memuat pratinjau gambar…</span>
+                      </div>
+                    )}
+                    {failedImageSrc === activeSlide.src && <p role="alert" className="absolute inset-0 z-20 flex items-center justify-center bg-obsidian/90 text-sm text-muted-text">Pratinjau gagal dimuat.</p>}
                     <Image
                       src={activeSlide.src}
                       alt={activeSlide.title}
                       fill
-                      sizes="(max-width: 1024px) 100vw, 90vw"
-                      className="object-contain"
+                      priority
+                      sizes="(max-width: 1024px) 94vw, 1280px"
+                      className={`object-contain transition-opacity duration-200 ${loadedImageSrc === activeSlide.src ? "opacity-100" : "opacity-0"}`}
                       referrerPolicy="no-referrer"
+                      onLoad={() => {
+                        setLoadedImageSrc(activeSlide.src);
+                        setFailedImageSrc(null);
+                      }}
+                      onError={() => {
+                        setLoadedImageSrc(activeSlide.src);
+                        setFailedImageSrc(activeSlide.src);
+                      }}
                     />
                   </div>
                 ) : (
@@ -403,7 +420,7 @@ export default function ProjectShowcase() {
                       <div className="mx-auto mb-5 w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/25 flex items-center justify-center">
                         <Layers aria-hidden="true" className="w-7 h-7 text-emerald-300" />
                       </div>
-                      <p className="text-xs uppercase tracking-[0.16em] font-bold text-emerald-300 mb-3">
+                      <p className="text-xs uppercase tracking-[0.16em] font-bold text-muted-text mb-3">
                         Pratinjau modul
                       </p>
                       <h3 className="text-xl sm:text-2xl font-bold text-white">{activeSlide.title}</h3>
@@ -423,7 +440,10 @@ export default function ProjectShowcase() {
                     <button
                       key={`${slide.kind}-${slide.title}`}
                       type="button"
-                      onClick={() => setGallery((current) => current ? { ...current, currentIndex: index } : current)}
+                      onClick={() => {
+                        setFailedImageSrc(null);
+                        setGallery((current) => current ? { ...current, currentIndex: index } : current);
+                      }}
                       aria-label={`Buka pratinjau ${index + 1}: ${slide.title}`}
                       aria-pressed={gallery.currentIndex === index}
                       className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"

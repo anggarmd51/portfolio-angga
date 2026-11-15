@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-labelledby="title">
+  <title id="title">Wavecomindo monogram</title>
+  <rect width="96" height="96" rx="22" fill="#0A0F18"/>
+  <path d="M17 32h12l7 27 9-21h8l9 21 7-27h12L67 72H56l-7-17-8 17H30L17 32Z" fill="#19C69A"/>
+  <path d="M18 80h60" stroke="#A6B0BD" stroke-opacity=".45" stroke-width="2" stroke-linecap="round"/>
+</svg>

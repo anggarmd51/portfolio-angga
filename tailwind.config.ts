@@ -9,34 +9,23 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Semantic Financial-Editorial Palette
-        "paper-base": "#F7F9F8",
-        "paper-surface": "#FFFFFF",
-        "paper-subtle": "#EDF1EF",
-        "paper-border": "#D5DED9",
-        "paper-muted": "#52635F",
-
-        "navy-deep": "#081B26",
-        "navy-surface": "#0C2331",
-        "navy-border": "#1A384D",
-        "navy-text": "#E2ECF2",
-        "navy-muted": "#8BA2B2",
-
-        // Restrained amber accents
-        "amber-gold": "#D99B26",
-        "amber-accent": "#F5B027",
-        // Semantic high-contrast amber for light paper (passes WCAG AA: 5.91:1 on white, 5.59:1 on #F7F9F8)
-        "amber-ink": "#8A5A10",
-
-        "ink-primary": "#0A1B24",
-        "ink-secondary": "#41535E",
-        "ink-faint": "#7E929E",
+        obsidian: "#0A0F18",
+        graphite: "#151D29",
+        "slate-surface": "#202B39",
+        "soft-white": "#F1F3F5",
+        "muted-text": "#A6B0BD",
+        "signature-teal": "#19C69A",
       },
       fontFamily: {
-        serif: ["var(--font-newsreader)", "serif"],
-        sans: ["var(--font-archivo)", "sans-serif"],
-        heading: ["var(--font-newsreader)", "serif"],
-        body: ["var(--font-archivo)", "sans-serif"],
+        sans: ["var(--font-inter)", "sans-serif"],
+        heading: ["var(--font-manrope)", "sans-serif"],
+        editorial: ["var(--font-instrument-serif)", "serif"],
+      },
+      maxWidth: {
+        content: "1240px",
+      },
+      borderRadius: {
+        ui: "12px",
       },
     },
   },

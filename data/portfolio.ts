@@ -21,6 +21,9 @@ export interface CareerRole {
   logo: string;
   logoAlt: string;
   bullets: string[];
+  industry?: string;
+  location?: string;
+  isCurrentRole?: boolean;
 }
 
 export interface ProjectScreenshot {
@@ -81,17 +84,16 @@ export interface ContactChannel {
 }
 
 export const HERO_DATA = {
-  eyebrow: "SALES, BUSINESS DEVELOPMENT & ACCOUNT MANAGEMENT",
+  eyebrow: "B2B SALES · BUSINESS DEVELOPMENT · ACCOUNT MANAGEMENT",
   name: "Muhammad Angga Ramadhan",
   secondaryName: "(Angga)",
-  tagline:
-    "Menangani Penjualan B2B, Pengelolaan Akun, dan Pengembangan Hubungan Bisnis di Sektor Pembiayaan & SaaS.",
+  tagline: "Driving Business Growth Through Strategic B2B Sales & Account Management.",
   subTagline:
-    "Berpengalaman sejak 2019 di industri pembiayaan, perbankan, dan perangkat lunak B2B (HRIS & POS) di Medan. Terbiasa mengelola siklus penjualan dari pemetaan kebutuhan klien, demonstrasi produk, hingga pendampingan onboarding.",
+    "Mengembangkan peluang bisnis, mengelola hubungan strategis dengan klien, dan mengoptimalkan proses penjualan melalui pendekatan konsultatif serta pemanfaatan teknologi.",
   portraitUrl: "/muhammad-angga-ramadhan-profile.png",
-  floatingBadges: [{ text: "Berpengalaman sejak 2019 • Medan" }],
+  floatingBadges: [{ text: "Account Manager · Wavecomindo" }],
   ctaPrimary: {
-    label: "Lihat Riwayat Kerja",
+    label: "Lihat Pengalaman",
     href: "#career",
   },
   ctaSecondary: {
@@ -217,6 +219,22 @@ export const SALES_WORKFLOW_STEPS = [
 ] as const;
 
 export const CAREER_ROLES: CareerRole[] = [
+  {
+    id: "role-wavecomindo",
+    company: "PT Wave Communication Indonesia (Wavecomindo)",
+    role: "Account Manager",
+    period: "Okt 2026 – Sekarang",
+    logo: "/assets/wavecomindo-monogram.svg",
+    logoAlt: "Monogram ilustratif Wavecomindo",
+    industry: "B2B Connectivity & Enterprise Network",
+    location: "Medan, Sumatera Utara",
+    isCurrentRole: true,
+    bullets: [
+      "Mengelola siklus penjualan B2B dan pengembangan akun korporasi untuk solusi konektivitas internet dedicated serta infrastruktur jaringan bisnis di wilayah Medan.",
+      "Melakukan pemetaan kebutuhan teknis bersama tim IT dan manajemen klien, menyusun proposal komersial, serta memimpin negosiasi kontrak layanan.",
+      "Mengawal proses onboarding instalasi bersama tim teknis serta menjaga retensi dan hubungan strategis jangka panjang dengan klien.",
+    ],
+  },
   {
     id: "role-1",
     company: "PT Media Antar Nusa (Nusawork HRIS)",

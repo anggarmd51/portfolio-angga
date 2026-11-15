@@ -161,7 +161,7 @@ export default function ContactSection() {
     <section
       id="contact"
       aria-labelledby="contact-heading"
-      className="py-20 md:py-32 px-4 sm:px-6 lg:px-8 border-t border-white/5 relative bg-[#0B0F19] overflow-hidden presentation-section"
+      className="py-20 md:py-32 px-4 sm:px-6 lg:px-8 border-t border-white/5 relative bg-graphite overflow-hidden presentation-section"
     >
       <div
         aria-hidden="true"
@@ -169,8 +169,9 @@ export default function ContactSection() {
       />
       <div className="max-w-5xl mx-auto text-center">
         <Reveal delay={0.05} y={16}>
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold tracking-wider uppercase mb-6">
-            <Sparkles aria-hidden="true" className="w-3.5 h-3.5" />
+          <div className="inline-flex items-center gap-2 rounded-full border border-muted-text/15 bg-white/[0.035] px-3.5 py-1.5 text-xs font-semibold tracking-wider text-muted-text uppercase mb-6">
+            <Sparkles aria-hidden="true" className="w-3.5 h-3.5 text-muted-text" />
+            <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-signature-teal" />
             Kontak & Peluang
           </div>
         </Reveal>

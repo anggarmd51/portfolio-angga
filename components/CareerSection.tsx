@@ -223,9 +223,10 @@ function DesktopCareerView() {
                   />
                 </motion.div>
                 <div>
-                  <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-mono font-semibold mb-1">
-                    <Calendar className="w-3 h-3" />
+                  <div className="inline-flex flex-wrap items-center gap-1.5 rounded-full border border-muted-text/15 bg-white/[0.035] px-2.5 py-1 text-xs font-mono font-semibold text-muted-text mb-1">
+                    <Calendar aria-hidden="true" className="w-3 h-3 text-muted-text" />
                     {selectedRole.period}
+                    {selectedRole.isCurrentRole && <span className="ml-1 rounded-full bg-signature-teal/10 px-2 py-0.5 font-sans text-[10px] uppercase tracking-wide text-signature-teal">Aktif</span>}
                   </div>
                   <motion.h3
                     id="dialog-role-title"
@@ -265,8 +266,9 @@ function DesktopCareerView() {
                 </ul>
               </div>
 
-              <div className="mt-8 pt-4 border-t border-white/5 text-xs text-slate-400">
-                Penempatan: Medan, Sumatera Utara
+              <div className="mt-8 space-y-2 border-t border-white/5 pt-4 text-xs text-muted-text">
+                {selectedRole.industry && <p>Industri: <span className="text-soft-white">{selectedRole.industry}</span></p>}
+                <p>Penempatan: <span className="text-soft-white">{selectedRole.location ?? "Medan, Sumatera Utara"}</span></p>
               </div>
             </motion.div>
           </div>
@@ -281,7 +283,7 @@ function DesktopCareerView() {
  * Accessible native accordion with zero layoutId, zero morph modal, and no desktop branch in DOM.
  */
 function MobileCareerView() {
-  const [mobileExpandedId, setMobileExpandedId] = useState<string | null>("role-1");
+  const [mobileExpandedId, setMobileExpandedId] = useState<string | null>("role-wavecomindo");
   const mobileHistoryEntry = useRef(false);
 
   const closeMobileDetails = useCallback(() => {
@@ -357,7 +359,8 @@ function MobileCareerView() {
                   />
                 </div>
                 <div className="min-w-0">
-                  <span className="text-[10px] font-mono font-bold text-emerald-400 block">
+                  <span className="mb-0.5 inline-flex items-center gap-1.5 text-[10px] font-mono font-bold text-muted-text">
+                    {role.isCurrentRole && <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-signature-teal" />}
                     {role.period}
                   </span>
                   <h3 className="text-sm font-bold text-white truncate">
@@ -384,6 +387,8 @@ function MobileCareerView() {
                 id={`role-content-${role.id}`}
                 className="px-4 pb-5 pt-2 border-t border-white/5 space-y-3"
               >
+                {role.industry && <p className="text-xs leading-relaxed text-muted-text">Industri: <span className="text-soft-white">{role.industry}</span></p>}
+                {role.location && <p className="text-xs leading-relaxed text-muted-text">Penempatan: <span className="text-soft-white">{role.location}</span></p>}
                 <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
                   Ruang Lingkup Pekerjaan
                 </div>
@@ -414,13 +419,14 @@ export default function CareerSection() {
     <section
       id="career"
       aria-labelledby="career-heading"
-      className="py-20 md:py-28 px-4 sm:px-6 lg:px-8 border-t border-white/5 relative bg-[#0B0F19] presentation-section"
+      className="py-20 md:py-28 px-4 sm:px-6 lg:px-8 border-t border-white/5 relative bg-obsidian presentation-section"
     >
-      <div className="max-w-7xl mx-auto">
+      <div className="mx-auto w-full max-w-[1240px]">
         {/* Section Header with Reveal */}
         <Reveal className="mb-12 md:mb-16 text-left max-w-3xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold uppercase tracking-wider mb-3">
-            <Briefcase className="w-3.5 h-3.5" />
+          <div className="inline-flex items-center gap-2 rounded-full border border-muted-text/15 bg-white/[0.035] px-3 py-1 text-xs font-semibold uppercase tracking-wider text-muted-text mb-3">
+            <Briefcase aria-hidden="true" className="w-3.5 h-3.5 text-muted-text" />
+            <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-signature-teal" />
             Rekam Jejak Karir & Eksekusi Lapangan
           </div>
           <h2

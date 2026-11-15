@@ -8,7 +8,7 @@ import FloatingCTA from "@/components/FloatingCTA";
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-[#0B0F19] text-slate-100 flex flex-col relative selection:bg-emerald-500/20 selection:text-emerald-300 overflow-x-hidden">
+    <div className="min-h-screen bg-obsidian text-soft-white flex flex-col relative selection:bg-signature-teal/20 selection:text-soft-white overflow-x-hidden">
       {/* Subtle Geometric Grid & Depth Accents behind all content */}
       <div
         aria-hidden="true"
@@ -16,7 +16,7 @@ export default function HomePage() {
       />
       <div
         aria-hidden="true"
-        className="fixed -top-40 left-1/2 -translate-x-1/2 w-[900px] h-[450px] bg-emerald-500/[0.035] blur-[140px] rounded-full pointer-events-none z-0"
+        className="fixed -top-40 left-1/2 -translate-x-1/2 w-[900px] h-[450px] bg-signature-teal/[0.025] blur-[140px] rounded-full pointer-events-none z-0"
       />
 
       {/* Main Content: 6 sections in continuous smooth flow */}
