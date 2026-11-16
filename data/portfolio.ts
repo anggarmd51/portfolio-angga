@@ -192,8 +192,8 @@ export const CAREER_ROLES: CareerRole[] = [
     company: "PT Wave Communication Indonesia (Wavecomindo)",
     role: "Account Manager",
     period: "Okt 2026 – Sekarang",
-    logo: "/assets/wavecomindo-monogram.svg",
-    logoAlt: "Monogram ilustratif Wavecomindo",
+    logo: "/assets/logo-wavecomindo.png",
+    logoAlt: "Logo Wavecomindo - PT Wave Communication Indonesia",
     industry: "B2B Connectivity & Enterprise Network",
     location: "Medan, Sumatera Utara",
     isCurrentRole: true,
@@ -513,13 +513,13 @@ export const CONTACT_DATA = {
 };
 
 export const NAVIGATION_SECTIONS = [
-  { id: "home", label: "Beranda", shortLabel: "Home" },
-  { id: "profile", label: "Profil", shortLabel: "Profil" },
-  { id: "competencies", label: "Kompetensi", shortLabel: "Keahlian" },
-  { id: "career", label: "Riwayat Kerja", shortLabel: "Karir" },
-  { id: "projects", label: "Proyek", shortLabel: "Proyek" },
-  { id: "methodology", label: "Metodologi Penjualan", shortLabel: "Metode" },
-  { id: "ecosystem", label: "Ekosistem Digital", shortLabel: "Ekosistem" },
-  { id: "credentials", label: "Pendidikan & Sertifikasi", shortLabel: "Kredensial" },
-  { id: "contact", label: "Kontak & Diskusi", shortLabel: "Kontak" },
+  { id: "home", label: "Home", shortLabel: "Home" },
+  { id: "profile", label: "Profile", shortLabel: "Profile" },
+  { id: "competencies", label: "Expertise", shortLabel: "Expertise" },
+  { id: "career", label: "Experience", shortLabel: "Experience" },
+  { id: "projects", label: "Projects", shortLabel: "Projects" },
+  { id: "methodology", label: "Approach", shortLabel: "Approach" },
+  { id: "ecosystem", label: "Tech", shortLabel: "Tech" },
+  { id: "credentials", label: "Credentials", shortLabel: "Credentials" },
+  { id: "contact", label: "Contact", shortLabel: "Contact" },
 ] as const;

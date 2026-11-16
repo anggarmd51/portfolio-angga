@@ -14,13 +14,13 @@ function RoleDetail({ role }: { role: CareerRole }) {
       className="border-l-2 border-signature-teal/70 bg-slate-surface/35 p-5 sm:p-7"
     >
       <div className="flex items-start gap-4">
-        <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl border border-white/15 bg-white p-1.5">
+        <div className="relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-white/15 bg-white p-1">
           <Image
             src={role.logo}
             alt={role.logoAlt}
-            fill
-            sizes="56px"
-            className="object-contain p-1"
+            width={48}
+            height={48}
+            className="h-12 w-12 object-contain"
           />
         </div>
         <div className="min-w-0 pt-0.5">

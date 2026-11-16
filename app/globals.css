@@ -4,8 +4,8 @@
   --color-obsidian: var(--obsidian-navy);
   --color-graphite: var(--graphite-surface);
   --color-slate-surface: var(--slate-surface);
-  --color-soft-white: var(--soft-white);
-  --color-muted-text: var(--muted-text);
+  --color-soft-white: var(--text-primary);
+  --color-muted-text: var(--text-muted);
   --color-signature-teal: var(--signature-teal);
   --color-signature-gold: var(--signature-gold);
   --color-glass-tint: var(--glass-tint);
@@ -13,12 +13,12 @@
   --color-emerald-400: var(--accent-text);
   --color-emerald-500: var(--signature-teal);
   --color-emerald-600: var(--accent-text-strong);
-  --color-white: var(--soft-white);
-  --color-slate-200: var(--soft-white);
-  --color-slate-300: var(--muted-text);
-  --color-slate-400: var(--muted-text);
-  --color-slate-500: var(--muted-text);
-  --color-slate-600: var(--muted-text);
+  --color-white: var(--text-primary);
+  --color-slate-200: var(--text-primary);
+  --color-slate-300: var(--text-muted);
+  --color-slate-400: var(--text-muted);
+  --color-slate-500: var(--text-muted);
+  --color-slate-600: var(--text-muted);
   --color-slate-900: var(--slate-surface);
   --color-slate-950: var(--button-ink);
   --font-sans: var(--font-inter);
@@ -36,8 +36,10 @@
   --obsidian-navy: #0a0f18;
   --graphite-surface: #151d29;
   --slate-surface: #202b39;
-  --soft-white: #f1f3f5;
-  --muted-text: #a6b0bd;
+  --text-primary: #f1f3f5;
+  --text-muted: #a6b0bd;
+  --soft-white: var(--text-primary);
+  --muted-text: var(--text-muted);
   --signature-teal: #19c69a;
   --signature-gold: #f2b705;
   --accent-text: #65d9b9;
@@ -579,8 +581,10 @@ html[data-theme="light"] {
   --obsidian-navy: #0d3b33;
   --graphite-surface: #e8eeea;
   --slate-surface: #dce7e2;
-  --soft-white: #0d3b33;
-  --muted-text: #385b54;
+  --text-primary: #0d3b33;
+  --text-muted: #385b54;
+  --soft-white: var(--text-primary);
+  --muted-text: var(--text-muted);
   --signature-teal: #f2b705;
   --signature-gold: #f2b705;
   --accent-text: #0f766e;
@@ -597,8 +601,10 @@ html[data-theme="light"] .portfolio-dark-stage {
   --obsidian-navy: #0d3b33;
   --graphite-surface: #0d3b33;
   --slate-surface: #174d43;
-  --soft-white: #f1f4f2;
-  --muted-text: #d0ddd8;
+  --text-primary: #f1f4f2;
+  --text-muted: #d0ddd8;
+  --soft-white: var(--text-primary);
+  --muted-text: var(--text-muted);
   --signature-teal: #f2b705;
   --signature-gold: #f2b705;
   --accent-text: #f2b705;
@@ -608,6 +614,13 @@ html[data-theme="light"] .portfolio-dark-stage {
   --card-surface: rgba(255, 255, 255, 0.075);
   --glass-tint: rgba(255, 255, 255, 0.055);
   --border-color: rgba(241, 244, 242, 0.18);
+}
+
+html[data-theme="dark"] {
+  --text-primary: #f1f3f5;
+  --text-muted: #a6b0bd;
+  --soft-white: var(--text-primary);
+  --muted-text: var(--text-muted);
 }
 
 @layer base {

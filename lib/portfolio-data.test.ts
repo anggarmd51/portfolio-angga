@@ -43,6 +43,26 @@ test("navigation contains the nine requested sections in architectural order", (
     NAVIGATION_SECTIONS.map((section) => section.id),
     ["home", "profile", "competencies", "career", "projects", "methodology", "ecosystem", "credentials", "contact"]
   );
+  assert.deepEqual(
+    NAVIGATION_SECTIONS.map((section) => section.shortLabel),
+    ["Home", "Profile", "Expertise", "Experience", "Projects", "Approach", "Tech", "Credentials", "Contact"]
+  );
+  assert.ok(NAVIGATION_SECTIONS.every((section) => section.label === section.shortLabel));
+  const navigation = readFileSync(join(projectRoot, "components/SectionNavigation.tsx"), "utf8");
+  assert.match(navigation, /href=\{`#\$\{section\.id\}`\}/);
+});
+
+test("dark-theme text tokens explicitly resolve readable primary and muted colors", () => {
+  const css = readFileSync(join(projectRoot, "app/globals.css"), "utf8");
+  const recruiterQa = readFileSync(join(projectRoot, "components/RecruiterQASection.tsx"), "utf8");
+  const ecosystem = readFileSync(join(projectRoot, "components/DigitalEcosystemSection.tsx"), "utf8");
+  const competencies = readFileSync(join(projectRoot, "components/CoreCompetenciesSection.tsx"), "utf8");
+  assert.match(css, /html\[data-theme="dark"\]\s*\{[\s\S]*?--text-primary:\s*#f1f3f5;[\s\S]*?--text-muted:\s*#a6b0bd;/);
+  assert.match(css, /--color-soft-white:\s*var\(--text-primary\)/);
+  assert.match(css, /--color-muted-text:\s*var\(--text-muted\)/);
+  assert.match(recruiterQa, /recruiter-qa-panel[\s\S]*text-soft-white[\s\S]*text-muted-text/);
+  assert.match(ecosystem, /digital-tool-card[\s\S]*text-soft-white[\s\S]*text-muted-text/);
+  assert.match(competencies, /competency-strip[\s\S]*text-soft-white[\s\S]*text-muted-text/);
 });
 
 test("hero uses the approved role copy and keeps portrait fallback assets", () => {
@@ -132,7 +152,11 @@ test("career history places the current Wavecomindo role above the six earlier r
   assert.equal(CAREER_ROLES[0].industry, "B2B Connectivity & Enterprise Network");
   assert.equal(CAREER_ROLES[0].location, "Medan, Sumatera Utara");
   assert.equal(CAREER_ROLES[0].isCurrentRole, true);
-  assert.equal(CAREER_ROLES[0].logo, "/assets/wavecomindo-monogram.svg");
+  assert.equal(CAREER_ROLES[0].logo, "/assets/logo-wavecomindo.png");
+  assert.equal(CAREER_ROLES[0].logoAlt, "Logo Wavecomindo - PT Wave Communication Indonesia");
+  assert.ok(existsSync(join(projectRoot, "public/assets/logo-wavecomindo.png")));
+  const career = readFileSync(join(projectRoot, "components/CareerSection.tsx"), "utf8");
+  assert.match(career, /src=\{role\.logo\}[\s\S]*width=\{48\}[\s\S]*height=\{48\}/);
   assert.match(CAREER_ROLES[1].bullets[0], /mendemonstrasikan Nusawork HRIS/);
   assert.match(CAREER_ROLES[2].bullets[0], /Business Development Officer/);
   assert.doesNotMatch(JSON.stringify(CAREER_ROLES), /mentransformasi|\b\d+%/i);
