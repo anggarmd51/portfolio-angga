@@ -181,7 +181,7 @@ export default function ContactSection() {
           <div className="inline-flex items-center gap-2 rounded-full border border-muted-text/15 bg-white/[0.035] px-3.5 py-1.5 text-xs font-semibold tracking-wider text-muted-foreground uppercase mb-6">
             <Sparkles aria-hidden="true" className="w-3.5 h-3.5 text-muted-foreground" />
             <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-signature-teal" />
-            Kontak & Peluang
+            CONTACT & COLLABORATION
           </div>
         </Reveal>
         <Reveal delay={0.12} y={22}>
@@ -224,15 +224,12 @@ export default function ContactSection() {
             </StaggerContainer>
           </section>
         </Reveal>
-        <div aria-hidden="true" className="editorial-watermark mt-14 overflow-hidden whitespace-nowrap text-center font-heading text-[clamp(1rem,5.45vw,4.75rem)] font-bold tracking-tighter select-none">
-          MUHAMMAD ANGGA RAMADHAN
-        </div>
         <Reveal
           delay={0.1}
           y={16}
           className="mt-8 border-t border-white/10 pt-8 text-center text-xs text-muted-foreground sm:text-sm"
         >
-          <p>{CONTACT_DATA.footer}</p>
+          <p className="font-sans text-muted-foreground">{CONTACT_DATA.footer}</p>
         </Reveal>
       </div>
     </section>

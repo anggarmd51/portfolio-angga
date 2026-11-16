@@ -239,7 +239,7 @@ export default function ProjectShowcase() {
       <div className="mx-auto w-full max-w-[1240px]">
         <Reveal className="mb-12 max-w-3xl text-left md:mb-16">
           <p className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-            Digital Product Showcase
+            FEATURED PROJECTS
           </p>
           <h2
             id="projects-heading"

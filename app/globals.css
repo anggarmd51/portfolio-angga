@@ -263,44 +263,6 @@ html {
   padding: 1rem;
 }
 
-.featured-credential-card {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1.5rem;
-  border: 1px solid rgba(25, 198, 154, 0.26);
-  border-radius: 14px;
-  background: linear-gradient(120deg, rgba(25, 198, 154, 0.075), rgba(21, 29, 41, 0.72) 44%, rgba(21, 29, 41, 0.72));
-  padding: clamp(1.1rem, 3vw, 2rem);
-}
-
-.featured-credential-action {
-  display: inline-flex;
-  min-height: 48px;
-  flex: 0 0 auto;
-  align-items: center;
-  justify-content: center;
-  gap: 0.55rem;
-  border: 1px solid rgba(25, 198, 154, 0.45);
-  border-radius: 10px;
-  background: rgba(25, 198, 154, 0.12);
-  padding: 0.75rem 1rem;
-  color: var(--soft-white);
-  font-size: 0.82rem;
-  font-weight: 700;
-  transition: background-color 180ms ease, border-color 180ms ease;
-}
-
-.featured-credential-action:hover {
-  border-color: var(--signature-teal);
-  background: rgba(25, 198, 154, 0.2);
-}
-
-.featured-credential-action:focus-visible {
-  outline: 2px solid var(--signature-teal);
-  outline-offset: 3px;
-}
-
 .digital-ecosystem-tabs {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -391,17 +353,6 @@ html {
 @media (max-width: 639px) {
   .sales-stepper-label {
     max-width: 100px;
-  }
-}
-
-@media (max-width: 639px) {
-  .featured-credential-card {
-    align-items: stretch;
-    flex-direction: column;
-  }
-
-  .featured-credential-action {
-    width: 100%;
   }
 }
 
@@ -667,7 +618,6 @@ html {
 
 .sales-stepper-shell,
 .sales-journey-detail,
-.featured-credential-card,
 .digital-ecosystem-tab,
 .digital-ecosystem-panel,
 .digital-tool-card {
@@ -921,12 +871,6 @@ main section[id]::before {
 .floating-capsule button:focus-visible {
   outline: 2px solid var(--signature-teal);
   outline-offset: 3px;
-}
-
-.editorial-watermark {
-  color: transparent;
-  -webkit-text-stroke: 1px color-mix(in srgb, var(--soft-white) 55%, transparent);
-  text-shadow: none;
 }
 
 @media (min-width: 640px) {

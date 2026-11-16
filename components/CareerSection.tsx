@@ -104,7 +104,7 @@ export default function CareerSection() {
         <header className="mb-12 max-w-4xl md:mb-16">
           <p className="mb-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
             <BriefcaseBusiness aria-hidden="true" className="h-4 w-4 text-signature-teal" />
-            The Growth Journey
+            CAREER MILESTONES
           </p>
           <h2
             id="career-heading"

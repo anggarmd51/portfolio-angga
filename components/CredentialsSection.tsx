@@ -100,16 +100,16 @@ function CertificateViewer({
     <dialog
       ref={dialogRef}
       aria-labelledby="certificate-viewer-title"
-      aria-describedby="certificate-viewer-help certificate-viewer-status"
+      aria-describedby="certificate-viewer-help certificate-viewer-description certificate-viewer-status"
       onCancel={(event) => {
         event.preventDefault();
         closeViewer();
       }}
       onKeyDown={handleKeyDown}
       onClick={handleBackdropClick}
-      className="fixed inset-0 m-0 h-full w-full max-h-none max-w-none bg-black/75 p-4 backdrop:bg-black/75 sm:p-6"
+      className="fixed inset-0 m-0 h-[100dvh] w-screen max-h-none max-w-none bg-black/75 p-2 backdrop:bg-black/75 sm:p-6"
     >
-      <div className="mx-auto flex h-full w-full max-w-5xl flex-col overflow-hidden rounded-[14px] border border-muted-text/15 bg-surface shadow-2xl">
+      <div className="mx-auto flex h-full w-full max-w-6xl flex-col overflow-hidden rounded-[14px] border border-muted-text/15 bg-surface shadow-2xl">
         <div className="flex shrink-0 items-center justify-between gap-4 border-b border-white/10 px-4 py-3 sm:px-6">
           <div className="min-w-0">
             <h2 id="certificate-viewer-title" className="text-sm font-bold text-foreground sm:text-base">
@@ -130,7 +130,8 @@ function CertificateViewer({
           </button>
         </div>
 
-        <div className="relative flex min-h-0 flex-1 items-center justify-center overflow-hidden bg-slate-900 p-2 sm:p-4" aria-busy={isLoading && !hasPreviewError}>
+        <div className="grid min-h-0 flex-1 grid-cols-1 content-start overflow-y-auto md:grid-cols-[minmax(0,1.45fr)_minmax(18rem,0.85fr)] md:content-stretch md:overflow-hidden">
+          <div className="relative flex h-[38dvh] min-h-[220px] max-h-[420px] min-w-0 flex-none items-center justify-center overflow-hidden bg-slate-900 p-2 sm:p-4 md:h-auto md:min-h-0 md:max-h-none md:flex-1" aria-busy={isLoading && !hasPreviewError}>
           {isLoading && !hasPreviewError ? (
             <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 bg-surface/75 px-6" role="status" aria-live="polite">
               <div aria-hidden="true" className="w-full max-w-2xl aspect-[1.42] rounded-xl border border-muted-text/15 bg-gradient-to-br from-white/[0.045] via-white/[0.02] to-white/[0.04] p-6 shadow-inner sm:p-10">
@@ -189,18 +190,31 @@ function CertificateViewer({
               }}
             />
           ) : null}
-          <p id="certificate-viewer-status" className="sr-only" aria-live="polite">
-            {isLoading && !hasPreviewError ? "Memuat gambar sertifikat." : hasPreviewError ? "Gambar sertifikat gagal dimuat." : "Gambar sertifikat siap."}
-          </p>
-        </div>
-        {imageUrl ? (
-          <div className="flex shrink-0 justify-center border-t border-muted-text/10 px-4 py-3">
-            <a href={imageUrl} target="_blank" rel="noopener noreferrer" className="min-h-[44px] inline-flex items-center gap-2 rounded-[10px] border border-muted-text/15 px-4 py-2 text-sm font-semibold text-foreground transition-colors hover:border-signature-teal/40 hover:text-signature-teal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signature-teal">
-              Buka Gambar Ukuran Penuh
-              <ExternalLink aria-hidden="true" className="h-4 w-4" />
-            </a>
+            <p id="certificate-viewer-status" className="sr-only" aria-live="polite">
+              {isLoading && !hasPreviewError ? "Memuat gambar sertifikat." : hasPreviewError ? "Gambar sertifikat gagal dimuat." : "Gambar sertifikat siap."}
+            </p>
           </div>
-        ) : null}
+          <aside className="flex min-w-0 flex-col gap-4 border-t border-muted-text/15 bg-surface p-5 sm:p-6 md:min-h-0 md:overflow-y-auto md:border-l md:border-t-0">
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-signature-teal">
+                {certificate.issuer}
+              </p>
+              <p id="certificate-viewer-description" className="mt-3 text-sm leading-7 text-foreground/90 sm:text-base">
+                {certificate.description}
+              </p>
+            </div>
+            <p className="text-xs leading-6 text-muted-foreground">
+              <span className="font-semibold">{certificate.validity ? "Masa berlaku: " : "Periode: "}</span>
+              <span className="font-mono">{certificate.validity ?? certificate.period}</span>
+            </p>
+            {imageUrl ? (
+              <a href={imageUrl} target="_blank" rel="noopener noreferrer" className="mt-auto min-h-[44px] inline-flex items-center justify-center gap-2 rounded-[10px] border border-muted-text/15 px-4 py-2 text-sm font-semibold text-foreground transition-colors hover:border-signature-teal/40 hover:text-signature-teal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signature-teal">
+                Buka Gambar Ukuran Penuh
+                <ExternalLink aria-hidden="true" className="h-4 w-4" />
+              </a>
+            ) : null}
+          </aside>
+        </div>
       </div>
     </dialog>
   );
@@ -208,7 +222,6 @@ function CertificateViewer({
 
 export default function CredentialsSection() {
   const [selectedCertificate, setSelectedCertificate] = useState<Certificate | null>(null);
-  const featuredCertificate = CERTIFICATIONS_DATA[0];
 
   return (
     <section
@@ -221,7 +234,7 @@ export default function CredentialsSection() {
           <div className="inline-flex items-center gap-2 rounded-full border border-muted-text/15 bg-white/[0.035] px-3 py-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
             <GraduationCap aria-hidden="true" className="w-3.5 h-3.5 text-muted-foreground" />
             <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-signature-teal" />
-            Pendidikan & Kredensial Profesional
+            ACADEMICS & CREDENTIALS
           </div>
           <h2
             id="credentials-heading"
@@ -291,51 +304,11 @@ export default function CredentialsSection() {
               Credential Gallery · 6 Sertifikat
             </h3>
           </div>
-          {featuredCertificate ? (
-            <article className="featured-credential-card mb-6">
-              <div className="min-w-0 flex-1">
-                <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-signature-teal/25 bg-signature-teal/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-signature-teal">
-                  <Award aria-hidden="true" className="h-3.5 w-3.5" />
-                  Featured Credential
-                </div>
-                <h4 className="font-heading text-xl font-semibold tracking-[-0.025em] text-foreground sm:text-2xl">
-                  {featuredCertificate.title}
-                </h4>
-                <p className="mt-1 text-sm font-semibold text-muted-foreground">
-                  {featuredCertificate.issuer}
-                </p>
-                <p className="mt-4 max-w-2xl text-sm leading-6 text-foreground/85">
-                  Pemegang sertifikat dinyatakan kompeten dalam prinsip dasar manajemen penjualan; kredensial ini mencatat pengujian atas praktik terbaik dan kesiapan untuk tanggung jawab manajer penjualan.
-                </p>
-                <p className="mt-4 inline-flex items-center gap-2 text-xs text-muted-foreground">
-                  <Calendar aria-hidden="true" className="h-4 w-4 text-signature-teal" />
-                  <span className="font-semibold">Masa berlaku:</span>
-                  <span className="font-mono">{featuredCertificate.validity ?? featuredCertificate.period}</span>
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={() => setSelectedCertificate(featuredCertificate)}
-                aria-label={`Lihat pratinjau sertifikat: ${featuredCertificate.title}`}
-                aria-haspopup="dialog"
-                aria-expanded={selectedCertificate?.id === featuredCertificate.id}
-                className="featured-credential-action"
-              >
-                Lihat Pratinjau Sertifikat
-                <Eye aria-hidden="true" className="h-4 w-4" />
-              </button>
-            </article>
-          ) : null}
-
-          <h4 className="mb-4 text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">
-            Sertifikat Pendukung · 5
-          </h4>
-
           <StaggerContainer
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
+            className="grid auto-rows-fr grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3"
             staggerChildren={0.08}
           >
-            {CERTIFICATIONS_DATA.slice(1).map((cert) => {
+            {CERTIFICATIONS_DATA.map((cert) => {
               const hasCertificateUrl = Boolean(cert.url?.trim());
               const cardContent = (
                 <>
@@ -373,7 +346,7 @@ export default function CredentialsSection() {
               );
 
               return (
-                <StaggerItem key={cert.id} className="flex">
+                <StaggerItem key={cert.id} className="flex h-full">
                   {hasCertificateUrl ? (
                     <button
                       type="button"
@@ -381,12 +354,12 @@ export default function CredentialsSection() {
                       aria-label={`Buka sertifikat: ${cert.title}`}
                       aria-haspopup="dialog"
                       aria-expanded={selectedCertificate?.id === cert.id}
-                      className="w-full glass-card p-5 sm:p-6 rounded-2xl border border-white/10 hover:border-emerald-500/30 transition-all flex flex-col justify-between text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+                      className="h-full w-full glass-card p-5 sm:p-6 rounded-2xl border border-white/10 hover:border-emerald-500/30 transition-all flex flex-col justify-between text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
                     >
                       {cardContent}
                     </button>
                   ) : (
-                    <article className="w-full glass-card p-5 sm:p-6 rounded-2xl border border-white/10 flex flex-col justify-between">
+                    <article className="h-full w-full glass-card p-5 sm:p-6 rounded-2xl border border-white/10 flex flex-col justify-between">
                       {cardContent}
                     </article>
                   )}

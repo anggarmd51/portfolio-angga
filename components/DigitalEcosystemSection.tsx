@@ -5,8 +5,10 @@ import {
   Atom,
   Bot,
   Briefcase,
+  BriefcaseBusiness,
   Code2,
   Database,
+  FileSpreadsheet,
   Flame,
   Github,
   Layers,
@@ -17,7 +19,9 @@ import {
   Search,
   Sparkles,
   Triangle,
+  Video,
   Wind,
+  Workflow,
   type LucideIcon,
 } from "lucide-react";
 import { DIGITAL_ECOSYSTEM_CATEGORIES } from "@/data/portfolio";
@@ -25,6 +29,7 @@ import EditorialDivider from "./EditorialDivider";
 
 const TOOL_ICONS: Record<string, LucideIcon> = {
   briefcase: Briefcase,
+  "briefcase-business": BriefcaseBusiness,
   linkedin: Linkedin,
   search: Search,
   mail: Mail,
@@ -35,10 +40,13 @@ const TOOL_ICONS: Record<string, LucideIcon> = {
   github: Github,
   flame: Flame,
   database: Database,
+  "file-spreadsheet": FileSpreadsheet,
   triangle: Triangle,
   layers: Layers,
   atom: Atom,
   wind: Wind,
+  video: Video,
+  workflow: Workflow,
   code: Code2,
 };
 
@@ -82,7 +90,7 @@ export default function DigitalEcosystemSection() {
       <div className="mx-auto w-full max-w-[1240px]">
         <header className="mb-10 max-w-3xl md:mb-12">
           <p className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-            Digital Ecosystem
+            DIGITAL ECOSYSTEM
           </p>
           <h2
             id="ecosystem-heading"
@@ -128,10 +136,7 @@ export default function DigitalEcosystemSection() {
               >
                 <header className="mb-5 flex items-end justify-between gap-3 border-b border-muted-text/15 pb-4">
                   <div>
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-signature-teal">
-                      Kategori {category.number}
-                    </p>
-                    <h3 className="mt-2 font-heading text-lg font-semibold tracking-[-0.025em] text-foreground sm:text-xl">
+                    <h3 className="font-heading text-lg font-semibold tracking-[-0.025em] text-foreground sm:text-xl">
                       {category.label}
                     </h3>
                   </div>
@@ -140,7 +145,7 @@ export default function DigitalEcosystemSection() {
                   </span>
                 </header>
 
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                <div className="grid auto-rows-fr grid-cols-1 gap-3 sm:grid-cols-2">
                   {category.items.map((tool) => {
                     const Icon = TOOL_ICONS[tool.icon];
                     return (

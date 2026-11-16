@@ -18,7 +18,7 @@ export default function ExecutiveProfileSection() {
       <div className="mx-auto w-full max-w-[1240px]">
         <div className="max-w-4xl">
           <p className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-            Profil Eksekutif
+            EXECUTIVE PROFILE
           </p>
           <h2
             id="profile-heading"

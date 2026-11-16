@@ -343,7 +343,7 @@ test("copy-email control keeps its approved address and touch-sized accessible f
   assert.match(contactSource, /min-h-\[44px\]/);
 });
 
-test("role and certificate cards omit sequence badges and certificates use an internal accessible image viewer", () => {
+test("six credential cards share one grid and use an accessible split image viewer", () => {
   const credentials = readFileSync(join(projectRoot, "components/CredentialsSection.tsx"), "utf8");
   assert.doesNotMatch(credentials, /0\{idx \+ 1\}/);
   assert.match(credentials, /<a href={imageUrl} target="_blank" rel="noopener noreferrer"/);
@@ -363,11 +363,38 @@ test("role and certificate cards omit sequence badges and certificates use an in
   assert.match(credentials, /Coba lagi/);
   assert.match(credentials, /animate-pulse/);
   assert.match(credentials, /priority/);
-  assert.match(credentials, /Featured Credential/);
-  assert.match(credentials, /Lihat Pratinjau Sertifikat/);
-  assert.match(credentials, /CERTIFICATIONS_DATA\.slice\(1\)/);
+  assert.match(credentials, /grid auto-rows-fr grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3/);
+  assert.match(credentials, /CERTIFICATIONS_DATA\.map\(\(cert\)/);
+  assert.match(credentials, /md:grid-cols-\[minmax\(0,1\.45fr\)_minmax\(18rem,0\.85fr\)\]/);
+  assert.match(credentials, /md:overflow-y-auto md:border-l/);
+  assert.match(credentials, /certificate\.description/);
+  assert.match(credentials, /Lihat pratinjau sertifikat/);
+  assert.doesNotMatch(credentials, /featured-credential|featuredCertificate|CERTIFICATIONS_DATA\.slice\(1\)/i);
   assert.match(credentials, /Masa berlaku:/);
-  assert.match(credentials, /pengujian atas praktik terbaik dan kesiapan untuk tanggung jawab manajer penjualan/);
+  assert.deepEqual(CERTIFICATIONS_DATA.map(({ description }) => description), [
+    "Validasi kemampuan merancang strategi penjualan B2B, mengelola pipeline, dan memimpin eksekusi target secara terukur.",
+    "Penguasaan teknis dalam mengoperasikan CRM HubSpot untuk pelacakan prospek, otomatisasi tugas, dan analitik penjualan.",
+    "Pemahaman fundamental integrasi kecerdasan buatan (AI) untuk mempercepat riset prospek dan efisiensi operasional bisnis.",
+    "Kemampuan menyusun proyeksi pendapatan (revenue projection) berbasis data historis dan tren pipeline secara akurat.",
+    "Penerapan metode penjualan berbasis nilai (value-based) yang mengurangi hambatan dalam proses buying journey klien.",
+    "Pemahaman dasar literasi keuangan yang mendukung analisis kelayakan dan negosiasi komersial yang sehat.",
+  ]);
+});
+
+test("section eyebrow labels use the approved English copy", () => {
+  const labels = [
+    ["components/ExecutiveProfileSection.tsx", "EXECUTIVE PROFILE"],
+    ["components/CoreCompetenciesSection.tsx", "CORE COMPETENCIES"],
+    ["components/CareerSection.tsx", "CAREER MILESTONES"],
+    ["components/ProjectShowcase.tsx", "FEATURED PROJECTS"],
+    ["components/SalesMethodologySection.tsx", "SALES METHODOLOGY"],
+    ["components/DigitalEcosystemSection.tsx", "DIGITAL ECOSYSTEM"],
+    ["components/CredentialsSection.tsx", "ACADEMICS & CREDENTIALS"],
+    ["components/ContactSection.tsx", "CONTACT & COLLABORATION"],
+  ] as const;
+  for (const [file, label] of labels) {
+    assert.ok(readFileSync(join(projectRoot, file), "utf8").includes(label), `${file} has ${label}`);
+  }
 });
 
 test("page renders the nine requested content sections, capsule navigation, and FloatingCTA", () => {
@@ -418,10 +445,37 @@ test("sales journey and digital ecosystem render accessible interactive data", (
     DIGITAL_ECOSYSTEM_CATEGORIES.map(({ label }) => label),
     ["Sales & Business Development", "AI & Productivity", "Digital Product & Development"]
   );
-  assert.deepEqual(DIGITAL_ECOSYSTEM_CATEGORIES.map(({ items }) => items.length), [4, 5, 8]);
+  assert.deepEqual(DIGITAL_ECOSYSTEM_CATEGORIES.map(({ items }) => items.length), [8, 5, 8]);
+  assert.ok(DIGITAL_ECOSYSTEM_CATEGORIES.every(({ items }) => items.length <= 8));
   assert.ok(DIGITAL_ECOSYSTEM_CATEGORIES.every((category) =>
     category.items.every((tool) => tool.name.trim() && tool.description.trim() && tool.icon.trim())
   ));
+  assert.deepEqual(DIGITAL_ECOSYSTEM_CATEGORIES[0]?.items.slice(4).map(({ id, name, icon, description }) => [id, name, icon, description]), [
+    ["salesforce", "Salesforce", "briefcase-business", "Mendukung manajemen prospek tingkat enterprise, analisis pipeline, dan pelaporan metrik kinerja penjualan (KPI)."],
+    ["make", "Make.com", "workflow", "Merancang otomatisasi alur kerja (workflow) untuk integrasi data antar aplikasi tanpa kode manual."],
+    ["microsoft-office", "Microsoft Office", "file-spreadsheet", "Mendukung pengelolaan administrasi penjualan, analisis data komersial, dan penyusunan proposal bisnis secara komprehensif."],
+    ["zoom-google-meet", "Zoom / Google Meet", "video", "Memfasilitasi presentasi solusi (solution demo) interaktif dan negosiasi virtual dengan klien B2B."],
+  ]);
+  assert.deepEqual(DIGITAL_ECOSYSTEM_CATEGORIES[1]?.items.map(({ id, description }) => [id, description]), [
+    ["chatgpt", "Asisten AI untuk membantu riset, penyusunan draf, dan eksplorasi ide kerja."],
+    ["gemini", "Asisten AI untuk membantu merangkum informasi dan mengembangkan ide."],
+    ["claude", "Asisten AI untuk membantu analisis teks dan penyusunan materi."],
+    ["notion", "Menyusun catatan, dokumentasi, dan basis pengetahuan kerja."],
+    ["cue", "Asisten AI untuk membantu mengatur riset, penulisan, dan alur kerja."],
+  ]);
+  assert.deepEqual(DIGITAL_ECOSYSTEM_CATEGORIES[2]?.items.map(({ id, description }) => [id, description]), [
+    ["github", "Mengelola source code dan kolaborasi perubahan proyek."],
+    ["firebase", "Layanan backend untuk autentikasi dan data aplikasi."],
+    ["supabase", "Backend aplikasi dengan basis data dan layanan terkelola."],
+    ["vercel", "Meng-host aplikasi web dan menjalankan alur deployment."],
+    ["nextjs", "Kerangka kerja React untuk membangun aplikasi web."],
+    ["react", "Pustaka antarmuka berbasis komponen untuk aplikasi web."],
+    ["tailwind-css", "Menyusun tampilan web melalui utility CSS."],
+    ["visual-studio-code", "Editor kode untuk pengembangan dan peninjauan proyek."],
+  ]);
+  for (const icon of ["BriefcaseBusiness", "Workflow", "FileSpreadsheet", "Video"]) {
+    assert.match(ecosystem, new RegExp(`\\b${icon}\\b`));
+  }
   assert.doesNotMatch(`${ecosystem}\n${css}`, /ToolMarquee|tool-marquee|@keyframes\s+tool-marquee/i);
   assert.match(showcase, /Tangkapan Layar Aplikasi/);
   assert.match(showcase, /Ilustrasi Modul Fitur/);
@@ -448,14 +502,15 @@ test("sales journey and digital ecosystem render accessible interactive data", (
   assert.match(css, /\.project-deck-surface[\s\S]*background: var\(--slate-surface\)/);
 });
 
-test("contact CTA uses an asymmetric conversion grid and preserves the requested watermark", () => {
+test("contact CTA uses an asymmetric conversion grid and a clean muted copyright footer", () => {
   const contact = readFileSync(join(projectRoot, "components/ContactSection.tsx"), "utf8");
   assert.match(contact, /CONTACT_DATA\.channels\.filter\(\(channel\) => channel\.iconName === "whatsapp" \|\| channel\.isDownload\)/);
   assert.match(contact, /CONTACT_DATA\.channels\.filter\(\(channel\) => channel\.iconName !== "whatsapp" && !channel\.isDownload\)/);
   assert.match(contact, /contact-primary-grid/);
   assert.match(contact, /contact-secondary-grid/);
-  assert.match(contact, /MUHAMMAD ANGGA RAMADHAN/);
-  assert.match(contact, /text-\[clamp\(1rem,5\.45vw,4\.75rem\)\]/);
+  assert.doesNotMatch(contact, /MUHAMMAD ANGGA RAMADHAN|editorial-watermark/);
+  assert.match(contact, /font-sans text-muted-foreground/);
+  assert.equal(CONTACT_DATA.footer, "© 2026 Muhammad Angga Ramadhan. All rights reserved.");
   assert.match(contact, /portfolio-dark-stage/);
 });
 

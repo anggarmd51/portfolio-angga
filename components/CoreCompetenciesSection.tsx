@@ -37,7 +37,7 @@ export default function CoreCompetenciesSection() {
       <div className="mx-auto w-full max-w-[1240px]">
         <div className="mb-10 max-w-3xl md:mb-14">
           <p className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-            Keahlian Utama
+            CORE COMPETENCIES
           </p>
           <h2
             id="competencies-heading"

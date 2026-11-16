@@ -47,7 +47,7 @@ export default function SalesMethodologySection() {
       <div className="mx-auto w-full max-w-[1240px]">
         <header className="mb-10 max-w-3xl md:mb-14">
           <p className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-            Sales Methodology
+            SALES METHODOLOGY
           </p>
           <h2
             id="methodology-heading"

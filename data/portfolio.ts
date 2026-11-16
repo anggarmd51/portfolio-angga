@@ -61,6 +61,7 @@ export interface CertificationItem {
   id: string;
   title: string;
   issuer: string;
+  description: string;
   period: string;
   validity?: string;
   url?: string;
@@ -155,6 +156,10 @@ export const DIGITAL_ECOSYSTEM_CATEGORIES = [
       { id: "linkedin-sales-navigator", name: "LinkedIn Sales Navigator", icon: "linkedin", description: "Menelusuri akun dan profesional untuk riset serta pemetaan prospek B2B." },
       { id: "apollo", name: "Apollo.io", icon: "search", description: "Mendukung pencarian prospek dan riset akun untuk proses outbound B2B." },
       { id: "google-workspace", name: "Google Workspace", icon: "mail", description: "Mendukung email, dokumen, kalender, dan kolaborasi kerja." },
+      { id: "salesforce", name: "Salesforce", icon: "briefcase-business", description: "Mendukung manajemen prospek tingkat enterprise, analisis pipeline, dan pelaporan metrik kinerja penjualan (KPI)." },
+      { id: "make", name: "Make.com", icon: "workflow", description: "Merancang otomatisasi alur kerja (workflow) untuk integrasi data antar aplikasi tanpa kode manual." },
+      { id: "microsoft-office", name: "Microsoft Office", icon: "file-spreadsheet", description: "Mendukung pengelolaan administrasi penjualan, analisis data komersial, dan penyusunan proposal bisnis secara komprehensif." },
+      { id: "zoom-google-meet", name: "Zoom / Google Meet", icon: "video", description: "Memfasilitasi presentasi solusi (solution demo) interaktif dan negosiasi virtual dengan klien B2B." },
     ],
   },
   {
@@ -421,6 +426,7 @@ export const CERTIFICATIONS_DATA: CertificationItem[] = [
     id: "cert-1",
     title: "Sales Management Certification",
     issuer: "HubSpot Academy",
+    description: "Validasi kemampuan merancang strategi penjualan B2B, mengelola pipeline, dan memimpin eksekusi target secara terukur.",
     period: "8 Okt 2026 – 6 Nov 2028",
     validity: "8 Okt 2026 – 6 Nov 2028",
     url: "/assets/sertifikat/Hubspot%20Academy%20-%20Sales%20Management.webp",
@@ -429,6 +435,7 @@ export const CERTIFICATIONS_DATA: CertificationItem[] = [
     id: "cert-2",
     title: "HubSpot Sales Hub Software Certified",
     issuer: "HubSpot Academy",
+    description: "Penguasaan teknis dalam mengoperasikan CRM HubSpot untuk pelacakan prospek, otomatisasi tugas, dan analitik penjualan.",
     period: "Jun 2026 – Jul 2027",
     validity: "Jun 2026 – Jul 2027",
     url: "/assets/sertifikat/HubSpot%20Academy%20-%20Sales%20Hub%20Software.webp",
@@ -437,6 +444,7 @@ export const CERTIFICATIONS_DATA: CertificationItem[] = [
     id: "cert-3",
     title: "Boosting MSME Growth through AI",
     issuer: "Hacktiv8, Google.org & ADB",
+    description: "Pemahaman fundamental integrasi kecerdasan buatan (AI) untuk mempercepat riset prospek dan efisiensi operasional bisnis.",
     period: "Nov 2025",
     url: "/assets/sertifikat/Hacktiv8%20-%20Boosting%20MSME%20Growth%20through%20AI.webp",
   },
@@ -444,6 +452,7 @@ export const CERTIFICATIONS_DATA: CertificationItem[] = [
     id: "cert-4",
     title: "Sales Forecasting",
     issuer: "HP LIFE (HP Foundation)",
+    description: "Kemampuan menyusun proyeksi pendapatan (revenue projection) berbasis data historis dan tren pipeline secara akurat.",
     period: "Oktober 2026",
     url: "/assets/sertifikat/Certificate%20of%20Completion%20-%20HP%20LIFE.webp",
   },
@@ -451,6 +460,7 @@ export const CERTIFICATIONS_DATA: CertificationItem[] = [
     id: "cert-5",
     title: "Frictionless Sales Certified",
     issuer: "HubSpot Academy",
+    description: "Penerapan metode penjualan berbasis nilai (value-based) yang mengurangi hambatan dalam proses buying journey klien.",
     period: "Okt 2026",
     url: "/assets/sertifikat/Hubspot%20Academy%20-%20Frictionless%20Sales.webp",
   },
@@ -458,6 +468,7 @@ export const CERTIFICATIONS_DATA: CertificationItem[] = [
     id: "cert-6",
     title: "Financial Literacy and Job Readiness",
     issuer: "DBS Foundation & Plan Int.",
+    description: "Pemahaman dasar literasi keuangan yang mendukung analisis kelayakan dan negosiasi komersial yang sehat.",
     period: "Sep 2026",
     url: "/assets/sertifikat/Muhammad%20Angga%20Ramadhan%20-%20Sertifikat%20Financial%20Literasi.webp",
   },
@@ -509,7 +520,7 @@ export const CONTACT_DATA = {
       iconName: "file-text" as const,
     },
   ],
-  footer: "© 2026 Muhammad Angga Ramadhan",
+  footer: "© 2026 Muhammad Angga Ramadhan. All rights reserved.",
 };
 
 export const NAVIGATION_SECTIONS = [
