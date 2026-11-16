@@ -4,7 +4,6 @@ import { useRef, useState } from "react";
 import Image from "next/image";
 import { CAREER_ROLES, type CareerRole } from "@/data/portfolio";
 import { BriefcaseBusiness, CalendarDays, MapPin } from "lucide-react";
-import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useScrollLinkedProgress } from "@/hooks/useScrollLinkedProgress";
 import EditorialDivider from "./EditorialDivider";
 
@@ -85,8 +84,7 @@ function RoleDetail({ role }: { role: CareerRole }) {
 
 export default function CareerSection() {
   const scrollPathRef = useRef<SVGPathElement | null>(null);
-  const scrollMotionEnabled = useMediaQuery("(prefers-reduced-motion: no-preference)");
-  const sectionRef = useScrollLinkedProgress<HTMLElement>(scrollPathRef, scrollMotionEnabled);
+  const sectionRef = useScrollLinkedProgress<HTMLElement>(scrollPathRef);
   const [selectedRoleId, setSelectedRoleId] = useState(CAREER_ROLES[0]?.id ?? "");
   const selectedIndex = Math.max(
     0,

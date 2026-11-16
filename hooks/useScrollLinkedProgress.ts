@@ -9,13 +9,11 @@ type ScrollPathRef = RefObject<SVGPathElement | null>;
  * DOM writes are batched to one requestAnimationFrame and never update React state.
  */
 export function useScrollLinkedProgress<T extends HTMLElement>(
-  pathRef: ScrollPathRef,
-  enabled: boolean
+  pathRef: ScrollPathRef
 ): RefObject<T | null> {
   const sectionRef = useRef<T | null>(null);
 
   useEffect(() => {
-    if (!enabled) return;
     const section = sectionRef.current;
     const path = pathRef.current;
     if (!section || !path) return;
@@ -44,7 +42,7 @@ export function useScrollLinkedProgress<T extends HTMLElement>(
       window.removeEventListener("scroll", scheduleUpdate);
       window.removeEventListener("resize", scheduleUpdate);
     };
-  }, [enabled, pathRef]);
+  }, [pathRef]);
 
   return sectionRef;
 }

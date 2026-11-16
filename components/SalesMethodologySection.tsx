@@ -2,7 +2,6 @@
 
 import { useRef, useState, type KeyboardEvent } from "react";
 import { SALES_WORKFLOW_STEPS } from "@/data/portfolio";
-import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useScrollLinkedProgress } from "@/hooks/useScrollLinkedProgress";
 import EditorialDivider from "./EditorialDivider";
 
@@ -16,8 +15,7 @@ export default function SalesMethodologySection() {
   const [activeIndex, setActiveIndex] = useState(0);
   const tabRefs = useRef<Array<HTMLButtonElement | null>>([]);
   const scrollPathRef = useRef<SVGPathElement | null>(null);
-  const scrollMotionEnabled = useMediaQuery("(prefers-reduced-motion: no-preference)");
-  const sectionRef = useScrollLinkedProgress<HTMLElement>(scrollPathRef, scrollMotionEnabled);
+  const sectionRef = useScrollLinkedProgress<HTMLElement>(scrollPathRef);
   const activeStep = SALES_WORKFLOW_STEPS[activeIndex];
 
   const handleKeyDown = (event: KeyboardEvent<HTMLButtonElement>, currentIndex: number) => {

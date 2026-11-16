@@ -11,7 +11,7 @@ import { MagneticAnchor } from "./MagneticElements";
 
 const ease = [0.21, 0.47, 0.32, 0.98] as const;
 const POINTER_EFFECT_QUERY =
-  "(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)";
+  "(hover: hover) and (pointer: fine)";
 
 const reveal = {
   hidden: { opacity: 0, y: 16 },
@@ -195,8 +195,8 @@ export default function HeroSection() {
 
         <div className="relative flex items-center justify-center lg:col-span-5 lg:justify-end">
           <motion.div
-            initial={{ opacity: 0, clipPath: "inset(0 0 0 100%)" }}
-            animate={{ opacity: 1, clipPath: "inset(0 0 0 0%)" }}
+            initial={{ opacity: 0, x: 18 }}
+            animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.12, delay: 0.84, ease }}
             className="hero-motion relative mx-auto aspect-square w-full max-w-[420px] sm:max-w-[500px] lg:mx-0 lg:aspect-[0.86/1] lg:max-w-[520px]"
           >

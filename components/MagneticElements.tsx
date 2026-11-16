@@ -5,7 +5,7 @@ import { motion, useMotionValue, useSpring, type HTMLMotionProps } from "motion/
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 const POINTER_EFFECT_QUERY =
-  "(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)";
+  "(hover: hover) and (pointer: fine)";
 const MAX_OFFSET = 5;
 
 function useMagneticMotion() {

@@ -59,8 +59,7 @@ export default function SectionNavigation() {
       Math.min(nav.scrollWidth - nav.clientWidth, nav.scrollLeft + linkBounds.left - navBounds.left)
     );
     if (Math.abs(targetLeft - nav.scrollLeft) < 1) return;
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    nav.scrollTo({ left: targetLeft, behavior: prefersReducedMotion ? "instant" : "smooth" });
+    nav.scrollTo({ left: targetLeft, behavior: "smooth" });
   }, [activeSection]);
 
   const toggleTheme = () => {

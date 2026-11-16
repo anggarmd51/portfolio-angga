@@ -219,7 +219,7 @@ test("metadata and share card use the approved title and description", () => {
   assert.match(navigation, /aria-label="Navigasi utama"/);
   assert.match(navigation, /layoutId="active-nav-indicator"/);
   assert.match(navigation, /const targetLeft = Math\.max\(\s*0,\s*Math\.min\(nav\.scrollWidth - nav\.clientWidth/);
-  assert.match(navigation, /nav\.scrollTo\(\{ left: targetLeft, behavior: prefersReducedMotion \? "instant" : "smooth" \}\)/);
+  assert.match(navigation, /nav\.scrollTo\(\{ left: targetLeft, behavior: "smooth" \}\)/);
   assert.match(navigation, /Aktifkan tema terang/);
   assert.match(navigation, /fixed left-1\/2 top-5/);
   assert.doesNotMatch(`${layout}\n${navigation}`, /Executive Portfolio/);
@@ -241,7 +241,7 @@ test("floating WhatsApp CTA is accessible, mobile-only, animated, and gated by s
   assert.match(cta, /aria-label=/);
   assert.match(cta, /focus-visible:ring/);
   assert.match(cta, /AnimatePresence/);
-  assert.match(layout, /MotionConfig reducedMotion="user"/);
+  assert.match(layout, /MotionConfig reducedMotion="never"/);
   assert.match(page, /<FloatingCTA \/>/);
 });
 
@@ -381,7 +381,7 @@ test("sales journey and digital ecosystem render accessible interactive data", (
   assert.match(ecosystem, /is-dimmed/);
   assert.doesNotMatch(ecosystem, /activeCategory|aria-hidden=\{isDimmed\}/);
   assert.match(css, /digital-tool-card\.is-dimmed[\s\S]*transform: scale\(0\.98\)/);
-  assert.match(css, /@media \(hover: hover\) and \(pointer: fine\) and \(prefers-reduced-motion: no-preference\)/);
+  assert.match(css, /@media \(hover: hover\) and \(pointer: fine\)/);
   assert.deepEqual(
     DIGITAL_ECOSYSTEM_CATEGORIES.map(({ label }) => label),
     ["Sales & Business Development", "AI & Productivity", "Digital Product & Development"]
@@ -446,14 +446,14 @@ test("presentation scroll-snap uses proximity at all sizes and keeps mobile sect
   assert.match(css, /scrollbar-width: none/);
   assert.match(css, /min-height: 100svh/);
   assert.doesNotMatch(css, /scroll-snap-type: y mandatory/);
-  assert.match(css, /prefers-reduced-motion:\s*reduce/);
-  assert.match(css, /\.motion-reveal\s*\{\s*opacity: 1 !important;\s*transform: none !important;/);
+  assert.doesNotMatch(css, /prefers-reduced-motion/);
 });
 
-test("site motion respects reduced-motion and displays scroll progress", () => {
+test("site motion is force-active and displays scroll progress", () => {
   const css = readFileSync(join(projectRoot, "app/globals.css"), "utf8");
   const layout = readFileSync(join(projectRoot, "app/layout.tsx"), "utf8");
-  assert.match(layout, /MotionConfig reducedMotion="user"/);
+  assert.match(layout, /MotionConfig reducedMotion="never"/);
+  assert.doesNotMatch(`${css}\n${layout}`, /prefers-reduced-motion/);
   assert.match(layout, /<ScrollProgress \/>/);
   const progress = readFileSync(join(projectRoot, "components/ScrollProgress.tsx"), "utf8");
   assert.match(progress, /--scroll-progress/);
@@ -465,4 +465,20 @@ test("site motion respects reduced-motion and displays scroll progress", () => {
   assert.match(motionSource, /whileInView=\{\{[\s\S]*?opacity: 1,[\s\S]*?y: 0,[\s\S]*?\}\}/);
   assert.match(motionSource, /duration = 0\.4/);
   assert.match(motionSource, /duration: 0\.4/);
+  assert.doesNotMatch(`${css}\n${motionSource}`, /prefers-reduced-motion|clipPath|transition:\s*all/);
+});
+
+test("project mockup tilt and competency strips respond to touch or keyboard focus", () => {
+  const showcase = readFileSync(join(projectRoot, "components/ProjectShowcase.tsx"), "utf8");
+  const competencies = readFileSync(join(projectRoot, "components/CoreCompetenciesSection.tsx"), "utf8");
+  const css = readFileSync(join(projectRoot, "app/globals.css"), "utf8");
+  assert.match(showcase, /onPointerDown=\{\(event\) => \{/);
+  assert.match(showcase, /event\.pointerType === "touch"/);
+  assert.match(showcase, /data-touch-active="false"/);
+  assert.match(showcase, /onFocus=\{\(event\) => \{/);
+  assert.match(css, /\.project-mockup-frame\[data-touch-active="true"\]/);
+  assert.match(competencies, /tabIndex=\{0\}/);
+  assert.match(competencies, /competency-strip/);
+  assert.match(css, /\.competency-strip:active/);
+  assert.match(css, /\.competency-strip:focus-visible/);
 });

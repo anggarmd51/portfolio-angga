@@ -20,7 +20,7 @@ import EditorialDivider from "./EditorialDivider";
 import { MagneticButton } from "./MagneticElements";
 
 const POINTER_EFFECT_QUERY =
-  "(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)";
+  "(hover: hover) and (pointer: fine)";
 
 type GallerySlide =
   | { kind: "image"; src: string; title: string; caption: string }
@@ -55,7 +55,6 @@ export default function ProjectShowcase() {
   const projectTabRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const touchStartX = useRef<number | null>(null);
   const pointerEffectsEnabled = useMediaQuery(POINTER_EFFECT_QUERY);
-  const reducedMotionEnabled = useMediaQuery("(prefers-reduced-motion: reduce)");
   const tiltFrameRef = useRef<number | null>(null);
   const pendingTiltRef = useRef<{ target: HTMLDivElement; x: number; y: number } | null>(null);
 
@@ -87,6 +86,16 @@ export default function ProjectShowcase() {
     event.currentTarget.style.setProperty("--tilt-x", "0deg");
     event.currentTarget.style.setProperty("--tilt-y", "0deg");
     event.currentTarget.dataset.pointerActive = "false";
+  };
+
+  const setMockupInteractionTilt = (
+    target: HTMLDivElement,
+    state: "touchActive" | "focusActive",
+    active: boolean
+  ) => {
+    target.dataset[state] = String(active);
+    target.style.setProperty("--tilt-x", active ? "-3deg" : "0deg");
+    target.style.setProperty("--tilt-y", active ? "3deg" : "0deg");
   };
 
   const openGallery = (project: ProjectItem) => {
@@ -257,14 +266,43 @@ export default function ProjectShowcase() {
                   scale: projectIndex < activeStackIndex ? Math.max(0.96, 1 - 0.02 * (activeStackIndex - projectIndex)) : 1,
                   opacity: projectIndex < activeStackIndex ? Math.max(0.72, 1 - 0.16 * (activeStackIndex - projectIndex)) : 1,
                 }}
-                transition={{ duration: reducedMotionEnabled ? 0 : 0.32, ease: "easeOut" }}
+                transition={{ duration: 0.32, ease: "easeOut" }}
               >
                   <div className={`${isArcrm ? "lg:col-span-7" : "lg:col-span-6"} border-b border-muted-text/15 py-5 lg:border-b-0 lg:border-r lg:py-8 lg:pr-8`}>
                     <div
                       className="project-mockup-frame relative overflow-hidden rounded-xl border border-white/10 bg-[#0D121B] p-2.5 shadow-2xl sm:p-3"
                       data-pointer-active="false"
+                      data-touch-active="false"
+                      data-focus-active="false"
+                      tabIndex={0}
+                      aria-label={`Pratinjau interaktif proyek ${project.title}; sentuh atau fokuskan untuk tilt 3D`}
                       onPointerMove={pointerEffectsEnabled ? handleMockupPointerMove : undefined}
                       onPointerLeave={pointerEffectsEnabled ? resetMockupTilt : undefined}
+                      onPointerDown={(event) => {
+                        if (event.pointerType === "touch") {
+                          setMockupInteractionTilt(event.currentTarget, "touchActive", true);
+                        }
+                      }}
+                      onPointerUp={(event) => {
+                        if (event.pointerType === "touch") {
+                          setMockupInteractionTilt(event.currentTarget, "touchActive", false);
+                        }
+                      }}
+                      onPointerCancel={(event) => {
+                        if (event.pointerType === "touch") {
+                          setMockupInteractionTilt(event.currentTarget, "touchActive", false);
+                        }
+                      }}
+                      onFocus={(event) => {
+                        if (event.target === event.currentTarget) {
+                          setMockupInteractionTilt(event.currentTarget, "focusActive", true);
+                        }
+                      }}
+                      onBlur={(event) => {
+                        if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+                          setMockupInteractionTilt(event.currentTarget, "focusActive", false);
+                        }
+                      }}
                     >
                       <div aria-hidden="true" className="flex h-7 items-center gap-1.5 border-b border-white/[0.08] px-1 pb-2">
                         <span className="h-2.5 w-2.5 rounded-full bg-[#ED6A5E]" />
@@ -356,7 +394,7 @@ export default function ProjectShowcase() {
                           Peran, Solusi &amp; Tech
                         </button>
                       </div>
-                      <motion.div layout className="mt-4" transition={{ layout: { duration: reducedMotionEnabled ? 0 : 0.24, ease: "easeOut" } }}>
+                      <motion.div layout className="mt-4" transition={{ layout: { duration: 0.24, ease: "easeOut" } }}>
                         <AnimatePresence mode="wait" initial={false}>
                           {activeProjectTab === "context" ? (
                             <motion.div
@@ -365,10 +403,10 @@ export default function ProjectShowcase() {
                               role="tabpanel"
                               tabIndex={0}
                               aria-labelledby={`project-${project.id}-tab-context`}
-                              initial={reducedMotionEnabled ? false : { opacity: 0, y: 8 }}
+                              initial={{ opacity: 0, y: 8 }}
                               animate={{ opacity: 1, y: 0 }}
-                              exit={reducedMotionEnabled ? undefined : { opacity: 0, y: -6 }}
-                              transition={{ duration: reducedMotionEnabled ? 0 : 0.18, ease: "easeOut" }}
+                              exit={{ opacity: 0, y: -6 }}
+                              transition={{ duration: 0.18, ease: "easeOut" }}
                               className="project-tab-panel space-y-4 rounded-xl border border-muted-text/15 bg-glass-tint p-4 sm:p-5"
                             >
                               <div>
@@ -387,10 +425,10 @@ export default function ProjectShowcase() {
                               role="tabpanel"
                               tabIndex={0}
                               aria-labelledby={`project-${project.id}-tab-solution`}
-                              initial={reducedMotionEnabled ? false : { opacity: 0, y: 8 }}
+                              initial={{ opacity: 0, y: 8 }}
                               animate={{ opacity: 1, y: 0 }}
-                              exit={reducedMotionEnabled ? undefined : { opacity: 0, y: -6 }}
-                              transition={{ duration: reducedMotionEnabled ? 0 : 0.18, ease: "easeOut" }}
+                              exit={{ opacity: 0, y: -6 }}
+                              transition={{ duration: 0.18, ease: "easeOut" }}
                               className="project-tab-panel space-y-4 rounded-xl border border-muted-text/15 bg-glass-tint p-4 sm:p-5"
                             >
                               <div>
@@ -553,10 +591,10 @@ export default function ProjectShowcase() {
                     <AnimatePresence initial={false} mode="sync">
                       <motion.div
                         key={activeSlide.src}
-                        initial={reducedMotionEnabled ? false : { opacity: 0 }}
+                        initial={{ opacity: 0 }}
                         animate={{ opacity: loadedImageSrc === activeSlide.src ? 1 : 0 }}
-                        exit={reducedMotionEnabled ? undefined : { opacity: 0 }}
-                        transition={{ duration: reducedMotionEnabled ? 0 : 0.24, ease: "easeOut" }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.24, ease: "easeOut" }}
                         className="gallery-slide absolute inset-0"
                       >
                         <Image

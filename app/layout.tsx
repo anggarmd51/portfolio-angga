@@ -89,7 +89,7 @@ export default function RootLayout({
         className="min-h-screen bg-page-background text-soft-white font-sans antialiased selection:bg-signature-teal/20 selection:text-soft-white"
       >
         <ScrollProgress />
-        <MotionConfig reducedMotion="user">{children}</MotionConfig>
+        <MotionConfig reducedMotion="never">{children}</MotionConfig>
         {process.env.VERCEL === "1" ? <Analytics /> : null}
       </body>
     </html>

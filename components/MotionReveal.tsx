@@ -11,7 +11,6 @@ interface RevealProps {
   amount?: number;
   onMouseMove?: MouseEventHandler<HTMLDivElement>;
   onMouseLeave?: MouseEventHandler<HTMLDivElement>;
-  maskReveal?: boolean;
 }
 
 export function Reveal({
@@ -23,19 +22,16 @@ export function Reveal({
   amount = 0.15,
   onMouseMove,
   onMouseLeave,
-  maskReveal = false,
 }: RevealProps) {
   return (
     <motion.div
       initial={{
         opacity: 0,
         y,
-        ...(maskReveal ? { clipPath: "inset(0 0 12% 0 round 16px)" } : {}),
       }}
       whileInView={{
         opacity: 1,
         y: 0,
-        ...(maskReveal ? { clipPath: "inset(0 0 0% 0 round 16px)" } : {}),
       }}
       viewport={{ once: true, amount }}
       transition={{

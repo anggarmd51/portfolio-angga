@@ -52,7 +52,8 @@ export default function CoreCompetenciesSection() {
           {COMPETENCIES.map((item, index) => (
             <li
               key={item.number}
-              className={`grid grid-cols-[3rem_1fr] gap-x-3 border-b border-muted-text/15 py-6 sm:grid-cols-[4rem_1fr] sm:gap-x-5 sm:py-8 ${
+              tabIndex={0}
+              className={`competency-strip grid grid-cols-[3rem_1fr] gap-x-3 border-b border-muted-text/15 py-6 sm:grid-cols-[4rem_1fr] sm:gap-x-5 sm:py-8 ${
                 index % 2 === 0 ? "md:pr-10" : "md:border-l md:pl-10"
               }`}
             >

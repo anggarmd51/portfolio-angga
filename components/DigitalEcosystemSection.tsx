@@ -69,7 +69,7 @@ export default function DigitalEcosystemSection() {
 
   const highlightOnPointer = (event: PointerEvent<HTMLButtonElement>, index: number) => {
     if (event.pointerType !== "mouse") return;
-    if (!window.matchMedia("(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)").matches) return;
+    if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
     setHoveredIndex(index);
   };
 
