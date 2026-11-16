@@ -7,10 +7,20 @@
   --color-soft-white: var(--soft-white);
   --color-muted-text: var(--muted-text);
   --color-signature-teal: var(--signature-teal);
-  --color-emerald-300: #65d9b9;
-  --color-emerald-400: var(--signature-teal);
+  --color-signature-gold: var(--signature-gold);
+  --color-glass-tint: var(--glass-tint);
+  --color-emerald-300: var(--accent-text);
+  --color-emerald-400: var(--accent-text);
   --color-emerald-500: var(--signature-teal);
-  --color-emerald-600: #11a77f;
+  --color-emerald-600: var(--accent-text-strong);
+  --color-white: var(--soft-white);
+  --color-slate-200: var(--soft-white);
+  --color-slate-300: var(--muted-text);
+  --color-slate-400: var(--muted-text);
+  --color-slate-500: var(--muted-text);
+  --color-slate-600: var(--muted-text);
+  --color-slate-900: var(--slate-surface);
+  --color-slate-950: var(--button-ink);
   --font-sans: var(--font-inter);
   --font-heading: var(--font-manrope);
   --font-editorial: var(--font-instrument-serif);
@@ -21,12 +31,23 @@
 }
 
 :root {
+  --page-background: #0a0f18;
+  --stage-background: #0a0f18;
   --obsidian-navy: #0a0f18;
   --graphite-surface: #151d29;
   --slate-surface: #202b39;
   --soft-white: #f1f3f5;
   --muted-text: #a6b0bd;
   --signature-teal: #19c69a;
+  --signature-gold: #f2b705;
+  --accent-text: #65d9b9;
+  --accent-text-strong: #11a77f;
+  --button-ink: #07140f;
+  --panel-surface: rgba(21, 29, 41, 0.72);
+  --card-surface: rgba(32, 43, 57, 0.52);
+  --glass-tint: rgba(255, 255, 255, 0.035);
+  --border-color: rgba(166, 176, 189, 0.16);
+  --color-scheme: dark;
   --content-width: 1240px;
   --radius-ui: 12px;
 }
@@ -330,10 +351,12 @@ html {
   transition: border-color 180ms ease, background-color 180ms ease, transform 180ms ease;
 }
 
-.digital-tool-card:hover {
-  transform: translateY(-2px);
-  border-color: rgba(25, 198, 154, 0.34);
-  background: rgba(10, 15, 24, 0.72);
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .digital-tool-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(25, 198, 154, 0.34);
+    background: rgba(10, 15, 24, 0.72);
+  }
 }
 
 .digital-tool-icon {
@@ -379,7 +402,7 @@ html {
   }
 }
 
-@media (pointer: fine) {
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
   .bento-spotlight {
     background-image: radial-gradient(
       260px circle at var(--spotlight-x, -1000px) var(--spotlight-y, -1000px),
@@ -392,7 +415,7 @@ html {
 .glass-card-hover {
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
-@media (hover: hover) and (pointer: fine) {
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
   .glass-card-hover:hover {
     background-color: rgba(32, 43, 57, 0.7);
     border-color: rgba(166, 176, 189, 0.18);
@@ -581,5 +604,377 @@ html {
   .career-scroll-progress,
   .sales-stepper-line-scroll {
     transition: none !important;
+  }
+}
+
+
+/* Master Blueprint integration: semantic dual-theme surfaces and architectural details. */
+@theme inline {
+  --color-page-background: var(--page-background);
+}
+
+.portfolio-dark-stage {
+  background-color: var(--stage-background);
+}
+
+html[data-theme="light"] {
+  --page-background: #f1f4f2;
+  --stage-background: #0d3b33;
+  --obsidian-navy: #0d3b33;
+  --graphite-surface: #e8eeea;
+  --slate-surface: #dce7e2;
+  --soft-white: #0d3b33;
+  --muted-text: #385b54;
+  --signature-teal: #f2b705;
+  --signature-gold: #f2b705;
+  --accent-text: #0f766e;
+  --accent-text-strong: #0d5e57;
+  --button-ink: #0d3b33;
+  --panel-surface: rgba(255, 255, 255, 0.76);
+  --card-surface: rgba(255, 255, 255, 0.72);
+  --glass-tint: rgba(13, 59, 51, 0.045);
+  --border-color: rgba(13, 59, 51, 0.16);
+  --color-scheme: light;
+}
+
+html[data-theme="light"] .portfolio-dark-stage {
+  --obsidian-navy: #0d3b33;
+  --graphite-surface: #0d3b33;
+  --slate-surface: #174d43;
+  --soft-white: #f1f4f2;
+  --muted-text: #d0ddd8;
+  --signature-teal: #f2b705;
+  --signature-gold: #f2b705;
+  --accent-text: #f2b705;
+  --accent-text-strong: #f2b705;
+  --button-ink: #0d3b33;
+  --panel-surface: rgba(7, 36, 31, 0.72);
+  --card-surface: rgba(255, 255, 255, 0.075);
+  --glass-tint: rgba(255, 255, 255, 0.055);
+  --border-color: rgba(241, 244, 242, 0.18);
+}
+
+@layer base {
+  html {
+    scroll-padding-top: 6rem;
+    color-scheme: var(--color-scheme, dark);
+    background-color: var(--page-background, var(--obsidian-navy));
+    color: var(--soft-white);
+  }
+
+  body {
+    overflow-x: clip;
+    background-color: var(--page-background, var(--obsidian-navy));
+  }
+}
+
+.glass-card {
+  background-color: var(--card-surface);
+  border-color: var(--border-color);
+}
+
+.glass-card-hover:hover {
+  background-color: var(--card-surface);
+  border-color: var(--border-color);
+}
+
+.glass-pill {
+  background-color: color-mix(in srgb, var(--panel-surface) 88%, transparent);
+  border-color: var(--border-color);
+}
+
+.bg-subtle-grid {
+  background-image:
+    linear-gradient(to right, color-mix(in srgb, var(--muted-text) 4%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--muted-text) 4%, transparent) 1px, transparent 1px);
+}
+
+.sales-stepper-shell,
+.sales-journey-detail,
+.featured-credential-card,
+.digital-ecosystem-tab,
+.digital-ecosystem-panel,
+.digital-tool-card {
+  border-color: var(--border-color);
+}
+
+.sales-stepper-number {
+  background-color: var(--page-background);
+}
+
+.sales-journey-panel,
+.digital-tool-card {
+  background-color: var(--panel-surface);
+}
+
+.sales-journey-detail,
+.digital-ecosystem-tab {
+  background-color: var(--glass-tint);
+}
+
+.digital-ecosystem-tab:hover,
+.digital-ecosystem-tab.is-active {
+  border-color: color-mix(in srgb, var(--signature-teal) 60%, transparent);
+  background-color: color-mix(in srgb, var(--signature-teal) 12%, transparent);
+  color: var(--soft-white);
+}
+
+.digital-tool-card.is-spotlit {
+  border-color: color-mix(in srgb, var(--signature-teal) 52%, transparent);
+  background-color: color-mix(in srgb, var(--signature-teal) 9%, var(--panel-surface));
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .digital-tool-card:hover {
+    border-color: color-mix(in srgb, var(--signature-teal) 52%, transparent);
+    background-color: color-mix(in srgb, var(--signature-teal) 9%, var(--panel-surface));
+  }
+}
+
+main section[id] {
+  position: relative;
+}
+
+main section[id]::before {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  content: "";
+  color: var(--muted-text);
+  opacity: 0.38;
+  background-image:
+    linear-gradient(currentColor, currentColor), linear-gradient(currentColor, currentColor),
+    linear-gradient(currentColor, currentColor), linear-gradient(currentColor, currentColor),
+    linear-gradient(currentColor, currentColor), linear-gradient(currentColor, currentColor),
+    linear-gradient(currentColor, currentColor), linear-gradient(currentColor, currentColor);
+  background-size: 12px 1px, 1px 12px, 12px 1px, 1px 12px, 12px 1px, 1px 12px, 12px 1px, 1px 12px;
+  background-position:
+    20px 20px, 25px 15px, calc(100% - 32px) 20px, calc(100% - 27px) 15px,
+    20px calc(100% - 20px), 25px calc(100% - 27px),
+    calc(100% - 32px) calc(100% - 20px), calc(100% - 27px) calc(100% - 27px);
+  background-repeat: no-repeat;
+}
+
+.floating-capsule {
+  border: 1px solid var(--border-color);
+  background: color-mix(in srgb, var(--page-background) 78%, transparent);
+  color: var(--soft-white);
+  box-shadow: 0 16px 42px -16px rgba(0, 0, 0, 0.5), inset 0 1px 0 color-mix(in srgb, var(--soft-white) 12%, transparent);
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+}
+
+.floating-capsule-scroll {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  overscroll-behavior-x: contain;
+}
+
+.floating-capsule-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.paper-noise-overlay {
+  opacity: 0.025;
+  mix-blend-mode: soft-light;
+}
+
+.project-deck-card {
+  transform-origin: center top;
+  will-change: transform, opacity;
+}
+
+.project-deck-surface {
+  border: 1px solid var(--border-color);
+  background: var(--slate-surface);
+  box-shadow: 0 28px 80px -36px rgba(0, 0, 0, 0.58), inset 0 1px 0 color-mix(in srgb, var(--soft-white) 5%, transparent);
+}
+
+.project-tab-button {
+  min-height: 44px;
+  border: 1px solid var(--border-color);
+  border-radius: 9999px;
+  padding: 0.65rem 0.9rem;
+  color: var(--muted-text);
+  transition: color 180ms ease, background-color 180ms ease, border-color 180ms ease;
+}
+
+.project-tab-button[aria-selected="true"] {
+  border-color: color-mix(in srgb, var(--signature-teal) 72%, transparent);
+  background: color-mix(in srgb, var(--signature-teal) 15%, transparent);
+  color: var(--soft-white);
+}
+
+.project-tab-panel {
+  min-height: 0;
+  overflow: visible;
+}
+
+.digital-category-panel {
+  min-width: 0;
+  border: 1px solid var(--border-color);
+  border-radius: 1.25rem;
+  background: color-mix(in srgb, var(--panel-surface) 80%, transparent);
+  padding: clamp(1rem, 2vw, 1.5rem);
+  transition: border-color 220ms ease, background-color 220ms ease, opacity 220ms ease, transform 220ms ease, filter 220ms ease;
+}
+
+.digital-category-panel.is-dimmed {
+  opacity: 0.34;
+  filter: grayscale(1);
+  transform: scale(0.985);
+}
+
+.digital-category-panel.is-spotlit {
+  border-color: color-mix(in srgb, var(--signature-teal) 45%, transparent);
+  background: color-mix(in srgb, var(--signature-teal) 5%, var(--panel-surface));
+}
+
+.digital-tool-card {
+  min-height: 132px;
+  transition: border-color 200ms ease, background-color 200ms ease, transform 200ms ease, opacity 200ms ease, filter 200ms ease;
+}
+
+.digital-tool-card.is-dimmed {
+  opacity: 0.32;
+  filter: grayscale(1);
+  transform: scale(0.98);
+}
+
+.digital-tool-card.is-spotlit {
+  opacity: 1;
+  filter: none;
+  transform: scale(1);
+}
+
+.contact-primary-grid,
+.contact-secondary-grid {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.contact-primary-grid {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.contact-secondary-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.contact-action-link {
+  min-height: 76px;
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.85rem;
+  border: 1px solid var(--border-color);
+  border-radius: 1rem;
+  background: var(--glass-tint);
+  padding: 1rem;
+  color: var(--soft-white);
+  transition: border-color 180ms ease, background-color 180ms ease, transform 180ms ease;
+}
+
+.contact-action-link.is-primary {
+  min-height: 124px;
+  border-color: color-mix(in srgb, var(--signature-teal) 55%, transparent);
+  background: color-mix(in srgb, var(--signature-teal) 10%, var(--glass-tint));
+}
+
+.contact-action-link.is-primary-whatsapp {
+  border-color: var(--signature-teal);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--signature-teal) 26%, transparent), 0 12px 32px -20px color-mix(in srgb, var(--signature-teal) 70%, transparent);
+}
+
+.contact-email-card {
+  border-color: var(--border-color);
+  background: var(--glass-tint);
+  transition: border-color 180ms ease, background-color 180ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .contact-action-link:hover {
+    border-color: color-mix(in srgb, var(--signature-teal) 55%, transparent);
+    background: color-mix(in srgb, var(--signature-teal) 8%, var(--glass-tint));
+    transform: translateY(-2px);
+  }
+
+  .contact-email-card:hover {
+    border-color: color-mix(in srgb, var(--signature-teal) 55%, transparent);
+  }
+
+  .contact-email-link:hover,
+  .contact-email-copy:hover {
+    color: var(--soft-white);
+  }
+
+  .contact-email-copy:hover {
+    background: color-mix(in srgb, var(--soft-white) 10%, transparent);
+  }
+}
+
+.project-preview-image {
+  transition: transform 220ms ease-out;
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .project-deck-card:hover .project-preview-image {
+    transform: scale(1.025);
+  }
+}
+
+.contact-action-link:focus-visible,
+.project-tab-button:focus-visible,
+.floating-capsule a:focus-visible,
+.floating-capsule button:focus-visible {
+  outline: 2px solid var(--signature-teal);
+  outline-offset: 3px;
+}
+
+.editorial-watermark {
+  color: transparent;
+  -webkit-text-stroke: 1px color-mix(in srgb, var(--soft-white) 55%, transparent);
+  text-shadow: none;
+}
+
+@media (min-width: 640px) {
+  .contact-primary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .contact-secondary-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 767px) {
+  .project-deck-card {
+    position: relative !important;
+    top: auto !important;
+    transform: none !important;
+    opacity: 1 !important;
+    will-change: auto;
+  }
+
+  .digital-category-panel.is-dimmed {
+    opacity: 0.56;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-deck-card,
+  .digital-category-panel,
+  .digital-tool-card,
+  .contact-action-link {
+    transition-duration: 0.01ms !important;
+    transform: none !important;
+  }
+
+  .paper-noise-overlay {
+    mix-blend-mode: normal;
   }
 }

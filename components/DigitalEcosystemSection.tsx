@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, type KeyboardEvent } from "react";
+import { useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
 import {
   Atom,
   Bot,
@@ -43,9 +43,10 @@ const TOOL_ICONS: Record<string, LucideIcon> = {
 };
 
 export default function DigitalEcosystemSection() {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const tabRefs = useRef<Array<HTMLButtonElement | null>>([]);
-  const activeCategory = DIGITAL_ECOSYSTEM_CATEGORIES[activeIndex];
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const categoryRefs = useRef<Array<HTMLButtonElement | null>>([]);
+  const spotlightIndex = hoveredIndex ?? activeIndex;
 
   const handleKeyDown = (event: KeyboardEvent<HTMLButtonElement>, currentIndex: number) => {
     let nextIndex: number | undefined;
@@ -62,8 +63,14 @@ export default function DigitalEcosystemSection() {
     if (nextIndex !== undefined) {
       event.preventDefault();
       setActiveIndex(nextIndex);
-      tabRefs.current[nextIndex]?.focus();
+      categoryRefs.current[nextIndex]?.focus();
     }
+  };
+
+  const highlightOnPointer = (event: PointerEvent<HTMLButtonElement>, index: number) => {
+    if (event.pointerType !== "mouse") return;
+    if (!window.matchMedia("(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)").matches) return;
+    setHoveredIndex(index);
   };
 
   return (
@@ -89,71 +96,74 @@ export default function DigitalEcosystemSection() {
           </p>
         </header>
 
-        <div className="digital-ecosystem-tabs" role="tablist" aria-label="Kategori ekosistem digital" aria-orientation="horizontal">
-          {DIGITAL_ECOSYSTEM_CATEGORIES.map((category, index) => {
-            const active = index === activeIndex;
+        <div className="mb-7 flex flex-wrap gap-2" role="group" aria-label="Sorot kategori tools">
+          {DIGITAL_ECOSYSTEM_CATEGORIES.map((category, index) => (
+            <button
+              key={category.id}
+              ref={(element) => { categoryRefs.current[index] = element; }}
+              type="button"
+              aria-pressed={activeIndex === index}
+              onClick={() => setActiveIndex((current) => current === index ? null : index)}
+              onPointerEnter={(event) => highlightOnPointer(event, index)}
+              onPointerLeave={(event) => { if (event.pointerType === "mouse") setHoveredIndex(null); }}
+              onFocus={() => setHoveredIndex(index)}
+              onBlur={() => setHoveredIndex(null)}
+              onKeyDown={(event) => handleKeyDown(event, index)}
+              className={`min-h-[44px] rounded-full border px-4 py-2 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signature-teal ${activeIndex === index || hoveredIndex === index ? "border-signature-teal/60 bg-signature-teal/10 text-soft-white" : "border-muted-text/20 bg-glass-tint text-muted-text hover:text-soft-white"}`}
+            >
+              {category.label}
+            </button>
+          ))}
+        </div>
+
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-12">
+          {DIGITAL_ECOSYSTEM_CATEGORIES.map((category, categoryIndex) => {
+            const isSpotlit = spotlightIndex === categoryIndex;
+            const isDimmed = spotlightIndex !== null && !isSpotlit;
             return (
-              <button
+              <section
                 key={category.id}
-                ref={(element) => {
-                  tabRefs.current[index] = element;
-                }}
-                type="button"
-                role="tab"
-                id={`ecosystem-tab-${category.id}`}
-                aria-selected={active}
-                aria-controls="ecosystem-panel"
-                tabIndex={active ? 0 : -1}
-                onClick={() => setActiveIndex(index)}
-                onKeyDown={(event) => handleKeyDown(event, index)}
-                className={`digital-ecosystem-tab ${active ? "is-active" : ""}`}
+                aria-label={category.label}
+                className={`digital-category-panel md:col-span-1 xl:col-span-4 ${isSpotlit ? "is-spotlit" : ""} ${isDimmed ? "is-dimmed" : ""}`}
               >
-                <span className="digital-ecosystem-tab-number">{category.number}</span>
-                <span className="digital-ecosystem-tab-label">{category.label}</span>
-              </button>
+                <header className="mb-5 flex items-end justify-between gap-3 border-b border-muted-text/15 pb-4">
+                  <div>
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-signature-teal">
+                      Kategori {category.number}
+                    </p>
+                    <h3 className="mt-2 font-heading text-lg font-semibold tracking-[-0.025em] text-soft-white sm:text-xl">
+                      {category.label}
+                    </h3>
+                  </div>
+                  <span className="shrink-0 rounded-full border border-muted-text/15 px-2.5 py-1 text-[11px] text-muted-text">
+                    {category.items.length} tools
+                  </span>
+                </header>
+
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  {category.items.map((tool) => {
+                    const Icon = TOOL_ICONS[tool.icon];
+                    return (
+                      <article
+                        key={tool.id}
+                        className={`digital-tool-card ${isSpotlit ? "is-spotlit" : ""} ${isDimmed ? "is-dimmed" : ""}`}
+                        title={`${tool.name}: ${tool.description}`}
+                      >
+                        <span aria-hidden="true" className="digital-tool-icon">
+                          <Icon className="h-5 w-5" strokeWidth={1.8} />
+                        </span>
+                        <div className="min-w-0">
+                          <h4 className="text-sm font-semibold leading-5 text-soft-white">{tool.name}</h4>
+                          <p className="mt-1.5 text-xs leading-5 text-muted-text">{tool.description}</p>
+                        </div>
+                      </article>
+                    );
+                  })}
+                </div>
+              </section>
             );
           })}
         </div>
-
-        {activeCategory ? (
-          <div
-            key={activeCategory.id}
-            id="ecosystem-panel"
-            role="tabpanel"
-            aria-labelledby={`ecosystem-tab-${activeCategory.id}`}
-            tabIndex={0}
-            className="digital-ecosystem-panel focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signature-teal"
-          >
-            <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
-              <div>
-                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-signature-teal">
-                  Kategori {activeCategory.number}
-                </p>
-                <h3 className="mt-2 font-heading text-xl font-semibold tracking-[-0.025em] text-soft-white sm:text-2xl">
-                  {activeCategory.label}
-                </h3>
-              </div>
-              <span className="text-xs text-muted-text">{activeCategory.items.length} tools</span>
-            </div>
-
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-              {activeCategory.items.map((tool) => {
-                const Icon = TOOL_ICONS[tool.icon];
-                return (
-                  <article key={tool.id} className="digital-tool-card" title={`${tool.name}: ${tool.description}`}>
-                    <span aria-hidden="true" className="digital-tool-icon">
-                      <Icon className="h-5 w-5" strokeWidth={1.8} />
-                    </span>
-                    <div className="min-w-0">
-                      <h4 className="text-sm font-semibold leading-5 text-soft-white">{tool.name}</h4>
-                      <p className="mt-1.5 text-xs leading-5 text-muted-text">{tool.description}</p>
-                    </div>
-                  </article>
-                );
-              })}
-            </div>
-          </div>
-        ) : null}
       </div>
     </section>
   );

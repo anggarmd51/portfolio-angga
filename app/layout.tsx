@@ -80,12 +80,13 @@ export default function RootLayout({
   return (
     <html
       lang="id"
+      data-theme="dark"
       suppressHydrationWarning
       className={`${inter.variable} ${manrope.variable} ${instrumentSerif.variable} font-sans scroll-smooth`}
     >
       <body
         suppressHydrationWarning
-        className="min-h-screen bg-obsidian text-soft-white font-sans antialiased selection:bg-signature-teal/20 selection:text-soft-white"
+        className="min-h-screen bg-page-background text-soft-white font-sans antialiased selection:bg-signature-teal/20 selection:text-soft-white"
       >
         <ScrollProgress />
         <MotionConfig reducedMotion="user">{children}</MotionConfig>

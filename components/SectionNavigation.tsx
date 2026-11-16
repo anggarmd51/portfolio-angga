@@ -1,178 +1,125 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Image from "next/image";
-import { CONTACT_DATA, NAVIGATION_SECTIONS } from "@/data/portfolio";
-import {
-  Home,
-  User,
-  Briefcase,
-  Layers,
-  GraduationCap,
-  Mail,
-  MessageCircle,
-} from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { motion } from "motion/react";
+import { Moon, Sun } from "lucide-react";
+import { NAVIGATION_SECTIONS } from "@/data/portfolio";
 
-const ICON_MAP = {
-  home: Home,
-  profile: User,
-  career: Briefcase,
-  projects: Layers,
-  credentials: GraduationCap,
-  contact: Mail,
-};
-
-const whatsappHref =
-  CONTACT_DATA.channels.find((channel) => channel.iconName === "whatsapp")?.href ??
-  "#contact";
+type Theme = "dark" | "light";
 
 export default function SectionNavigation() {
   const [activeSection, setActiveSection] = useState<string>("home");
+  const [theme, setTheme] = useState<Theme>("dark");
+  const navScrollRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY + 200;
+    let storedTheme: Theme = "dark";
+    try {
+      storedTheme = window.localStorage.getItem("portfolio-theme") === "light" ? "light" : "dark";
+    } catch {
+      storedTheme = "dark";
+    }
+    document.documentElement.dataset.theme = storedTheme;
+    const themeFrame = window.requestAnimationFrame(() => setTheme(storedTheme));
 
-      for (let i = NAVIGATION_SECTIONS.length - 1; i >= 0; i--) {
-        const section = document.getElementById(NAVIGATION_SECTIONS[i].id);
-        if (section && scrollPosition >= section.offsetTop) {
-          setActiveSection(NAVIGATION_SECTIONS[i].id);
-          break;
+    let scheduledFrame = 0;
+    const updateActiveSection = () => {
+      window.cancelAnimationFrame(scheduledFrame);
+      scheduledFrame = window.requestAnimationFrame(() => {
+        let current: string = NAVIGATION_SECTIONS[0]?.id ?? "home";
+        const activationLine = Math.max(90, window.innerHeight * 0.3);
+        for (const section of NAVIGATION_SECTIONS) {
+          const element = document.getElementById(section.id);
+          if (element && element.getBoundingClientRect().top <= activationLine) current = section.id;
         }
-      }
+        setActiveSection(current);
+      });
     };
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
+    updateActiveSection();
+    window.addEventListener("scroll", updateActiveSection, { passive: true });
+    window.addEventListener("resize", updateActiveSection);
+    return () => {
+      window.cancelAnimationFrame(themeFrame);
+      window.cancelAnimationFrame(scheduledFrame);
+      window.removeEventListener("scroll", updateActiveSection);
+      window.removeEventListener("resize", updateActiveSection);
+    };
   }, []);
 
+  useEffect(() => {
+    const nav = navScrollRef.current;
+    const activeLink = nav?.querySelector<HTMLElement>(`[data-nav-id="${activeSection}"]`);
+    if (!nav || !activeLink) return;
+    if (nav.scrollWidth <= nav.clientWidth) return;
+    const navBounds = nav.getBoundingClientRect();
+    const linkBounds = activeLink.getBoundingClientRect();
+    const targetLeft = Math.max(
+      0,
+      Math.min(nav.scrollWidth - nav.clientWidth, nav.scrollLeft + linkBounds.left - navBounds.left)
+    );
+    if (Math.abs(targetLeft - nav.scrollLeft) < 1) return;
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    nav.scrollTo({ left: targetLeft, behavior: prefersReducedMotion ? "instant" : "smooth" });
+  }, [activeSection]);
+
+  const toggleTheme = () => {
+    const nextTheme: Theme = theme === "dark" ? "light" : "dark";
+    document.documentElement.dataset.theme = nextTheme;
+    try {
+      window.localStorage.setItem("portfolio-theme", nextTheme);
+    } catch {
+      // Theme remains active for this session even when storage is unavailable.
+    }
+    setTheme(nextTheme);
+  };
+
+  const ThemeIcon = theme === "dark" ? Sun : Moon;
+
   return (
-    <>
-      <header className="fixed top-0 left-0 right-0 z-40 bg-[#0B0F19]/90 backdrop-blur-md border-b border-white/5 transition-all">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-2">
-          <a
-            href="#home"
-            className="min-h-[44px] flex items-center gap-2.5 sm:gap-3.5 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 rounded-xl py-1 px-1.5 -ml-1.5 transition-colors"
-            aria-label="Kembali ke bagian Beranda — Portofolio Sales & Business Development"
-          >
-            <div className="relative w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12 rounded-xl bg-white/5 border border-white/10 p-1.5 flex items-center justify-center shrink-0 shadow-md group-hover:border-emerald-500/40 group-hover:bg-white/10 transition overflow-hidden">
-              <Image
-                src="/assets/Favicon%20AR.png"
-                alt="Logo AR — Muhammad Angga Ramadhan"
-                width={48}
-                height={48}
-                priority
-                className="object-contain w-full h-full"
-                referrerPolicy="no-referrer"
-              />
-            </div>
-            <span className="max-w-[172px] sm:max-w-none text-[10px] leading-tight sm:text-sm lg:text-base font-extrabold text-white tracking-tight group-hover:text-emerald-300 transition-colors">
-              Portofolio Sales & Business Development
-            </span>
-          </a>
-
-          <nav
-            aria-label="Navigasi Utama Desktop"
-            className="hidden md:flex items-center gap-0.5 lg:gap-1 bg-white/5 p-1 rounded-full border border-white/10"
-          >
-            {NAVIGATION_SECTIONS.map((sec) => {
-              const isActive = activeSection === sec.id;
-              return (
-                <a
-                  key={sec.id}
-                  href={`#${sec.id}`}
-                  className={`min-h-[44px] px-2 lg:px-3.5 py-1.5 rounded-full text-[11px] lg:text-xs font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 inline-flex items-center ${
-                    isActive
-                      ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shadow-sm"
-                      : "text-slate-300 hover:text-white hover:bg-white/5"
-                  }`}
-                >
-                  {sec.shortLabel}
-                </a>
-              );
-            })}
-          </nav>
-
-          <div className="hidden md:block shrink-0">
-            <a
-              href="#contact"
-              className="min-h-[44px] inline-flex items-center gap-2 px-3 lg:px-4 py-2 rounded-lg bg-emerald-500 text-slate-950 font-semibold text-xs hover:bg-emerald-400 transition shadow-lg shadow-emerald-500/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
-            >
-              Hubungi Saya
-            </a>
-          </div>
-
-          <a
-            href={whatsappHref}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Hubungi melalui WhatsApp"
-            title="Hubungi melalui WhatsApp"
-            className="md:hidden min-h-[44px] min-w-[44px] shrink-0 inline-flex items-center justify-center rounded-xl bg-emerald-500 text-slate-950 hover:bg-emerald-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
-          >
-            <MessageCircle aria-hidden="true" className="w-5 h-5" />
-          </a>
-        </div>
-      </header>
-
-      <nav
-        aria-label="Navigasi Samping"
-        className="hidden lg:flex fixed right-6 top-1/2 -translate-y-1/2 z-40 flex-col gap-3 p-2.5 rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 shadow-xl"
-      >
-        {NAVIGATION_SECTIONS.map((sec) => {
-          const isActive = activeSection === sec.id;
-          return (
-            <a
-              key={sec.id}
-              href={`#${sec.id}`}
-              className="group relative flex items-center justify-end min-h-[44px] min-w-[44px] p-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 rounded-full"
-              aria-label={`Ke bagian ${sec.label}`}
-            >
-              <span className="absolute right-8 px-2.5 py-1 rounded bg-slate-900 border border-white/10 text-xs text-slate-200 whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity shadow-lg">
-                {sec.label}
-              </span>
-              <span
-                aria-hidden="true"
-                className={`transition-all duration-300 rounded-full ${
-                  isActive
-                    ? "w-3 h-7 bg-emerald-400 shadow-md shadow-emerald-400/30"
-                    : "w-2.5 h-2.5 bg-slate-600 group-hover:bg-slate-300"
-                }`}
-              />
-            </a>
-          );
-        })}
-      </nav>
-
-      <nav
-        aria-label="Navigasi Bawah Mobile"
-        className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#0B0F19]/95 backdrop-blur-xl border-t border-white/10 px-2 pt-2 pb-[calc(0.75rem+env(safe-area-inset-bottom))] shadow-2xl"
-      >
-        <div className="flex items-center justify-around max-w-md mx-auto">
-          {NAVIGATION_SECTIONS.map((sec) => {
-            const Icon = ICON_MAP[sec.id as keyof typeof ICON_MAP] || Home;
-            const isActive = activeSection === sec.id;
+    <header className="fixed left-1/2 top-5 z-50 w-max max-w-[calc(100vw-1.25rem)] -translate-x-1/2">
+      <div className="floating-capsule flex items-center gap-1 rounded-full p-1.5">
+        <nav
+          ref={navScrollRef}
+          aria-label="Navigasi utama"
+          className="floating-capsule-scroll flex min-w-0 items-center gap-0.5 overflow-x-auto rounded-full"
+        >
+          {NAVIGATION_SECTIONS.map((section) => {
+            const active = activeSection === section.id;
             return (
               <a
-                key={sec.id}
-                href={`#${sec.id}`}
-                className={`flex flex-col items-center justify-center min-w-[52px] min-h-[46px] rounded-xl px-1.5 py-1 text-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 ${
-                  isActive
-                    ? "text-emerald-400 bg-emerald-500/10"
-                    : "text-slate-300 hover:text-slate-200"
-                }`}
-                aria-current={isActive ? "location" : undefined}
+                key={section.id}
+                href={`#${section.id}`}
+                data-nav-id={section.id}
+                aria-current={active ? "location" : undefined}
+                className="relative inline-flex min-h-11 shrink-0 items-center justify-center rounded-full px-3 text-[11px] font-semibold tracking-[0.01em] transition-colors sm:px-3.5 sm:text-xs"
               >
-                <Icon aria-hidden="true" className={`w-5 h-5 ${isActive ? "stroke-[2.5]" : "stroke-[1.75]"}`} />
-                <span className="text-[10px] font-medium tracking-tight mt-0.5">
-                  {sec.shortLabel}
+                {active && (
+                  <motion.span
+                    layoutId="active-nav-indicator"
+                    aria-hidden="true"
+                    className="absolute inset-0 rounded-full bg-signature-teal/15 ring-1 ring-inset ring-signature-teal/30"
+                    transition={{ type: "spring", stiffness: 420, damping: 34, mass: 0.65 }}
+                  />
+                )}
+                <span className={`relative z-10 whitespace-nowrap ${active ? "text-soft-white" : "text-muted-text hover:text-soft-white"}`}>
+                  {section.shortLabel}
                 </span>
               </a>
             );
           })}
-        </div>
-      </nav>
-    </>
+        </nav>
+        <span aria-hidden="true" className="h-6 w-px shrink-0 bg-muted-text/20" />
+        <button
+          type="button"
+          onClick={toggleTheme}
+          aria-label={theme === "dark" ? "Aktifkan tema terang" : "Aktifkan tema gelap"}
+          title={theme === "dark" ? "Tema terang" : "Tema gelap"}
+          className="inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-full text-signature-teal transition-colors hover:bg-glass-tint"
+        >
+          <ThemeIcon aria-hidden="true" className="h-4 w-4" strokeWidth={1.9} />
+        </button>
+      </div>
+    </header>
   );
 }

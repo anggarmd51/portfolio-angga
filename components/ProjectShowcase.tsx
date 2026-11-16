@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
+import { useEffect, useRef, useState, type KeyboardEvent as ReactKeyboardEvent, type PointerEvent as ReactPointerEvent } from "react";
 import Image from "next/image";
 import { PROJECTS_DATA, type ProjectItem } from "@/data/portfolio";
 import {
@@ -32,6 +32,8 @@ interface ActiveGallery {
   currentIndex: number;
 }
 
+type ProjectDetailTab = "context" | "solution";
+
 function getGallerySlides(project: ProjectItem): GallerySlide[] {
   return [
     ...project.screenshots.map((screenshot) => ({ kind: "image" as const, ...screenshot })),
@@ -43,10 +45,14 @@ export default function ProjectShowcase() {
   const [gallery, setGallery] = useState<ActiveGallery | null>(null);
   const [loadedImageSrc, setLoadedImageSrc] = useState<string | null>(null);
   const [failedImageSrc, setFailedImageSrc] = useState<string | null>(null);
+  const [activeStackIndex, setActiveStackIndex] = useState(0);
+  const [projectTabs, setProjectTabs] = useState<Record<string, ProjectDetailTab>>({});
   const isGalleryOpen = gallery !== null;
   const dialogRef = useRef<HTMLDivElement | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
   const galleryTriggerRef = useRef<HTMLElement | null>(null);
+  const projectCardRefs = useRef<Array<HTMLElement | null>>([]);
+  const projectTabRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const touchStartX = useRef<number | null>(null);
   const pointerEffectsEnabled = useMediaQuery(POINTER_EFFECT_QUERY);
   const reducedMotionEnabled = useMediaQuery("(prefers-reduced-motion: reduce)");
@@ -119,6 +125,51 @@ export default function ProjectShowcase() {
   );
 
   useEffect(() => {
+    let frame = 0;
+    const updateStack = () => {
+      window.cancelAnimationFrame(frame);
+      frame = window.requestAnimationFrame(() => {
+        if (window.innerWidth < 768) {
+          setActiveStackIndex(0);
+          return;
+        }
+        let nextActiveIndex = 0;
+        projectCardRefs.current.forEach((card, index) => {
+          if (card && card.getBoundingClientRect().top <= 116 + index * 16) nextActiveIndex = index;
+        });
+        setActiveStackIndex((current) => current === nextActiveIndex ? current : nextActiveIndex);
+      });
+    };
+
+    updateStack();
+    window.addEventListener("scroll", updateStack, { passive: true });
+    window.addEventListener("resize", updateStack);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", updateStack);
+      window.removeEventListener("resize", updateStack);
+    };
+  }, []);
+
+  const selectProjectTab = (projectId: string, tab: ProjectDetailTab) => {
+    setProjectTabs((current) => ({ ...current, [projectId]: tab }));
+  };
+
+  const handleProjectTabKeyDown = (
+    event: ReactKeyboardEvent<HTMLButtonElement>,
+    projectId: string,
+    currentTab: ProjectDetailTab
+  ) => {
+    if (event.key !== "ArrowRight" && event.key !== "ArrowLeft" && event.key !== "Home" && event.key !== "End") return;
+    event.preventDefault();
+    const nextTab = event.key === "Home" || (event.key === "ArrowLeft" && currentTab === "solution")
+      ? "context"
+      : "solution";
+    selectProjectTab(projectId, nextTab);
+    window.requestAnimationFrame(() => projectTabRefs.current[`${projectId}-${nextTab}`]?.focus());
+  };
+
+  useEffect(() => {
     if (!isGalleryOpen) return;
 
     const previousOverflow = document.body.style.overflow;
@@ -173,7 +224,7 @@ export default function ProjectShowcase() {
     <section
       id="projects"
       aria-labelledby="projects-heading"
-      className="relative border-t border-white/[0.08] bg-graphite px-5 py-20 sm:px-8 md:py-28 lg:px-10 presentation-section"
+      className="portfolio-dark-stage relative border-t border-white/[0.08] bg-graphite px-5 py-20 sm:px-8 md:py-28 lg:px-10 presentation-section"
     >
       <div className="mx-auto w-full max-w-[1240px]">
         <Reveal className="mb-12 max-w-3xl text-left md:mb-16">
@@ -195,9 +246,19 @@ export default function ProjectShowcase() {
         <div className="space-y-14">
           {PROJECTS_DATA.map((project, projectIndex) => {
             const isArcrm = project.id === "arcrm";
+            const activeProjectTab = projectTabs[project.id] ?? "context";
             return (
-              <Reveal key={project.id} y={24} duration={0.45} maskReveal className="project-showcase-reveal">
-                <article className="group/project grid grid-cols-1 border-y border-muted-text/20 lg:grid-cols-12">
+              <motion.article
+                key={project.id}
+                ref={(element) => { projectCardRefs.current[projectIndex] = element; }}
+                className="project-deck-card project-deck-surface group/project relative grid grid-cols-1 overflow-visible rounded-3xl p-4 sm:p-6 lg:grid-cols-12 lg:p-7 md:sticky"
+                style={{ top: `calc(6rem + ${projectIndex}rem)`, zIndex: 10 + projectIndex }}
+                animate={{
+                  scale: projectIndex < activeStackIndex ? Math.max(0.96, 1 - 0.02 * (activeStackIndex - projectIndex)) : 1,
+                  opacity: projectIndex < activeStackIndex ? Math.max(0.72, 1 - 0.16 * (activeStackIndex - projectIndex)) : 1,
+                }}
+                transition={{ duration: reducedMotionEnabled ? 0 : 0.32, ease: "easeOut" }}
+              >
                   <div className={`${isArcrm ? "lg:col-span-7" : "lg:col-span-6"} border-b border-muted-text/15 py-5 lg:border-b-0 lg:border-r lg:py-8 lg:pr-8`}>
                     <div
                       className="project-mockup-frame relative overflow-hidden rounded-xl border border-white/10 bg-[#0D121B] p-2.5 shadow-2xl sm:p-3"
@@ -219,7 +280,7 @@ export default function ProjectShowcase() {
                           alt={`Pratinjau proyek ${project.title}`}
                           fill
                           sizes="(max-width: 1024px) 100vw, 60vw"
-                          className={`${isArcrm ? "object-contain" : "object-cover object-top"} transition-transform duration-[220ms] ease-out group-hover/project:scale-[1.025]`}
+                          className={`${isArcrm ? "object-contain" : "object-cover object-top"} project-preview-image`}
                           referrerPolicy="no-referrer"
                         />
                         <button
@@ -264,30 +325,91 @@ export default function ProjectShowcase() {
                       {project.role}
                     </p>
 
-                    <dl className="mt-6 divide-y divide-muted-text/15 border-y border-muted-text/15">
-                      <div className="py-3.5">
-                        <dt className="text-[10px] font-semibold uppercase tracking-[0.13em] text-muted-text">Business Problem</dt>
-                        <dd className="mt-1.5 text-sm leading-6 text-soft-white/90">{project.businessProblem}</dd>
+                    <div className="mt-6">
+                      <div className="flex flex-wrap gap-2" role="tablist" aria-label={`Detail proyek ${project.title}`}>
+                        <button
+                          ref={(element) => { projectTabRefs.current[`${project.id}-context`] = element; }}
+                          id={`project-${project.id}-tab-context`}
+                          type="button"
+                          role="tab"
+                          aria-selected={activeProjectTab === "context"}
+                          aria-controls={`project-${project.id}-panel`}
+                          tabIndex={activeProjectTab === "context" ? 0 : -1}
+                          onClick={() => selectProjectTab(project.id, "context")}
+                          onKeyDown={(event) => handleProjectTabKeyDown(event, project.id, activeProjectTab)}
+                          className="project-tab-button text-xs font-semibold"
+                        >
+                          Konteks &amp; Tantangan
+                        </button>
+                        <button
+                          ref={(element) => { projectTabRefs.current[`${project.id}-solution`] = element; }}
+                          id={`project-${project.id}-tab-solution`}
+                          type="button"
+                          role="tab"
+                          aria-selected={activeProjectTab === "solution"}
+                          aria-controls={`project-${project.id}-panel`}
+                          tabIndex={activeProjectTab === "solution" ? 0 : -1}
+                          onClick={() => selectProjectTab(project.id, "solution")}
+                          onKeyDown={(event) => handleProjectTabKeyDown(event, project.id, activeProjectTab)}
+                          className="project-tab-button text-xs font-semibold"
+                        >
+                          Peran, Solusi &amp; Tech
+                        </button>
                       </div>
-                      <div className="py-3.5">
-                        <dt className="text-[10px] font-semibold uppercase tracking-[0.13em] text-muted-text">Objective</dt>
-                        <dd className="mt-1.5 text-sm leading-6 text-soft-white/90">{project.objective}</dd>
-                      </div>
-                      <div className="py-3.5">
-                        <dt className="text-[10px] font-semibold uppercase tracking-[0.13em] text-muted-text">My Contribution</dt>
-                        <dd className="mt-1.5 text-sm leading-6 text-soft-white/90">{project.myContribution}</dd>
-                      </div>
-                      <div className="py-3.5">
-                        <dt className="text-[10px] font-semibold uppercase tracking-[0.13em] text-muted-text">Solution</dt>
-                        <dd className="mt-1.5 text-sm leading-6 text-soft-white/90">{project.solution}</dd>
-                      </div>
-                      <div className="py-3.5">
-                        <dt className="text-[10px] font-semibold uppercase tracking-[0.13em] text-muted-text">Technology</dt>
-                        <dd className="mt-1.5 text-sm leading-6 text-soft-white/90">
-                          {project.techStack?.join(" · ") ?? ""}
-                        </dd>
-                      </div>
-                    </dl>
+                      <motion.div layout className="mt-4" transition={{ layout: { duration: reducedMotionEnabled ? 0 : 0.24, ease: "easeOut" } }}>
+                        <AnimatePresence mode="wait" initial={false}>
+                          {activeProjectTab === "context" ? (
+                            <motion.div
+                              key={`${project.id}-context`}
+                              id={`project-${project.id}-panel`}
+                              role="tabpanel"
+                              tabIndex={0}
+                              aria-labelledby={`project-${project.id}-tab-context`}
+                              initial={reducedMotionEnabled ? false : { opacity: 0, y: 8 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={reducedMotionEnabled ? undefined : { opacity: 0, y: -6 }}
+                              transition={{ duration: reducedMotionEnabled ? 0 : 0.18, ease: "easeOut" }}
+                              className="project-tab-panel space-y-4 rounded-xl border border-muted-text/15 bg-glass-tint p-4 sm:p-5"
+                            >
+                              <div>
+                                <h4 className="text-[10px] font-semibold uppercase tracking-[0.13em] text-muted-text">Business Problem</h4>
+                                <p className="mt-1.5 text-sm leading-6 text-soft-white/90">{project.businessProblem}</p>
+                              </div>
+                              <div>
+                                <h4 className="text-[10px] font-semibold uppercase tracking-[0.13em] text-muted-text">Objective</h4>
+                                <p className="mt-1.5 text-sm leading-6 text-soft-white/90">{project.objective}</p>
+                              </div>
+                            </motion.div>
+                          ) : (
+                            <motion.div
+                              key={`${project.id}-solution`}
+                              id={`project-${project.id}-panel`}
+                              role="tabpanel"
+                              tabIndex={0}
+                              aria-labelledby={`project-${project.id}-tab-solution`}
+                              initial={reducedMotionEnabled ? false : { opacity: 0, y: 8 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={reducedMotionEnabled ? undefined : { opacity: 0, y: -6 }}
+                              transition={{ duration: reducedMotionEnabled ? 0 : 0.18, ease: "easeOut" }}
+                              className="project-tab-panel space-y-4 rounded-xl border border-muted-text/15 bg-glass-tint p-4 sm:p-5"
+                            >
+                              <div>
+                                <h4 className="text-[10px] font-semibold uppercase tracking-[0.13em] text-muted-text">My Contribution</h4>
+                                <p className="mt-1.5 text-sm leading-6 text-soft-white/90">{project.myContribution}</p>
+                              </div>
+                              <div>
+                                <h4 className="text-[10px] font-semibold uppercase tracking-[0.13em] text-muted-text">Solution</h4>
+                                <p className="mt-1.5 text-sm leading-6 text-soft-white/90">{project.solution}</p>
+                              </div>
+                              <div>
+                                <h4 className="text-[10px] font-semibold uppercase tracking-[0.13em] text-muted-text">Technology</h4>
+                                <p className="mt-1.5 text-sm leading-6 text-soft-white/90">{project.techStack?.join(" · ") ?? ""}</p>
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </motion.div>
+                    </div>
 
                     {project.accessNote && (
                       <p className="mt-4 flex items-start gap-2.5 text-xs leading-5 text-muted-text">
@@ -334,8 +456,7 @@ export default function ProjectShowcase() {
                       </div>
                     )}
                   </div>
-                </article>
-              </Reveal>
+              </motion.article>
             );
           })}
         </div>

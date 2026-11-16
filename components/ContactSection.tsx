@@ -31,12 +31,13 @@ const ICON_MAP = {
 function ContactLink({ channel }: { channel: ContactChannel }) {
   const Icon = ICON_MAP[channel.iconName];
   const opensNewTab = channel.href.startsWith("https://");
+  const isPrimary = channel.iconName === "whatsapp" || Boolean(channel.isDownload);
   const linkProps = {
     href: channel.href,
     target: opensNewTab ? "_blank" : undefined,
     rel: opensNewTab ? "noopener noreferrer" : undefined,
     download: channel.isDownload ? channel.downloadFilename : undefined,
-    className: "min-h-[72px] w-full inline-flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-slate-200 hover:text-white hover:bg-white/10 hover:border-emerald-500/30 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400",
+    className: `contact-action-link ${isPrimary ? "is-primary" : ""} ${channel.iconName === "whatsapp" ? "is-primary-whatsapp" : ""}`,
   };
   const content = (
     <>
@@ -116,10 +117,10 @@ function ContactEmailCard({ channel }: { channel: ContactChannel }) {
 
   const StatusIcon = copied ? Check : Copy;
   return (
-    <div className="min-h-[72px] w-full grid grid-cols-[minmax(0,1fr)_auto] rounded-xl bg-white/5 border border-white/10 hover:border-emerald-500/30 transition">
+    <div className="contact-email-card min-h-[72px] w-full grid grid-cols-[minmax(0,1fr)_auto] rounded-xl border transition">
       <a
         href={`mailto:${email}`}
-        className="min-w-0 inline-flex items-center gap-3 px-4 py-3 rounded-l-xl text-slate-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-emerald-400"
+        className="contact-email-link min-w-0 inline-flex items-center gap-3 px-4 py-3 rounded-l-xl text-slate-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-emerald-400"
       >
         <Mail aria-hidden="true" className="w-5 h-5 text-emerald-400 shrink-0" />
         <span className="min-w-0 flex-1 text-left">
@@ -134,7 +135,7 @@ function ContactEmailCard({ channel }: { channel: ContactChannel }) {
         type="button"
         onClick={() => void copyEmail()}
         aria-label={copied ? "Alamat email berhasil disalin" : "Salin alamat email"}
-        className="min-h-[44px] min-w-[76px] self-center mr-2 inline-flex flex-col items-center justify-center gap-1 rounded-lg px-2 text-slate-300 hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+        className="contact-email-copy min-h-[44px] min-w-[76px] self-center mr-2 inline-flex flex-col items-center justify-center gap-1 rounded-lg px-2 text-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
       >
         <AnimatePresence mode="wait" initial={false}>
           <motion.span
@@ -169,14 +170,14 @@ export default function ContactSection() {
     <section
       id="contact"
       aria-labelledby="contact-heading"
-      className="py-20 md:py-32 px-4 sm:px-6 lg:px-8 border-t border-white/5 relative bg-graphite overflow-hidden presentation-section"
+      className="portfolio-dark-stage py-20 md:py-32 px-4 sm:px-6 lg:px-8 border-t border-white/5 relative bg-graphite overflow-hidden presentation-section"
     >
       <div
         aria-hidden="true"
         className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-emerald-500/[0.025] blur-[110px] rounded-full pointer-events-none -z-10"
       />
-      <div className="max-w-5xl mx-auto text-center">
-        <Reveal delay={0.05} y={16}>
+      <div className="mx-auto max-w-6xl text-left">
+        <Reveal delay={0.05} y={16} className="max-w-4xl">
           <div className="inline-flex items-center gap-2 rounded-full border border-muted-text/15 bg-white/[0.035] px-3.5 py-1.5 text-xs font-semibold tracking-wider text-muted-text uppercase mb-6">
             <Sparkles aria-hidden="true" className="w-3.5 h-3.5 text-muted-text" />
             <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-signature-teal" />
@@ -186,32 +187,36 @@ export default function ContactSection() {
         <Reveal delay={0.12} y={22}>
           <h2
             id="contact-heading"
-            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-tight max-w-4xl mx-auto"
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-soft-white tracking-tight leading-tight max-w-4xl"
           >
             {CONTACT_DATA.headline}
           </h2>
-          <EditorialDivider className="mx-auto mt-6 max-w-xs" />
+          <EditorialDivider className="mt-6 max-w-xs" />
         </Reveal>
         <Reveal delay={0.18} y={22}>
-          <p className="mt-6 text-base sm:text-lg md:text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
+          <p className="mt-6 text-base sm:text-lg md:text-xl text-muted-text max-w-3xl leading-relaxed">
             {CONTACT_DATA.subheadline}
           </p>
         </Reveal>
         <Reveal delay={0.14} y={18} className="mt-12 text-left">
           <section className="glass-card rounded-3xl p-5 sm:p-7 lg:p-8 border border-white/10 shadow-xl">
-            <div className="max-w-2xl">
-              <h3 className="text-lg sm:text-xl font-bold text-white">
+            <div className="mb-6 max-w-2xl">
+              <h3 className="text-lg sm:text-xl font-bold text-soft-white">
                 {CONTACT_DATA.panelTitle}
               </h3>
-              <p className="mt-2 mb-6 text-sm text-slate-300 leading-relaxed">
+              <p className="mt-2 text-sm text-muted-text leading-relaxed">
                 {CONTACT_DATA.panelDescription}
               </p>
             </div>
-            <StaggerContainer
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"
-              staggerChildren={0.05}
-            >
-              {CONTACT_DATA.channels.map((channel) => (
+            <StaggerContainer className="contact-primary-grid" staggerChildren={0.06}>
+              {CONTACT_DATA.channels.filter((channel) => channel.iconName === "whatsapp" || channel.isDownload).map((channel) => (
+                <StaggerItem key={channel.label}>
+                  <ContactAction channel={channel} />
+                </StaggerItem>
+              ))}
+            </StaggerContainer>
+            <StaggerContainer className="contact-secondary-grid mt-3" staggerChildren={0.04}>
+              {CONTACT_DATA.channels.filter((channel) => channel.iconName !== "whatsapp" && !channel.isDownload).map((channel) => (
                 <StaggerItem key={channel.label}>
                   <ContactAction channel={channel} />
                 </StaggerItem>
@@ -219,10 +224,13 @@ export default function ContactSection() {
             </StaggerContainer>
           </section>
         </Reveal>
+        <div aria-hidden="true" className="editorial-watermark mt-14 overflow-hidden whitespace-nowrap text-center font-heading text-[clamp(1rem,5.45vw,4.75rem)] font-bold tracking-tighter select-none">
+          MUHAMMAD ANGGA RAMADHAN
+        </div>
         <Reveal
           delay={0.1}
           y={16}
-          className="mt-16 pt-8 border-t border-white/10 text-xs sm:text-sm text-slate-300"
+          className="mt-8 border-t border-white/10 pt-8 text-center text-xs text-muted-text sm:text-sm"
         >
           <p>{CONTACT_DATA.footer}</p>
         </Reveal>

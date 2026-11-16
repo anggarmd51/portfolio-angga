@@ -20,13 +20,21 @@ test("Executive Editorial design tokens, fonts, and protected integrations are p
   const css = readFileSync(join(projectRoot, "app/globals.css"), "utf8");
   const design = readFileSync(join(projectRoot, "DESIGN.md"), "utf8");
   const layout = readFileSync(join(projectRoot, "app/layout.tsx"), "utf8");
+  const page = readFileSync(join(projectRoot, "app/page.tsx"), "utf8");
   for (const token of ["#0A0F18", "#151D29", "#202B39", "#F1F3F5", "#A6B0BD", "#19C69A"]) {
     assert.ok(css.toLowerCase().includes(token.toLowerCase()), `${token} is in the CSS theme`);
     assert.ok(design.toLowerCase().includes(token.toLowerCase()), `${token} is documented`);
   }
+  for (const token of ["#F1F4F2", "#0D3B33", "#F2B705"]) {
+    assert.ok(css.toLowerCase().includes(token.toLowerCase()), `${token} is available for the light theme`);
+  }
   assert.match(layout, /Instrument_Serif, Inter, Manrope/);
   assert.match(css, /--radius-2xl: 14px/);
   assert.match(layout, /process\.env\.VERCEL === "1" \? <Analytics \/> : null/);
+  assert.match(layout, /data-theme="dark"/);
+  assert.match(page, /<feTurbulence/);
+  assert.match(css, /main section\[id\]::before/);
+  assert.doesNotMatch(`${css}\n${layout}`, /three\.js|webglrenderer/i);
 });
 
 test("navigation contains the nine requested sections in architectural order", () => {
@@ -208,8 +216,12 @@ test("metadata and share card use the approved title and description", () => {
   assert.match(layout, /process\.env\.VERCEL === "1" \? <Analytics \/> : null/);
   assert.match(layout, /<Analytics \/>[\s\S]*<\/body>/);
   assert.equal(existsSync(join(projectRoot, "app/opengraph-image.tsx")), false);
-  assert.match(navigation, /Portofolio Sales & Business Development/);
-  assert.match(navigation, /group-focus-visible:opacity-100/);
+  assert.match(navigation, /aria-label="Navigasi utama"/);
+  assert.match(navigation, /layoutId="active-nav-indicator"/);
+  assert.match(navigation, /const targetLeft = Math\.max\(\s*0,\s*Math\.min\(nav\.scrollWidth - nav\.clientWidth/);
+  assert.match(navigation, /nav\.scrollTo\(\{ left: targetLeft, behavior: prefersReducedMotion \? "instant" : "smooth" \}\)/);
+  assert.match(navigation, /Aktifkan tema terang/);
+  assert.match(navigation, /fixed left-1\/2 top-5/);
   assert.doesNotMatch(`${layout}\n${navigation}`, /Executive Portfolio/);
 });
 
@@ -292,7 +304,8 @@ test("copy-email control keeps its approved address and touch-sized accessible f
   assert.match(contactSource, /Tersalin!/);
   assert.match(contactSource, /\}, 2000\)/);
   assert.match(contactSource, /aria-live="polite"/);
-  assert.match(contactSource, /<div className="min-h-\[72px\] w-full grid/);
+  assert.match(contactSource, /<div className="contact-email-card min-h-\[72px\] w-full grid/);
+  assert.match(contactSource, /className="contact-email-copy min-h-\[44px\]/);
   assert.match(contactSource, /<button[\s\S]*?Salin alamat email/);
   assert.doesNotMatch(contactSource, /prefers-reduced-motion/);
   assert.match(contactSource, /min-h-\[44px\]/);
@@ -325,12 +338,14 @@ test("role and certificate cards omit sequence badges and certificates use an in
   assert.match(credentials, /pengujian atas praktik terbaik dan kesiapan untuk tanggung jawab manajer penjualan/);
 });
 
-test("page renders the nine requested content sections in exact order and preserves FloatingCTA", () => {
+test("page renders the nine requested content sections, capsule navigation, and FloatingCTA", () => {
   const page = readFileSync(join(projectRoot, "app/page.tsx"), "utf8");
   const layout = readFileSync(join(projectRoot, "app/layout.tsx"), "utf8");
-  assert.doesNotMatch(`${page}\n${layout}`, /SectionNavigation|Navigasi Samping/);
+  assert.match(page, /<SectionNavigation \/>/);
+  assert.doesNotMatch(`${page}\n${layout}`, /Navigasi Samping|Navigasi Bawah Mobile/);
   const renderedComponents = [...page.matchAll(/<([A-Z][A-Za-z]+)\s*\/>/g)].map((match) => match[1]);
   assert.deepEqual(renderedComponents, [
+    "SectionNavigation",
     "HeroSection",
     "ExecutiveProfileSection",
     "CoreCompetenciesSection",
@@ -359,9 +374,14 @@ test("sales journey and digital ecosystem render accessible interactive data", (
   assert.match(methodology, /Objective/);
   assert.match(methodology, /Aktivitas Utama/);
   assert.match(methodology, /Output Proses/);
-  assert.match(ecosystem, /role="tablist"/);
-  assert.match(ecosystem, /role="tabpanel"/);
-  assert.match(ecosystem, /aria-selected=\{active\}/);
+  assert.match(ecosystem, /role="group" aria-label="Sorot kategori tools"/);
+  assert.match(ecosystem, /aria-pressed=\{activeIndex === index\}/);
+  assert.match(ecosystem, /DIGITAL_ECOSYSTEM_CATEGORIES\.map\(\(category, categoryIndex\)/);
+  assert.match(ecosystem, /category\.items\.map\(\(tool\)/);
+  assert.match(ecosystem, /is-dimmed/);
+  assert.doesNotMatch(ecosystem, /activeCategory|aria-hidden=\{isDimmed\}/);
+  assert.match(css, /digital-tool-card\.is-dimmed[\s\S]*transform: scale\(0\.98\)/);
+  assert.match(css, /@media \(hover: hover\) and \(pointer: fine\) and \(prefers-reduced-motion: no-preference\)/);
   assert.deepEqual(
     DIGITAL_ECOSYSTEM_CATEGORIES.map(({ label }) => label),
     ["Sales & Business Development", "AI & Productivity", "Digital Product & Development"]
@@ -378,11 +398,30 @@ test("sales journey and digital ecosystem render accessible interactive data", (
   assert.match(showcase, /h-\[90dvh\]/);
   assert.match(showcase, /event.key === "ArrowLeft"/);
   assert.match(showcase, /event.key === "ArrowRight"/);
-  assert.match(showcase, /group-hover\/project:scale-\[1\.025\]/);
+  assert.match(showcase, /project-preview-image/);
+  assert.match(showcase, /Math\.max\(0\.72, 1 - 0\.16 \*/);
   assert.match(showcase, /Lihat Galeri \/ Preview/);
   assert.match(showcase, /Kunjungi Website/);
   assert.match(showcase, /Business Problem/);
   assert.match(showcase, /My Contribution/);
+  assert.match(showcase, /className="project-deck-card[\s\S]*md:sticky/);
+  assert.match(showcase, /top: `calc\(6rem \+ \$\{projectIndex\}rem\)`/);
+  assert.match(showcase, /Konteks &amp; Tantangan/);
+  assert.match(showcase, /Peran, Solusi &amp; Tech/);
+  assert.match(showcase, /AnimatePresence mode="wait"/);
+  assert.match(showcase, /transition=\{\{ layout: \{/);
+  assert.match(css, /\.project-deck-surface[\s\S]*background: var\(--slate-surface\)/);
+});
+
+test("contact CTA uses an asymmetric conversion grid and preserves the requested watermark", () => {
+  const contact = readFileSync(join(projectRoot, "components/ContactSection.tsx"), "utf8");
+  assert.match(contact, /CONTACT_DATA\.channels\.filter\(\(channel\) => channel\.iconName === "whatsapp" \|\| channel\.isDownload\)/);
+  assert.match(contact, /CONTACT_DATA\.channels\.filter\(\(channel\) => channel\.iconName !== "whatsapp" && !channel\.isDownload\)/);
+  assert.match(contact, /contact-primary-grid/);
+  assert.match(contact, /contact-secondary-grid/);
+  assert.match(contact, /MUHAMMAD ANGGA RAMADHAN/);
+  assert.match(contact, /text-\[clamp\(1rem,5\.45vw,4\.75rem\)\]/);
+  assert.match(contact, /portfolio-dark-stage/);
 });
 
 test("career timeline presents seven accessible interactive milestones with complete role detail", () => {
