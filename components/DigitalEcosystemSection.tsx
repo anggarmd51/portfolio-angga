@@ -77,21 +77,21 @@ export default function DigitalEcosystemSection() {
     <section
       id="ecosystem"
       aria-labelledby="ecosystem-heading"
-      className="presentation-section border-t border-white/[0.08] bg-graphite px-5 py-20 sm:px-8 md:py-28 lg:px-10"
+      className="presentation-section border-t border-white/[0.08] bg-surface px-5 py-20 sm:px-8 md:py-28 lg:px-10"
     >
       <div className="mx-auto w-full max-w-[1240px]">
         <header className="mb-10 max-w-3xl md:mb-12">
-          <p className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-muted-text">
+          <p className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
             Digital Ecosystem
           </p>
           <h2
             id="ecosystem-heading"
-            className="font-heading text-3xl font-semibold tracking-[-0.04em] text-soft-white sm:text-4xl md:text-5xl"
+            className="font-heading text-3xl font-semibold tracking-[-0.04em] text-foreground sm:text-4xl md:text-5xl"
           >
             Tools &amp; Tech
           </h2>
           <EditorialDivider className="mt-5 max-w-xs" />
-          <p className="mt-4 text-sm leading-7 text-muted-text sm:text-base">
+          <p className="mt-4 text-sm leading-7 text-muted-foreground sm:text-base">
             Perangkat kerja untuk riset prospek, pengelolaan akun, kolaborasi, dan pengembangan produk digital.
           </p>
         </header>
@@ -109,7 +109,7 @@ export default function DigitalEcosystemSection() {
               onFocus={() => setHoveredIndex(index)}
               onBlur={() => setHoveredIndex(null)}
               onKeyDown={(event) => handleKeyDown(event, index)}
-              className={`min-h-[44px] rounded-full border px-4 py-2 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signature-teal ${activeIndex === index || hoveredIndex === index ? "border-signature-teal/60 bg-signature-teal/10 text-soft-white" : "border-muted-text/20 bg-glass-tint text-muted-text hover:text-soft-white"}`}
+              className={`min-h-[44px] rounded-full border px-4 py-2 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signature-teal ${activeIndex === index || hoveredIndex === index ? "border-signature-teal/60 bg-signature-teal/10 text-foreground" : "border-muted-text/20 bg-glass-tint text-muted-foreground hover:text-foreground"}`}
             >
               {category.label}
             </button>
@@ -131,11 +131,11 @@ export default function DigitalEcosystemSection() {
                     <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-signature-teal">
                       Kategori {category.number}
                     </p>
-                    <h3 className="mt-2 font-heading text-lg font-semibold tracking-[-0.025em] text-soft-white sm:text-xl">
+                    <h3 className="mt-2 font-heading text-lg font-semibold tracking-[-0.025em] text-foreground sm:text-xl">
                       {category.label}
                     </h3>
                   </div>
-                  <span className="shrink-0 rounded-full border border-muted-text/15 px-2.5 py-1 text-[11px] text-muted-text">
+                  <span className="shrink-0 rounded-full border border-muted-text/15 px-2.5 py-1 text-[11px] text-muted-foreground">
                     {category.items.length} tools
                   </span>
                 </header>
@@ -153,8 +153,8 @@ export default function DigitalEcosystemSection() {
                           <Icon className="h-5 w-5" strokeWidth={1.8} />
                         </span>
                         <div className="min-w-0">
-                          <h4 className="text-sm font-semibold leading-5 text-soft-white">{tool.name}</h4>
-                          <p className="mt-1.5 text-xs leading-5 text-muted-text">{tool.description}</p>
+                          <h4 className="text-sm font-semibold leading-5 text-foreground">{tool.name}</h4>
+                          <p className="mt-1.5 text-xs leading-5 text-muted-foreground">{tool.description}</p>
                         </div>
                       </article>
                     );

@@ -12,7 +12,7 @@ import SectionNavigation from "@/components/SectionNavigation";
 
 export default function HomePage() {
   return (
-    <div className="relative flex min-h-screen flex-col overflow-x-clip bg-page-background text-soft-white selection:bg-signature-teal/20 selection:text-soft-white">
+    <div className="relative flex min-h-screen flex-col overflow-x-clip bg-page-background text-foreground selection:bg-signature-teal/20 selection:text-foreground">
       <div
         aria-hidden="true"
         className="pointer-events-none fixed inset-0 z-0 bg-subtle-grid [mask-image:radial-gradient(ellipse_at_center,black_55%,transparent_90%)]"

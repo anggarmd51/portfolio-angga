@@ -109,13 +109,13 @@ function CertificateViewer({
       onClick={handleBackdropClick}
       className="fixed inset-0 m-0 h-full w-full max-h-none max-w-none bg-black/75 p-4 backdrop:bg-black/75 sm:p-6"
     >
-      <div className="mx-auto flex h-full w-full max-w-5xl flex-col overflow-hidden rounded-[14px] border border-muted-text/15 bg-graphite shadow-2xl">
+      <div className="mx-auto flex h-full w-full max-w-5xl flex-col overflow-hidden rounded-[14px] border border-muted-text/15 bg-surface shadow-2xl">
         <div className="flex shrink-0 items-center justify-between gap-4 border-b border-white/10 px-4 py-3 sm:px-6">
           <div className="min-w-0">
-            <h2 id="certificate-viewer-title" className="text-sm font-bold text-white sm:text-base">
+            <h2 id="certificate-viewer-title" className="text-sm font-bold text-foreground sm:text-base">
               {certificate.title}
             </h2>
-            <p id="certificate-viewer-help" className="mt-1 text-xs text-slate-300">
+            <p id="certificate-viewer-help" className="mt-1 text-xs text-muted-foreground">
               Tekan Esc atau × untuk menutup.
             </p>
           </div>
@@ -124,7 +124,7 @@ function CertificateViewer({
             type="button"
             onClick={closeViewer}
             aria-label="Tutup pratinjau sertifikat"
-            className="inline-flex min-h-[44px] min-w-[44px] shrink-0 items-center justify-center rounded-lg text-slate-300 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+            className="inline-flex min-h-[44px] min-w-[44px] shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-white/10 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
           >
             <X aria-hidden="true" className="h-5 w-5" />
           </button>
@@ -132,20 +132,20 @@ function CertificateViewer({
 
         <div className="relative flex min-h-0 flex-1 items-center justify-center overflow-hidden bg-slate-900 p-2 sm:p-4" aria-busy={isLoading && !hasPreviewError}>
           {isLoading && !hasPreviewError ? (
-            <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 bg-slate-surface/75 px-6" role="status" aria-live="polite">
+            <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 bg-surface/75 px-6" role="status" aria-live="polite">
               <div aria-hidden="true" className="w-full max-w-2xl aspect-[1.42] rounded-xl border border-muted-text/15 bg-gradient-to-br from-white/[0.045] via-white/[0.02] to-white/[0.04] p-6 shadow-inner sm:p-10">
                 <div className="h-3 w-1/3 animate-pulse rounded bg-white/10" />
                 <div className="mt-5 h-2 w-2/3 animate-pulse rounded bg-white/[0.08]" />
                 <div className="mt-2 h-2 w-1/2 animate-pulse rounded bg-white/[0.06]" />
                 <div className="mt-8 h-12 animate-pulse rounded-lg bg-white/[0.045] sm:mt-12 sm:h-20" />
               </div>
-              <span className="text-sm text-muted-text">Memuat pratinjau sertifikat…</span>
+              <span className="text-sm text-muted-foreground">Memuat pratinjau sertifikat…</span>
             </div>
           ) : null}
           {hasPreviewError ? (
             <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 px-6 text-center" aria-live="assertive">
-              <p className="text-sm text-slate-200">Gambar sertifikat tidak dapat ditampilkan.</p>
-              <p className="max-w-md text-xs text-slate-300">Periksa koneksi lalu coba muat ulang pratinjau.</p>
+              <p className="text-sm text-foreground">Gambar sertifikat tidak dapat ditampilkan.</p>
+              <p className="max-w-md text-xs text-muted-foreground">Periksa koneksi lalu coba muat ulang pratinjau.</p>
               <button
                 type="button"
                 onClick={() => {
@@ -154,7 +154,7 @@ function CertificateViewer({
                   setIsLoading(true);
                   setViewerKey((key) => key + 1);
                 }}
-                className="min-h-[44px] rounded-lg border border-muted-text/15 px-4 py-2 text-sm font-semibold text-muted-text transition-colors hover:border-signature-teal/30 hover:text-signature-teal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signature-teal"
+                className="min-h-[44px] rounded-lg border border-muted-text/15 px-4 py-2 text-sm font-semibold text-muted-foreground transition-colors hover:border-signature-teal/30 hover:text-signature-teal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signature-teal"
               >
                 Coba lagi
               </button>
@@ -195,7 +195,7 @@ function CertificateViewer({
         </div>
         {imageUrl ? (
           <div className="flex shrink-0 justify-center border-t border-muted-text/10 px-4 py-3">
-            <a href={imageUrl} target="_blank" rel="noopener noreferrer" className="min-h-[44px] inline-flex items-center gap-2 rounded-[10px] border border-muted-text/15 px-4 py-2 text-sm font-semibold text-soft-white transition-colors hover:border-signature-teal/40 hover:text-signature-teal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signature-teal">
+            <a href={imageUrl} target="_blank" rel="noopener noreferrer" className="min-h-[44px] inline-flex items-center gap-2 rounded-[10px] border border-muted-text/15 px-4 py-2 text-sm font-semibold text-foreground transition-colors hover:border-signature-teal/40 hover:text-signature-teal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signature-teal">
               Buka Gambar Ukuran Penuh
               <ExternalLink aria-hidden="true" className="h-4 w-4" />
             </a>
@@ -214,23 +214,23 @@ export default function CredentialsSection() {
     <section
       id="credentials"
       aria-labelledby="credentials-heading"
-      className="py-20 md:py-28 px-4 sm:px-6 lg:px-8 border-t border-white/5 relative bg-obsidian presentation-section"
+      className="py-20 md:py-28 px-4 sm:px-6 lg:px-8 border-t border-white/5 relative bg-background presentation-section"
     >
       <div className="mx-auto w-full max-w-[1240px]">
         <Reveal className="mb-12 md:mb-16 text-left max-w-3xl">
-          <div className="inline-flex items-center gap-2 rounded-full border border-muted-text/15 bg-white/[0.035] px-3 py-1 text-xs font-semibold uppercase tracking-wider text-muted-text mb-3">
-            <GraduationCap aria-hidden="true" className="w-3.5 h-3.5 text-muted-text" />
+          <div className="inline-flex items-center gap-2 rounded-full border border-muted-text/15 bg-white/[0.035] px-3 py-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
+            <GraduationCap aria-hidden="true" className="w-3.5 h-3.5 text-muted-foreground" />
             <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-signature-teal" />
             Pendidikan & Kredensial Profesional
           </div>
           <h2
             id="credentials-heading"
-            className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white tracking-tight"
+            className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-foreground tracking-tight"
           >
             Fondasi Akademik & Sertifikasi Profesional
           </h2>
           <EditorialDivider className="mt-5 max-w-xs" />
-          <p className="mt-3 text-sm sm:text-base text-slate-300">
+          <p className="mt-3 text-sm sm:text-base text-muted-foreground">
             {EDUCATION_DATA.professionalSummary}
           </p>
         </Reveal>
@@ -250,13 +250,13 @@ export default function CredentialsSection() {
                   />
                 </div>
                 <div className="min-w-0">
-                  <span className="text-xs font-bold uppercase tracking-wider text-muted-text block mb-1">
+                  <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground block mb-1">
                     Pendidikan Formal
                   </span>
-                  <h3 className="text-lg sm:text-2xl font-extrabold text-white">
+                  <h3 className="text-lg sm:text-2xl font-extrabold text-foreground">
                     {EDUCATION_DATA.institution}
                   </h3>
-                  <p className="text-sm sm:text-base font-semibold text-slate-200 mt-1">
+                  <p className="text-sm sm:text-base font-semibold text-foreground mt-1">
                     {EDUCATION_DATA.degree} {EDUCATION_DATA.field}
                   </p>
                 </div>
@@ -264,18 +264,18 @@ export default function CredentialsSection() {
 
               <div className="flex flex-wrap sm:flex-nowrap items-center gap-3 pt-3 md:pt-0 border-t md:border-t-0 border-white/5 w-full md:w-auto">
                 <div className="px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-left">
-                  <div className="text-[11px] text-slate-300 uppercase tracking-wider font-semibold">
+                  <div className="text-[11px] text-muted-foreground uppercase tracking-wider font-semibold">
                     Tahun Kelulusan
                   </div>
-                  <div className="text-base sm:text-lg font-bold text-white mt-0.5">
+                  <div className="text-base sm:text-lg font-bold text-foreground mt-0.5">
                     {EDUCATION_DATA.graduationYear}
                   </div>
                 </div>
                 <div className="px-4 py-2.5 rounded-xl bg-white/[0.035] border border-muted-text/15 text-left">
-                  <div className="text-[11px] text-muted-text uppercase tracking-wider font-semibold">
+                  <div className="text-[11px] text-muted-foreground uppercase tracking-wider font-semibold">
                     Indeks Prestasi Kumulatif (IPK)
                   </div>
-                  <div className="text-base sm:text-lg font-bold text-soft-white mt-0.5">
+                  <div className="text-base sm:text-lg font-bold text-foreground mt-0.5">
                     {EDUCATION_DATA.gpa} / 4.00
                   </div>
                 </div>
@@ -287,7 +287,7 @@ export default function CredentialsSection() {
         <Reveal y={20} duration={0.45}>
           <div className="flex items-center gap-2 mb-6">
             <Award className="w-4 h-4 text-emerald-400" />
-            <h3 className="text-sm sm:text-base font-bold text-white uppercase tracking-wider">
+            <h3 className="text-sm sm:text-base font-bold text-foreground uppercase tracking-wider">
               Credential Gallery · 6 Sertifikat
             </h3>
           </div>
@@ -298,16 +298,16 @@ export default function CredentialsSection() {
                   <Award aria-hidden="true" className="h-3.5 w-3.5" />
                   Featured Credential
                 </div>
-                <h4 className="font-heading text-xl font-semibold tracking-[-0.025em] text-soft-white sm:text-2xl">
+                <h4 className="font-heading text-xl font-semibold tracking-[-0.025em] text-foreground sm:text-2xl">
                   {featuredCertificate.title}
                 </h4>
-                <p className="mt-1 text-sm font-semibold text-muted-text">
+                <p className="mt-1 text-sm font-semibold text-muted-foreground">
                   {featuredCertificate.issuer}
                 </p>
-                <p className="mt-4 max-w-2xl text-sm leading-6 text-soft-white/85">
+                <p className="mt-4 max-w-2xl text-sm leading-6 text-foreground/85">
                   Pemegang sertifikat dinyatakan kompeten dalam prinsip dasar manajemen penjualan; kredensial ini mencatat pengujian atas praktik terbaik dan kesiapan untuk tanggung jawab manajer penjualan.
                 </p>
-                <p className="mt-4 inline-flex items-center gap-2 text-xs text-muted-text">
+                <p className="mt-4 inline-flex items-center gap-2 text-xs text-muted-foreground">
                   <Calendar aria-hidden="true" className="h-4 w-4 text-signature-teal" />
                   <span className="font-semibold">Masa berlaku:</span>
                   <span className="font-mono">{featuredCertificate.validity ?? featuredCertificate.period}</span>
@@ -327,7 +327,7 @@ export default function CredentialsSection() {
             </article>
           ) : null}
 
-          <h4 className="mb-4 text-xs font-bold uppercase tracking-[0.14em] text-muted-text">
+          <h4 className="mb-4 text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">
             Sertifikat Pendukung · 5
           </h4>
 
@@ -345,16 +345,16 @@ export default function CredentialsSection() {
                         <Award aria-hidden="true" className="w-4 h-4 text-emerald-400" />
                       </div>
                     </div>
-                    <h4 className="text-sm sm:text-base font-bold text-white leading-snug">
+                    <h4 className="text-sm sm:text-base font-bold text-foreground leading-snug">
                       {cert.title}
                     </h4>
-                    <p className="text-xs sm:text-sm font-semibold text-muted-text mt-1">
+                    <p className="text-xs sm:text-sm font-semibold text-muted-foreground mt-1">
                       {cert.issuer}
                     </p>
                   </div>
 
-                  <div className="mt-5 pt-3 border-t border-white/5 flex items-start gap-2 text-xs text-slate-300">
-                    <Calendar aria-hidden="true" className="w-3.5 h-3.5 text-slate-300 shrink-0 mt-0.5" />
+                  <div className="mt-5 pt-3 border-t border-white/5 flex items-start gap-2 text-xs text-muted-foreground">
+                    <Calendar aria-hidden="true" className="w-3.5 h-3.5 text-muted-foreground shrink-0 mt-0.5" />
                     <span>
                       <span className="font-semibold">
                         {cert.validity ? "Masa berlaku: " : "Periode: "}
@@ -364,7 +364,7 @@ export default function CredentialsSection() {
                   </div>
 
                   {hasCertificateUrl ? (
-                    <span className="mt-4 min-h-[44px] inline-flex items-center justify-center gap-2 rounded-lg border border-muted-text/15 px-3 py-2 text-xs font-semibold text-muted-text">
+                    <span className="mt-4 min-h-[44px] inline-flex items-center justify-center gap-2 rounded-lg border border-muted-text/15 px-3 py-2 text-xs font-semibold text-muted-foreground">
                       Lihat pratinjau sertifikat
                       <Eye aria-hidden="true" className="w-3.5 h-3.5" />
                     </span>

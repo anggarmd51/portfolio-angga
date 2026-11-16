@@ -42,21 +42,21 @@ export default function SalesMethodologySection() {
       id="methodology"
       aria-labelledby="methodology-heading"
       ref={sectionRef}
-      className="presentation-section border-t border-white/[0.08] bg-obsidian px-5 py-20 sm:px-8 md:py-28 lg:px-10"
+      className="presentation-section border-t border-white/[0.08] bg-background px-5 py-20 sm:px-8 md:py-28 lg:px-10"
     >
       <div className="mx-auto w-full max-w-[1240px]">
         <header className="mb-10 max-w-3xl md:mb-14">
-          <p className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-muted-text">
+          <p className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
             Sales Methodology
           </p>
           <h2
             id="methodology-heading"
-            className="font-heading text-3xl font-semibold tracking-[-0.04em] text-soft-white sm:text-4xl md:text-5xl"
+            className="font-heading text-3xl font-semibold tracking-[-0.04em] text-foreground sm:text-4xl md:text-5xl"
           >
             Alur Penjualan B2B
           </h2>
           <EditorialDivider className="mt-5 max-w-xs" />
-          <p className="mt-4 text-sm leading-7 text-muted-text sm:text-base">
+          <p className="mt-4 text-sm leading-7 text-muted-foreground sm:text-base">
             Enam tahap konsultatif—dari pemetaan akun hingga retensi—dengan ruang untuk memahami konteks dan kebutuhan tiap klien.
           </p>
         </header>
@@ -112,7 +112,7 @@ export default function SalesMethodologySection() {
                     tabIndex={active ? 0 : -1}
                     onClick={() => setActiveIndex(index)}
                     onKeyDown={(event) => handleKeyDown(event, index)}
-                    className="sales-stepper-node focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signature-teal focus-visible:ring-offset-4 focus-visible:ring-offset-obsidian"
+                    className="sales-stepper-node focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signature-teal focus-visible:ring-offset-4 focus-visible:ring-offset-background"
                   >
                     <span
                       aria-hidden="true"
@@ -128,7 +128,7 @@ export default function SalesMethodologySection() {
               })}
             </div>
           </div>
-          <p className="mt-3 text-center text-[11px] font-medium tracking-wide text-muted-text sm:hidden">
+          <p className="mt-3 text-center text-[11px] font-medium tracking-wide text-muted-foreground sm:hidden">
             Geser untuk melihat semua tahapan
           </p>
         </div>
@@ -148,11 +148,11 @@ export default function SalesMethodologySection() {
                 <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-signature-teal">
                   Tahap {activeStep.number} / 06
                 </p>
-                <h3 className="mt-2 font-heading text-2xl font-semibold tracking-[-0.03em] text-soft-white sm:text-3xl">
+                <h3 className="mt-2 font-heading text-2xl font-semibold tracking-[-0.03em] text-foreground sm:text-3xl">
                   {activeStep.label}
                 </h3>
               </div>
-              <span className="font-mono text-sm text-muted-text">{activeStep.number} — 06</span>
+              <span className="font-mono text-sm text-muted-foreground">{activeStep.number} — 06</span>
             </div>
 
             <div className="grid gap-4 md:grid-cols-3 md:gap-5">
@@ -162,10 +162,10 @@ export default function SalesMethodologySection() {
                     <span className="font-mono text-[11px] text-signature-teal">0{index + 1}</span>
                     <span className="h-px flex-1 bg-white/10" />
                   </div>
-                  <h4 className="text-[11px] font-bold uppercase tracking-[0.14em] text-muted-text">
+                  <h4 className="text-[11px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
                     {label}
                   </h4>
-                  <p className="mt-3 text-sm leading-7 text-soft-white/90">
+                  <p className="mt-3 text-sm leading-7 text-foreground/90">
                     {activeStep[key]}
                   </p>
                 </article>

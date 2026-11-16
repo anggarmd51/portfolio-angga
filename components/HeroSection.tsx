@@ -99,7 +99,7 @@ export default function HeroSection() {
             initial="hidden"
             animate="visible"
             transition={{ duration: 0.18, delay: 0.1, ease }}
-            className="hero-motion mb-5 inline-flex w-fit max-w-full items-center gap-2.5 border-b border-muted-text/20 pb-2 text-[11px] font-semibold tracking-[0.15em] text-muted-text sm:text-xs"
+            className="hero-motion mb-5 inline-flex w-fit max-w-full items-center gap-2.5 border-b border-muted-text/20 pb-2 text-[11px] font-semibold tracking-[0.15em] text-muted-foreground sm:text-xs"
           >
             <span aria-hidden="true" className="h-1.5 w-1.5 shrink-0 rounded-full bg-signature-teal" />
             <span>{HERO_DATA.eyebrow}</span>
@@ -112,8 +112,8 @@ export default function HeroSection() {
             transition={{ duration: 0.18, delay: 0.25, ease }}
             className="hero-motion"
           >
-            <h1 id="hero-name" className="font-heading text-2xl font-semibold tracking-[-0.035em] text-soft-white sm:text-3xl lg:text-[2rem]">
-              {HERO_DATA.name} <span className="font-medium text-muted-text">{HERO_DATA.secondaryName}</span>
+            <h1 id="hero-name" className="font-heading text-2xl font-semibold tracking-[-0.035em] text-foreground sm:text-3xl lg:text-[2rem]">
+              {HERO_DATA.name} <span className="font-medium text-muted-foreground">{HERO_DATA.secondaryName}</span>
             </h1>
           </motion.div>
 
@@ -122,7 +122,7 @@ export default function HeroSection() {
             variants={headlineSequence}
             initial="hidden"
             animate="visible"
-            className="hero-motion mt-5 max-w-none font-heading text-[2.65rem] font-bold leading-[1.04] tracking-[-0.06em] text-soft-white sm:text-5xl md:text-6xl lg:text-[clamp(2.5rem,4vw,3.75rem)]"
+            className="hero-motion mt-5 max-w-none font-heading text-[2.65rem] font-bold leading-[1.04] tracking-[-0.06em] text-foreground sm:text-5xl md:text-6xl lg:text-[clamp(2.5rem,4vw,3.75rem)]"
           >
             <motion.span variants={headlineLine} className="hero-motion-item block">Driving Business Growth</motion.span>
             <motion.span variants={headlineLine} className="hero-motion-item block">Through Strategic</motion.span>
@@ -137,7 +137,7 @@ export default function HeroSection() {
             initial="hidden"
             animate="visible"
             transition={{ duration: 0.16, delay: 0.68, ease }}
-            className="hero-motion mt-5 max-w-[62ch] text-base leading-7 text-muted-text sm:text-lg sm:leading-8"
+            className="hero-motion mt-5 max-w-[62ch] text-base leading-7 text-muted-foreground sm:text-lg sm:leading-8"
           >
             {HERO_DATA.subTagline}
           </motion.p>
@@ -151,16 +151,16 @@ export default function HeroSection() {
             aria-label="Ringkasan pengalaman profesional"
           >
             <div>
-              <div className="font-heading text-xl font-bold tracking-tight text-soft-white sm:text-2xl">Sejak 2019</div>
-              <div className="mt-1 text-[11px] leading-4 text-muted-text sm:text-xs">Pengalaman profesional</div>
+              <div className="font-heading text-xl font-bold tracking-tight text-foreground sm:text-2xl">Sejak 2019</div>
+              <div className="mt-1 text-[11px] leading-4 text-muted-foreground sm:text-xs">Pengalaman profesional</div>
             </div>
             <div>
-              <div className="font-heading text-xl font-bold tracking-tight text-soft-white sm:text-2xl">Medan</div>
-              <div className="mt-1 text-[11px] leading-4 text-muted-text sm:text-xs">Sumatera Utara</div>
+              <div className="font-heading text-xl font-bold tracking-tight text-foreground sm:text-2xl">Medan</div>
+              <div className="mt-1 text-[11px] leading-4 text-muted-foreground sm:text-xs">Sumatera Utara</div>
             </div>
             <div>
-              <div className="font-heading text-base font-bold leading-6 tracking-tight text-soft-white sm:text-lg">Account Manager</div>
-              <div className="mt-1 inline-flex items-center gap-1.5 text-[11px] leading-4 text-muted-text sm:text-xs">
+              <div className="font-heading text-base font-bold leading-6 tracking-tight text-foreground sm:text-lg">Account Manager</div>
+              <div className="mt-1 inline-flex items-center gap-1.5 text-[11px] leading-4 text-muted-foreground sm:text-xs">
                 <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-signature-teal" />
                 Wavecomindo · peran aktif
               </div>
@@ -176,7 +176,7 @@ export default function HeroSection() {
           >
             <MagneticAnchor
               href={HERO_DATA.ctaPrimary.href}
-              className="hero-motion group min-h-[44px] inline-flex items-center justify-center gap-2.5 rounded-[12px] bg-signature-teal px-5 py-3 font-semibold text-obsidian shadow-lg shadow-signature-teal/15 transition-colors duration-200 hover:bg-[#35d7ad] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signature-teal focus-visible:ring-offset-2 focus-visible:ring-offset-obsidian sm:justify-start"
+              className="hero-motion group min-h-[44px] inline-flex items-center justify-center gap-2.5 rounded-[12px] bg-signature-teal px-5 py-3 font-semibold text-button-foreground shadow-lg shadow-signature-teal/15 transition-colors duration-200 hover:bg-[#35d7ad] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signature-teal focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:justify-start"
             >
               <span>{HERO_DATA.ctaPrimary.label}</span>
               <ArrowRight aria-hidden="true" className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
@@ -184,11 +184,11 @@ export default function HeroSection() {
 
             <MagneticAnchor
               href={HERO_DATA.ctaSecondary.href}
-              className="hero-motion group min-h-[44px] inline-flex items-center justify-center gap-2 rounded-[12px] border border-muted-text/20 bg-white/[0.025] px-5 py-3 font-medium text-soft-white transition-colors duration-200 hover:border-muted-text/35 hover:bg-white/[0.055] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signature-teal sm:justify-start"
+              className="hero-motion group min-h-[44px] inline-flex items-center justify-center gap-2 rounded-[12px] border border-muted-text/20 bg-white/[0.025] px-5 py-3 font-medium text-foreground transition-colors duration-200 hover:border-muted-text/35 hover:bg-white/[0.055] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signature-teal sm:justify-start"
             >
-              <MessageSquare aria-hidden="true" className="h-4 w-4 text-muted-text" />
+              <MessageSquare aria-hidden="true" className="h-4 w-4 text-muted-foreground" />
               <span>{HERO_DATA.ctaSecondary.label}</span>
-              <ArrowRight aria-hidden="true" className="h-4 w-4 text-muted-text transition-transform duration-200 group-hover:translate-x-1" />
+              <ArrowRight aria-hidden="true" className="h-4 w-4 text-muted-foreground transition-transform duration-200 group-hover:translate-x-1" />
             </MagneticAnchor>
           </motion.div>
         </div>
@@ -221,7 +221,7 @@ export default function HeroSection() {
               <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-signature-teal/30 bg-signature-teal/10">
                 <TrendingUp aria-hidden="true" className="h-4 w-4 text-signature-teal" />
               </div>
-              <span className="text-xs font-semibold leading-tight text-soft-white">
+              <span className="text-xs font-semibold leading-tight text-foreground">
                 {HERO_DATA.floatingBadges[0].text}
               </span>
             </motion.div>

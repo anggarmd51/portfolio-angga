@@ -32,16 +32,16 @@ export default function CoreCompetenciesSection() {
     <section
       id="competencies"
       aria-labelledby="competencies-heading"
-      className="presentation-section border-t border-white/[0.08] bg-graphite px-5 py-20 sm:px-8 md:py-28 lg:px-10"
+      className="presentation-section border-t border-white/[0.08] bg-surface px-5 py-20 sm:px-8 md:py-28 lg:px-10"
     >
       <div className="mx-auto w-full max-w-[1240px]">
         <div className="mb-10 max-w-3xl md:mb-14">
-          <p className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-muted-text">
+          <p className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
             Keahlian Utama
           </p>
           <h2
             id="competencies-heading"
-            className="font-heading text-3xl font-semibold tracking-[-0.04em] text-soft-white sm:text-4xl md:text-5xl"
+            className="font-heading text-3xl font-semibold tracking-[-0.04em] text-foreground sm:text-4xl md:text-5xl"
           >
             Core Competencies
           </h2>
@@ -57,14 +57,14 @@ export default function CoreCompetenciesSection() {
                 index % 2 === 0 ? "md:pr-10" : "md:border-l md:pl-10"
               }`}
             >
-              <span className="pt-1 font-mono text-xs tracking-wide text-muted-text">
+              <span className="pt-1 font-mono text-xs tracking-wide text-muted-foreground">
                 {item.number} /
               </span>
               <div>
-                <h3 className="font-heading text-xl font-semibold tracking-[-0.02em] text-soft-white sm:text-2xl">
+                <h3 className="font-heading text-xl font-semibold tracking-[-0.02em] text-foreground sm:text-2xl">
                   {item.title}
                 </h3>
-                <p className="mt-2 max-w-[58ch] text-sm leading-7 text-muted-text sm:text-base">
+                <p className="mt-2 max-w-[58ch] text-sm leading-7 text-muted-foreground sm:text-base">
                   {item.description}
                 </p>
               </div>

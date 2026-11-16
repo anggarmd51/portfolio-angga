@@ -21,11 +21,11 @@ test("Executive Editorial design tokens, fonts, and protected integrations are p
   const design = readFileSync(join(projectRoot, "DESIGN.md"), "utf8");
   const layout = readFileSync(join(projectRoot, "app/layout.tsx"), "utf8");
   const page = readFileSync(join(projectRoot, "app/page.tsx"), "utf8");
-  for (const token of ["#0A0F18", "#151D29", "#202B39", "#F1F3F5", "#A6B0BD", "#19C69A"]) {
+  for (const token of ["#0A0F18", "#151D29", "#F1F3F5", "#A6B0BD", "#19C69A"]) {
     assert.ok(css.toLowerCase().includes(token.toLowerCase()), `${token} is in the CSS theme`);
     assert.ok(design.toLowerCase().includes(token.toLowerCase()), `${token} is documented`);
   }
-  for (const token of ["#F1F4F2", "#0D3B33", "#F2B705"]) {
+  for (const token of ["#F1F4F2", "#FFFFFF", "#0D3B33", "#52625E", "#F2B705"]) {
     assert.ok(css.toLowerCase().includes(token.toLowerCase()), `${token} is available for the light theme`);
   }
   assert.match(layout, /Instrument_Serif, Inter, Manrope/);
@@ -37,32 +37,40 @@ test("Executive Editorial design tokens, fonts, and protected integrations are p
   assert.doesNotMatch(`${css}\n${layout}`, /three\.js|webglrenderer/i);
 });
 
-test("navigation contains the nine requested sections in architectural order", () => {
-  assert.equal(NAVIGATION_SECTIONS.length, 9);
+test("navigation contains the five requested English sections and representative anchors", () => {
+  assert.equal(NAVIGATION_SECTIONS.length, 5);
   assert.deepEqual(
     NAVIGATION_SECTIONS.map((section) => section.id),
-    ["home", "profile", "competencies", "career", "projects", "methodology", "ecosystem", "credentials", "contact"]
+    ["home", "career", "projects", "credentials", "contact"]
   );
   assert.deepEqual(
     NAVIGATION_SECTIONS.map((section) => section.shortLabel),
-    ["Home", "Profile", "Expertise", "Experience", "Projects", "Approach", "Tech", "Credentials", "Contact"]
+    ["Home", "Experience", "Projects", "Credentials", "Contact"]
   );
   assert.ok(NAVIGATION_SECTIONS.every((section) => section.label === section.shortLabel));
+  assert.equal(NAVIGATION_SECTIONS[1]?.id, "career");
   const navigation = readFileSync(join(projectRoot, "components/SectionNavigation.tsx"), "utf8");
   assert.match(navigation, /href=\{`#\$\{section\.id\}`\}/);
 });
 
-test("dark-theme text tokens explicitly resolve readable primary and muted colors", () => {
+test("light and dark semantic theme tokens resolve distinct backgrounds, surfaces, and readable text", () => {
   const css = readFileSync(join(projectRoot, "app/globals.css"), "utf8");
   const recruiterQa = readFileSync(join(projectRoot, "components/RecruiterQASection.tsx"), "utf8");
   const ecosystem = readFileSync(join(projectRoot, "components/DigitalEcosystemSection.tsx"), "utf8");
   const competencies = readFileSync(join(projectRoot, "components/CoreCompetenciesSection.tsx"), "utf8");
-  assert.match(css, /html\[data-theme="dark"\]\s*\{[\s\S]*?--text-primary:\s*#f1f3f5;[\s\S]*?--text-muted:\s*#a6b0bd;/);
-  assert.match(css, /--color-soft-white:\s*var\(--text-primary\)/);
-  assert.match(css, /--color-muted-text:\s*var\(--text-muted\)/);
-  assert.match(recruiterQa, /recruiter-qa-panel[\s\S]*text-soft-white[\s\S]*text-muted-text/);
-  assert.match(ecosystem, /digital-tool-card[\s\S]*text-soft-white[\s\S]*text-muted-text/);
-  assert.match(competencies, /competency-strip[\s\S]*text-soft-white[\s\S]*text-muted-text/);
+  const career = readFileSync(join(projectRoot, "components/CareerSection.tsx"), "utf8");
+  assert.match(css, /:root\s*\{[\s\S]*?--page-background:\s*#f1f4f2;[\s\S]*?--surface:\s*#ffffff;[\s\S]*?--text-primary:\s*#0d3b33;[\s\S]*?--text-muted:\s*#52625e;/);
+  assert.match(css, /:root:is\(\.dark, \[data-theme="dark"\]\)\s*\{[\s\S]*?--page-background:\s*#0a0f18;[\s\S]*?--surface:\s*#151d29;[\s\S]*?--text-primary:\s*#f1f3f5;[\s\S]*?--text-muted:\s*#a6b0bd;/);
+  assert.match(css, /--color-background:\s*var\(--page-background\)/);
+  assert.match(css, /--color-surface:\s*var\(--surface\)/);
+  assert.match(css, /--color-foreground:\s*var\(--text-primary\)/);
+  assert.match(css, /--color-muted-foreground:\s*var\(--text-muted\)/);
+  assert.match(css, /--color-white:\s*#ffffff/);
+  assert.match(css, /\.dark \*\)\);/);
+  assert.match(recruiterQa, /recruiter-qa-panel[\s\S]*bg-surface[\s\S]*text-foreground[\s\S]*text-muted-foreground/);
+  assert.match(ecosystem, /digital-tool-card[\s\S]*text-foreground[\s\S]*text-muted-foreground/);
+  assert.match(competencies, /competency-strip[\s\S]*text-foreground[\s\S]*text-muted-foreground/);
+  assert.match(career, /border-l-2 border-signature-teal\/70 bg-surface/);
 });
 
 test("hero uses the approved role copy and keeps portrait fallback assets", () => {
@@ -418,6 +426,9 @@ test("sales journey and digital ecosystem render accessible interactive data", (
   assert.match(showcase, /Tangkapan Layar Aplikasi/);
   assert.match(showcase, /Ilustrasi Modul Fitur/);
   assert.match(showcase, /Memuat pratinjau gambar/);
+  assert.match(showcase, /createPortal\([\s\S]*document\.body,/);
+  assert.match(showcase, /typeof document !== "undefined"/);
+  assert.match(showcase, /z-\[60\]/);
   assert.match(showcase, /max-h-\[72vh\]/);
   assert.match(showcase, /h-\[90dvh\]/);
   assert.match(showcase, /event.key === "ArrowLeft"/);

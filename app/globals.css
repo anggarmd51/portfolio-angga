@@ -1,9 +1,16 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme inline {
+  --color-background: var(--page-background);
+  --color-surface: var(--surface);
+  --color-foreground: var(--text-primary);
+  --color-muted-foreground: var(--text-muted);
+  --color-button-foreground: var(--button-ink);
   --color-obsidian: var(--obsidian-navy);
-  --color-graphite: var(--graphite-surface);
-  --color-slate-surface: var(--slate-surface);
+  --color-graphite: var(--surface);
+  --color-slate-surface: var(--surface);
   --color-soft-white: var(--text-primary);
   --color-muted-text: var(--text-muted);
   --color-signature-teal: var(--signature-teal);
@@ -13,14 +20,14 @@
   --color-emerald-400: var(--accent-text);
   --color-emerald-500: var(--signature-teal);
   --color-emerald-600: var(--accent-text-strong);
-  --color-white: var(--text-primary);
+  --color-white: #ffffff;
   --color-slate-200: var(--text-primary);
   --color-slate-300: var(--text-muted);
   --color-slate-400: var(--text-muted);
   --color-slate-500: var(--text-muted);
   --color-slate-600: var(--text-muted);
   --color-slate-900: var(--slate-surface);
-  --color-slate-950: var(--button-ink);
+  --color-slate-950: #020617;
   --font-sans: var(--font-inter);
   --font-heading: var(--font-manrope);
   --font-editorial: var(--font-instrument-serif);
@@ -31,25 +38,26 @@
 }
 
 :root {
-  --page-background: #0a0f18;
-  --stage-background: #0a0f18;
-  --obsidian-navy: #0a0f18;
-  --graphite-surface: #151d29;
-  --slate-surface: #202b39;
-  --text-primary: #f1f3f5;
-  --text-muted: #a6b0bd;
+  --page-background: #f1f4f2;
+  --stage-background: #ffffff;
+  --surface: #ffffff;
+  --obsidian-navy: var(--page-background);
+  --graphite-surface: var(--surface);
+  --slate-surface: var(--surface);
+  --text-primary: #0d3b33;
+  --text-muted: #52625e;
   --soft-white: var(--text-primary);
   --muted-text: var(--text-muted);
-  --signature-teal: #19c69a;
-  --signature-gold: #f2b705;
-  --accent-text: #65d9b9;
+  --signature-teal: #0f766e;
+  --signature-gold: #b7791f;
+  --accent-text: #0f766e;
   --accent-text-strong: #11a77f;
-  --button-ink: #07140f;
-  --panel-surface: rgba(21, 29, 41, 0.72);
-  --card-surface: rgba(32, 43, 57, 0.52);
-  --glass-tint: rgba(255, 255, 255, 0.035);
-  --border-color: rgba(166, 176, 189, 0.16);
-  --color-scheme: dark;
+  --button-ink: #ffffff;
+  --panel-surface: #ffffff;
+  --card-surface: #ffffff;
+  --glass-tint: rgba(13, 59, 51, 0.04);
+  --border-color: rgba(13, 59, 51, 0.16);
+  --color-scheme: light;
   --content-width: 1240px;
   --radius-ui: 12px;
 }
@@ -72,7 +80,7 @@
   body {
     min-height: 100vh;
     background-color: var(--obsidian-navy);
-    color: var(--muted-text);
+    color: var(--text-primary);
     overflow-x: hidden;
     font-family: var(--font-inter), sans-serif;
     font-variant-numeric: tabular-nums;
@@ -567,66 +575,65 @@ html {
 
 
 /* Master Blueprint integration: semantic dual-theme surfaces and architectural details. */
+:root:is(.dark, [data-theme="dark"]) {
+  --page-background: #0a0f18;
+  --stage-background: #151d29;
+  --surface: #151d29;
+  --obsidian-navy: var(--page-background);
+  --graphite-surface: var(--surface);
+  --slate-surface: var(--surface);
+  --text-primary: #f1f3f5;
+  --text-muted: #a6b0bd;
+  --soft-white: var(--text-primary);
+  --muted-text: var(--text-muted);
+  --signature-teal: #19c69a;
+  --signature-gold: #f2b705;
+  --accent-text: #65d9b9;
+  --accent-text-strong: #11a77f;
+  --button-ink: #07140f;
+  --panel-surface: #151d29;
+  --card-surface: #151d29;
+  --glass-tint: rgba(255, 255, 255, 0.035);
+  --border-color: rgba(166, 176, 189, 0.16);
+  --color-scheme: dark;
+}
+
+:root:is(.light, [data-theme="light"]) {
+  --page-background: #f1f4f2;
+  --stage-background: #ffffff;
+  --surface: #ffffff;
+  --obsidian-navy: var(--page-background);
+  --graphite-surface: var(--surface);
+  --slate-surface: var(--surface);
+  --text-primary: #0d3b33;
+  --text-muted: #52625e;
+  --soft-white: var(--text-primary);
+  --muted-text: var(--text-muted);
+  --signature-teal: #0f766e;
+  --signature-gold: #b7791f;
+  --accent-text: #0f766e;
+  --accent-text-strong: #0d5e57;
+  --button-ink: #ffffff;
+  --panel-surface: #ffffff;
+  --card-surface: #ffffff;
+  --glass-tint: rgba(13, 59, 51, 0.04);
+  --border-color: rgba(13, 59, 51, 0.16);
+  --color-scheme: light;
+}
+
 @theme inline {
   --color-page-background: var(--page-background);
 }
 
 .portfolio-dark-stage {
   background-color: var(--stage-background);
-}
-
-html[data-theme="light"] {
-  --page-background: #f1f4f2;
-  --stage-background: #0d3b33;
-  --obsidian-navy: #0d3b33;
-  --graphite-surface: #e8eeea;
-  --slate-surface: #dce7e2;
-  --text-primary: #0d3b33;
-  --text-muted: #385b54;
-  --soft-white: var(--text-primary);
-  --muted-text: var(--text-muted);
-  --signature-teal: #f2b705;
-  --signature-gold: #f2b705;
-  --accent-text: #0f766e;
-  --accent-text-strong: #0d5e57;
-  --button-ink: #0d3b33;
-  --panel-surface: rgba(255, 255, 255, 0.76);
-  --card-surface: rgba(255, 255, 255, 0.72);
-  --glass-tint: rgba(13, 59, 51, 0.045);
-  --border-color: rgba(13, 59, 51, 0.16);
-  --color-scheme: light;
-}
-
-html[data-theme="light"] .portfolio-dark-stage {
-  --obsidian-navy: #0d3b33;
-  --graphite-surface: #0d3b33;
-  --slate-surface: #174d43;
-  --text-primary: #f1f4f2;
-  --text-muted: #d0ddd8;
-  --soft-white: var(--text-primary);
-  --muted-text: var(--text-muted);
-  --signature-teal: #f2b705;
-  --signature-gold: #f2b705;
-  --accent-text: #f2b705;
-  --accent-text-strong: #f2b705;
-  --button-ink: #0d3b33;
-  --panel-surface: rgba(7, 36, 31, 0.72);
-  --card-surface: rgba(255, 255, 255, 0.075);
-  --glass-tint: rgba(255, 255, 255, 0.055);
-  --border-color: rgba(241, 244, 242, 0.18);
-}
-
-html[data-theme="dark"] {
-  --text-primary: #f1f3f5;
-  --text-muted: #a6b0bd;
-  --soft-white: var(--text-primary);
-  --muted-text: var(--text-muted);
+  color: var(--text-primary);
 }
 
 @layer base {
   html {
     scroll-padding-top: 6rem;
-    color-scheme: var(--color-scheme, dark);
+    color-scheme: var(--color-scheme, light);
     background-color: var(--page-background, var(--obsidian-navy));
     color: var(--soft-white);
   }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type KeyboardEvent as ReactKeyboardEvent, type PointerEvent as ReactPointerEvent } from "react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
 import { PROJECTS_DATA, type ProjectItem } from "@/data/portfolio";
 import {
@@ -233,21 +234,21 @@ export default function ProjectShowcase() {
     <section
       id="projects"
       aria-labelledby="projects-heading"
-      className="portfolio-dark-stage relative border-t border-white/[0.08] bg-graphite px-5 py-20 sm:px-8 md:py-28 lg:px-10 presentation-section"
+      className="portfolio-dark-stage relative border-t border-white/[0.08] bg-surface px-5 py-20 sm:px-8 md:py-28 lg:px-10 presentation-section"
     >
       <div className="mx-auto w-full max-w-[1240px]">
         <Reveal className="mb-12 max-w-3xl text-left md:mb-16">
-          <p className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-muted-text">
+          <p className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
             Digital Product Showcase
           </p>
           <h2
             id="projects-heading"
-            className="font-heading text-3xl font-semibold tracking-[-0.04em] text-soft-white sm:text-4xl md:text-5xl"
+            className="font-heading text-3xl font-semibold tracking-[-0.04em] text-foreground sm:text-4xl md:text-5xl"
           >
             Featured Projects
           </h2>
           <EditorialDivider className="mt-5 max-w-xs" />
-          <p className="mt-4 text-sm leading-7 text-muted-text sm:text-base">
+          <p className="mt-4 text-sm leading-7 text-muted-foreground sm:text-base">
             Tiga studi kasus produk digital yang memperlihatkan cara saya merancang alur kerja dan mengembangkan solusi untuk kebutuhan nyata.
           </p>
         </Reveal>
@@ -308,7 +309,7 @@ export default function ProjectShowcase() {
                         <span className="h-2.5 w-2.5 rounded-full bg-[#ED6A5E]" />
                         <span className="h-2.5 w-2.5 rounded-full bg-[#F4BF4F]" />
                         <span className="h-2.5 w-2.5 rounded-full bg-[#61C454]" />
-                        <span className="ml-3 min-w-0 flex-1 truncate rounded-md bg-white/[0.045] px-3 py-1 text-center font-mono text-[10px] text-muted-text">
+                        <span className="ml-3 min-w-0 flex-1 truncate rounded-md bg-white/[0.045] px-3 py-1 text-center font-mono text-[10px] text-muted-foreground">
                           {project.websiteUrl.replace(/^https?:\/\//, "").replace(/\/$/, "")}
                         </span>
                       </div>
@@ -325,18 +326,18 @@ export default function ProjectShowcase() {
                           type="button"
                           onClick={() => openGallery(project)}
                           aria-label={`Buka galeri pratinjau ${project.title}`}
-                          className="absolute bottom-3 right-3 inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg border border-white/20 bg-obsidian/90 text-white shadow-lg transition-colors hover:bg-signature-teal hover:text-obsidian focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signature-teal"
+                          className="absolute bottom-3 right-3 inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg border border-white/20 bg-slate-950/90 text-white shadow-lg transition-colors hover:bg-signature-teal hover:text-button-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signature-teal"
                         >
                           <Maximize2 aria-hidden="true" className="h-4 w-4" />
                         </button>
                       </div>
                     </div>
-                    <div className="mt-3 flex flex-wrap items-center justify-between gap-2 text-xs text-muted-text">
+                    <div className="mt-3 flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground">
                       <span>{project.screenshots[0]?.title ?? `Preview ${project.title}`}</span>
                       <button
                         type="button"
                         onClick={() => openGallery(project)}
-                        className="inline-flex min-h-[44px] items-center gap-2 rounded-lg px-2 font-semibold text-soft-white/80 transition-colors hover:text-signature-teal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signature-teal"
+                        className="inline-flex min-h-[44px] items-center gap-2 rounded-lg px-2 font-semibold text-foreground/80 transition-colors hover:text-signature-teal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signature-teal"
                       >
                         Lihat Galeri / Preview
                         <Maximize2 aria-hidden="true" className="h-3.5 w-3.5" />
@@ -346,17 +347,17 @@ export default function ProjectShowcase() {
 
                   <div className={`${isArcrm ? "lg:col-span-5" : "lg:col-span-6"} flex min-w-0 flex-col justify-center py-7 lg:py-8 lg:pl-8`}>
                     <div className="flex flex-wrap items-center justify-between gap-3">
-                      <span className="text-[11px] font-semibold uppercase tracking-[0.15em] text-muted-text">
+                      <span className="text-[11px] font-semibold uppercase tracking-[0.15em] text-muted-foreground">
                         {isArcrm ? "FEATURED PRODUCT" : project.status ?? "PROJECT CASE STUDY"}
                       </span>
-                      <span className="font-mono text-xs text-muted-text">
+                      <span className="font-mono text-xs text-muted-foreground">
                         PROYEK 0{projectIndex + 1}
                       </span>
                     </div>
-                    <h3 className="mt-3 font-heading text-2xl font-bold tracking-[-0.035em] text-soft-white sm:text-3xl">
+                    <h3 className="mt-3 font-heading text-2xl font-bold tracking-[-0.035em] text-foreground sm:text-3xl">
                       {project.title}
                     </h3>
-                    <p className="mt-1 text-sm font-medium text-muted-text sm:text-base">
+                    <p className="mt-1 text-sm font-medium text-muted-foreground sm:text-base">
                       {project.subtitle}
                     </p>
                     <p className="mt-3 text-xs font-semibold text-signature-teal/90">
@@ -410,12 +411,12 @@ export default function ProjectShowcase() {
                               className="project-tab-panel space-y-4 rounded-xl border border-muted-text/15 bg-glass-tint p-4 sm:p-5"
                             >
                               <div>
-                                <h4 className="text-[10px] font-semibold uppercase tracking-[0.13em] text-muted-text">Business Problem</h4>
-                                <p className="mt-1.5 text-sm leading-6 text-soft-white/90">{project.businessProblem}</p>
+                                <h4 className="text-[10px] font-semibold uppercase tracking-[0.13em] text-muted-foreground">Business Problem</h4>
+                                <p className="mt-1.5 text-sm leading-6 text-foreground/90">{project.businessProblem}</p>
                               </div>
                               <div>
-                                <h4 className="text-[10px] font-semibold uppercase tracking-[0.13em] text-muted-text">Objective</h4>
-                                <p className="mt-1.5 text-sm leading-6 text-soft-white/90">{project.objective}</p>
+                                <h4 className="text-[10px] font-semibold uppercase tracking-[0.13em] text-muted-foreground">Objective</h4>
+                                <p className="mt-1.5 text-sm leading-6 text-foreground/90">{project.objective}</p>
                               </div>
                             </motion.div>
                           ) : (
@@ -432,16 +433,16 @@ export default function ProjectShowcase() {
                               className="project-tab-panel space-y-4 rounded-xl border border-muted-text/15 bg-glass-tint p-4 sm:p-5"
                             >
                               <div>
-                                <h4 className="text-[10px] font-semibold uppercase tracking-[0.13em] text-muted-text">My Contribution</h4>
-                                <p className="mt-1.5 text-sm leading-6 text-soft-white/90">{project.myContribution}</p>
+                                <h4 className="text-[10px] font-semibold uppercase tracking-[0.13em] text-muted-foreground">My Contribution</h4>
+                                <p className="mt-1.5 text-sm leading-6 text-foreground/90">{project.myContribution}</p>
                               </div>
                               <div>
-                                <h4 className="text-[10px] font-semibold uppercase tracking-[0.13em] text-muted-text">Solution</h4>
-                                <p className="mt-1.5 text-sm leading-6 text-soft-white/90">{project.solution}</p>
+                                <h4 className="text-[10px] font-semibold uppercase tracking-[0.13em] text-muted-foreground">Solution</h4>
+                                <p className="mt-1.5 text-sm leading-6 text-foreground/90">{project.solution}</p>
                               </div>
                               <div>
-                                <h4 className="text-[10px] font-semibold uppercase tracking-[0.13em] text-muted-text">Technology</h4>
-                                <p className="mt-1.5 text-sm leading-6 text-soft-white/90">{project.techStack?.join(" · ") ?? ""}</p>
+                                <h4 className="text-[10px] font-semibold uppercase tracking-[0.13em] text-muted-foreground">Technology</h4>
+                                <p className="mt-1.5 text-sm leading-6 text-foreground/90">{project.techStack?.join(" · ") ?? ""}</p>
                               </div>
                             </motion.div>
                           )}
@@ -450,8 +451,8 @@ export default function ProjectShowcase() {
                     </div>
 
                     {project.accessNote && (
-                      <p className="mt-4 flex items-start gap-2.5 text-xs leading-5 text-muted-text">
-                        <Lock aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0 text-muted-text" />
+                      <p className="mt-4 flex items-start gap-2.5 text-xs leading-5 text-muted-foreground">
+                        <Lock aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
                         <span>{project.accessNote}</span>
                       </p>
                     )}
@@ -460,7 +461,7 @@ export default function ProjectShowcase() {
                       <MagneticButton
                         type="button"
                         onClick={() => openGallery(project)}
-                        className="group/gallery inline-flex min-h-[44px] flex-1 items-center justify-center gap-2 rounded-lg bg-signature-teal px-4 py-3 text-sm font-bold text-obsidian transition-colors hover:bg-[#35d7ad] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signature-teal focus-visible:ring-offset-2 focus-visible:ring-offset-graphite"
+                        className="group/gallery inline-flex min-h-[44px] flex-1 items-center justify-center gap-2 rounded-lg bg-signature-teal px-4 py-3 text-sm font-bold text-button-foreground transition-colors hover:bg-[#35d7ad] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signature-teal focus-visible:ring-offset-2 focus-visible:ring-offset-graphite"
                       >
                         Lihat Galeri / Preview
                         <Maximize2 aria-hidden="true" className="h-4 w-4" />
@@ -469,7 +470,7 @@ export default function ProjectShowcase() {
                         href={project.websiteUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group/site inline-flex min-h-[44px] flex-1 items-center justify-center gap-2 rounded-lg border border-muted-text/25 px-4 py-3 text-sm font-semibold text-soft-white transition-colors hover:border-signature-teal/60 hover:text-signature-teal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signature-teal"
+                        className="group/site inline-flex min-h-[44px] flex-1 items-center justify-center gap-2 rounded-lg border border-muted-text/25 px-4 py-3 text-sm font-semibold text-foreground transition-colors hover:border-signature-teal/60 hover:text-signature-teal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signature-teal"
                       >
                         Kunjungi Website
                         <ArrowUpRight aria-hidden="true" className="h-4 w-4 transition-transform duration-200 group-hover/site:translate-x-0.5 group-hover/site:-translate-y-0.5" />
@@ -478,14 +479,14 @@ export default function ProjectShowcase() {
 
                     {project.socials && project.socials.length > 0 && (
                       <div className="mt-4 flex flex-wrap items-center gap-2">
-                        <span className="mr-1 text-xs text-muted-text">Social</span>
+                        <span className="mr-1 text-xs text-muted-foreground">Social</span>
                         {project.socials.map((social) => (
                           <a
                             key={social.platform}
                             href={social.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex min-h-[44px] items-center gap-1.5 rounded-md px-2 text-xs text-muted-text transition-colors hover:text-soft-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signature-teal"
+                            className="inline-flex min-h-[44px] items-center gap-1.5 rounded-md px-2 text-xs text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signature-teal"
                           >
                             {social.platform}
                             <ExternalLink aria-hidden="true" className="h-3 w-3" />
@@ -499,7 +500,7 @@ export default function ProjectShowcase() {
           })}
         </div>
 
-        {gallery && activeSlide && (
+        {gallery && activeSlide && typeof document !== "undefined" && createPortal(
           <div
             className="fixed inset-0 z-[60] flex items-center justify-center p-2 sm:p-5 bg-slate-950/95 backdrop-blur-md"
             onClick={(event) => {
@@ -512,19 +513,19 @@ export default function ProjectShowcase() {
               aria-modal="true"
               aria-labelledby="project-gallery-title"
               aria-describedby="project-gallery-caption"
-              className="relative flex h-[90dvh] max-h-[94dvh] w-[min(94vw,1280px)] max-w-6xl flex-col rounded-[14px] border border-muted-text/15 bg-graphite p-3 shadow-2xl sm:p-5"
+              className="relative flex h-[90dvh] max-h-[94dvh] w-[min(94vw,1280px)] max-w-6xl flex-col rounded-[14px] border border-muted-text/15 bg-surface p-3 shadow-2xl sm:p-5"
             >
               <div className="flex items-start justify-between gap-4 mb-4">
                 <div className="min-w-0">
-                  <h2 id="project-gallery-title" className="text-lg sm:text-xl font-bold text-white">
+                  <h2 id="project-gallery-title" className="text-lg sm:text-xl font-bold text-foreground">
                     {gallery.projectTitle === "AR CRM" ? "Lihat Preview Aplikasi — AR CRM" : `Galeri ${gallery.projectTitle}`}
                   </h2>
-                  <p className="text-xs sm:text-sm text-slate-300 mt-1">
+                  <p className="text-xs sm:text-sm text-muted-foreground mt-1">
                     {gallery.currentIndex + 1} dari {gallery.slides.length} pratinjau
                   </p>
                   {gallery.projectTitle === "AR CRM" && (
                     <span
-                      className="mt-2 inline-flex items-center rounded-full border border-muted-text/15 bg-white/[0.035] px-2.5 py-1 text-[11px] font-semibold text-muted-text"
+                      className="mt-2 inline-flex items-center rounded-full border border-muted-text/15 bg-white/[0.035] px-2.5 py-1 text-[11px] font-semibold text-muted-foreground"
                     >
                       {activeSlide.kind === "image"
                         ? "Tangkapan Layar Aplikasi"
@@ -537,7 +538,7 @@ export default function ProjectShowcase() {
                   type="button"
                   onClick={closeGallery}
                   aria-label="Tutup galeri"
-                  className="min-h-[44px] min-w-[44px] shrink-0 rounded-full bg-white/10 hover:bg-white/20 text-white inline-flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+                  className="min-h-[44px] min-w-[44px] shrink-0 rounded-full bg-glass-tint hover:bg-muted-foreground/20 text-foreground inline-flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
                 >
                   <X aria-hidden="true" className="w-5 h-5" />
                 </button>
@@ -582,12 +583,12 @@ export default function ProjectShowcase() {
                 {activeSlide.kind === "image" ? (
                   <div className="relative h-full min-h-[260px] max-h-[72vh] w-full" aria-busy={loadedImageSrc !== activeSlide.src}>
                     {loadedImageSrc !== activeSlide.src && (
-                      <div role="status" className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 rounded-xl bg-slate-surface/70 px-6" aria-live="polite">
+                      <div role="status" className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 rounded-xl bg-surface/70 px-6" aria-live="polite">
                         <span aria-hidden="true" className="h-9 w-9 animate-pulse rounded-full bg-signature-teal/20 ring-1 ring-signature-teal/25" />
-                        <span className="text-sm text-muted-text">Memuat pratinjau gambar…</span>
+                        <span className="text-sm text-muted-foreground">Memuat pratinjau gambar…</span>
                       </div>
                     )}
-                    {failedImageSrc === activeSlide.src && <p role="alert" className="absolute inset-0 z-20 flex items-center justify-center bg-obsidian/90 text-sm text-muted-text">Pratinjau gagal dimuat.</p>}
+                    {failedImageSrc === activeSlide.src && <p role="alert" className="absolute inset-0 z-20 flex items-center justify-center bg-background/90 text-sm text-muted-foreground">Pratinjau gagal dimuat.</p>}
                     <AnimatePresence initial={false} mode="sync">
                       <motion.div
                         key={activeSlide.src}
@@ -623,17 +624,17 @@ export default function ProjectShowcase() {
                       <div className="mx-auto mb-5 w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/25 flex items-center justify-center">
                         <Layers aria-hidden="true" className="w-7 h-7 text-emerald-300" />
                       </div>
-                      <p className="text-xs uppercase tracking-[0.16em] font-bold text-muted-text mb-3">
+                      <p className="text-xs uppercase tracking-[0.16em] font-bold text-[#A6B0BD] mb-3">
                         Pratinjau modul
                       </p>
                       <h3 className="text-xl sm:text-2xl font-bold text-white">{activeSlide.title}</h3>
-                      <p className="mt-4 text-sm sm:text-base leading-relaxed text-slate-200">{activeSlide.caption}</p>
+                      <p className="mt-4 text-sm sm:text-base leading-relaxed text-[#A6B0BD]">{activeSlide.caption}</p>
                     </div>
                   </div>
                 )}
               </div>
 
-              <p id="project-gallery-caption" aria-live="polite" className="mt-4 min-h-10 text-center text-sm text-slate-200">
+              <p id="project-gallery-caption" aria-live="polite" className="mt-4 min-h-10 text-center text-sm text-foreground">
                 {activeSlide.caption}
               </p>
 
@@ -657,7 +658,8 @@ export default function ProjectShowcase() {
                 </div>
               )}
             </div>
-          </div>
+          </div>,
+          document.body,
         )}
       </div>
     </section>

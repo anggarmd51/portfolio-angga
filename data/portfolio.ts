@@ -514,12 +514,8 @@ export const CONTACT_DATA = {
 
 export const NAVIGATION_SECTIONS = [
   { id: "home", label: "Home", shortLabel: "Home" },
-  { id: "profile", label: "Profile", shortLabel: "Profile" },
-  { id: "competencies", label: "Expertise", shortLabel: "Expertise" },
   { id: "career", label: "Experience", shortLabel: "Experience" },
   { id: "projects", label: "Projects", shortLabel: "Projects" },
-  { id: "methodology", label: "Approach", shortLabel: "Approach" },
-  { id: "ecosystem", label: "Tech", shortLabel: "Tech" },
   { id: "credentials", label: "Credentials", shortLabel: "Credentials" },
   { id: "contact", label: "Contact", shortLabel: "Contact" },
 ] as const;

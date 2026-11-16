@@ -13,21 +13,21 @@ export default function ExecutiveProfileSection() {
     <section
       id="profile"
       aria-labelledby="profile-heading"
-      className="presentation-section border-t border-white/[0.08] bg-graphite px-5 py-20 sm:px-8 md:py-28 lg:px-10"
+      className="presentation-section border-t border-white/[0.08] bg-surface px-5 py-20 sm:px-8 md:py-28 lg:px-10"
     >
       <div className="mx-auto w-full max-w-[1240px]">
         <div className="max-w-4xl">
-          <p className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-muted-text">
+          <p className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
             Profil Eksekutif
           </p>
           <h2
             id="profile-heading"
-            className="font-heading text-3xl font-semibold leading-tight tracking-[-0.04em] text-soft-white sm:text-4xl md:text-5xl"
+            className="font-heading text-3xl font-semibold leading-tight tracking-[-0.04em] text-foreground sm:text-4xl md:text-5xl"
           >
             Dari Analisis Kredit hingga B2B SaaS &amp; Konektivitas Korporasi
           </h2>
           <EditorialDivider className="mt-5 max-w-xs" />
-          <div className="mt-7 max-w-3xl space-y-4 text-base leading-8 text-muted-text sm:text-lg">
+          <div className="mt-7 max-w-3xl space-y-4 text-base leading-8 text-muted-foreground sm:text-lg">
             <p>
               Perjalanan profesional saya dimulai sebagai Surveyor di PT Astra Sedaya Finance pada 2019, membangun pemahaman atas verifikasi lapangan dan proses analisis kredit. Pengalaman berlanjut ke penjualan pembiayaan dan layanan perbankan.
             </p>
@@ -54,10 +54,10 @@ export default function ExecutiveProfileSection() {
                 index === 0 || index === 2 ? "sm:pl-0" : ""
               }`}
             >
-              <dt className="font-heading text-3xl font-bold tracking-[-0.04em] text-soft-white sm:text-4xl">
+              <dt className="font-heading text-3xl font-bold tracking-[-0.04em] text-foreground sm:text-4xl">
                 {item.value}
               </dt>
-              <dd className="mt-2 max-w-[24ch] text-sm leading-6 text-muted-text">
+              <dd className="mt-2 max-w-[24ch] text-sm leading-6 text-muted-foreground">
                 {item.label}
               </dd>
             </div>

@@ -20,6 +20,8 @@ export default function SectionNavigation() {
       storedTheme = "dark";
     }
     document.documentElement.dataset.theme = storedTheme;
+    document.documentElement.classList.toggle("dark", storedTheme === "dark");
+    document.documentElement.classList.toggle("light", storedTheme === "light");
     const themeFrame = window.requestAnimationFrame(() => setTheme(storedTheme));
 
     let scheduledFrame = 0;
@@ -65,6 +67,8 @@ export default function SectionNavigation() {
   const toggleTheme = () => {
     const nextTheme: Theme = theme === "dark" ? "light" : "dark";
     document.documentElement.dataset.theme = nextTheme;
+    document.documentElement.classList.toggle("dark", nextTheme === "dark");
+    document.documentElement.classList.toggle("light", nextTheme === "light");
     try {
       window.localStorage.setItem("portfolio-theme", nextTheme);
     } catch {
@@ -101,7 +105,7 @@ export default function SectionNavigation() {
                     transition={{ type: "spring", stiffness: 420, damping: 34, mass: 0.65 }}
                   />
                 )}
-                <span className={`relative z-10 whitespace-nowrap ${active ? "text-soft-white" : "text-muted-text hover:text-soft-white"}`}>
+                <span className={`relative z-10 whitespace-nowrap ${active ? "text-foreground" : "text-muted-foreground hover:text-foreground"}`}>
                   {section.shortLabel}
                 </span>
               </a>
