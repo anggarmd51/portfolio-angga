@@ -140,7 +140,6 @@ html {
   will-change: transform;
   transform: scaleX(var(--scroll-progress, 0));
   transform-origin: left center;
-  transition: transform 100ms linear;
 }
 
 .sales-stepper-shell {

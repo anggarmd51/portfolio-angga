@@ -562,6 +562,31 @@ test("site motion is force-active and displays scroll progress", () => {
   assert.doesNotMatch(`${css}\n${motionSource}`, /prefers-reduced-motion|clipPath|transition:\s*all/);
 });
 
+test("mobile scroll work is frame-coalesced and scroll-linked work is viewport-scoped", () => {
+  const css = readFileSync(join(projectRoot, "app/globals.css"), "utf8");
+  const navigation = readFileSync(join(projectRoot, "components/SectionNavigation.tsx"), "utf8");
+  const progress = readFileSync(join(projectRoot, "components/ScrollProgress.tsx"), "utf8");
+  const cta = readFileSync(join(projectRoot, "components/FloatingCTA.tsx"), "utf8");
+  const scrollLinkedProgress = readFileSync(join(projectRoot, "hooks/useScrollLinkedProgress.ts"), "utf8");
+  const projectShowcase = readFileSync(join(projectRoot, "components/ProjectShowcase.tsx"), "utf8");
+  assert.match(css, /html\s*\{\s*scroll-behavior:\s*smooth;/);
+  assert.match(css, /\.scroll-progress-indicator\s*\{[^}]*will-change:\s*transform;/);
+  assert.doesNotMatch(css, /\.scroll-progress-indicator\s*\{[^}]*transition:\s*transform/);
+  assert.match(navigation, /if \(scheduledFrame !== null\) return;/);
+  assert.match(navigation, /activeSectionRef\.current/);
+  assert.match(navigation, /will-change-transform/);
+  assert.match(progress, /if \(frame === null\) frame = window\.requestAnimationFrame\(updateProgress\)/);
+  assert.match(cta, /if \(frame === null\) frame = window\.requestAnimationFrame\(updateVisibility\)/);
+  assert.match(cta, /lastVisibility/);
+  assert.match(cta, /will-change-transform/);
+  assert.match(scrollLinkedProgress, /new IntersectionObserver/);
+  assert.match(scrollLinkedProgress, /rootMargin: "100px 0px"/);
+  assert.match(scrollLinkedProgress, /if \(frame === null\) frame = window\.requestAnimationFrame\(update\)/);
+  assert.match(projectShowcase, /window\.matchMedia\("\(min-width: 768px\)"\)/);
+  assert.match(projectShowcase, /if \(frame !== null\) return;/);
+  assert.match(projectShowcase, /desktopViewport\.addEventListener\("change"/);
+});
+
 test("project mockup tilt and competency strips respond to touch or keyboard focus", () => {
   const showcase = readFileSync(join(projectRoot, "components/ProjectShowcase.tsx"), "utf8");
   const competencies = readFileSync(join(projectRoot, "components/CoreCompetenciesSection.tsx"), "utf8");

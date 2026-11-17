@@ -19,6 +19,7 @@ export function useScrollLinkedProgress<T extends HTMLElement>(
     if (!section || !path) return;
 
     let frame: number | null = null;
+    let scrollListenerAttached = false;
     const update = () => {
       frame = null;
       const rect = section.getBoundingClientRect();
@@ -32,15 +33,42 @@ export function useScrollLinkedProgress<T extends HTMLElement>(
     const scheduleUpdate = () => {
       if (frame === null) frame = window.requestAnimationFrame(update);
     };
-
-    scheduleUpdate();
-    window.addEventListener("scroll", scheduleUpdate, { passive: true });
-    window.addEventListener("resize", scheduleUpdate, { passive: true });
-
-    return () => {
-      if (frame !== null) window.cancelAnimationFrame(frame);
+    const startScrollUpdates = () => {
+      if (scrollListenerAttached) return;
+      scrollListenerAttached = true;
+      scheduleUpdate();
+      window.addEventListener("scroll", scheduleUpdate, { passive: true });
+      window.addEventListener("resize", scheduleUpdate, { passive: true });
+    };
+    const stopScrollUpdates = () => {
+      if (!scrollListenerAttached) return;
+      scrollListenerAttached = false;
       window.removeEventListener("scroll", scheduleUpdate);
       window.removeEventListener("resize", scheduleUpdate);
+      if (frame !== null) {
+        window.cancelAnimationFrame(frame);
+        frame = null;
+      }
+      update();
+    };
+
+    scheduleUpdate();
+    const observer = "IntersectionObserver" in window
+      ? new IntersectionObserver((entries) => {
+          if (entries.some((entry) => entry.isIntersecting)) startScrollUpdates();
+          else stopScrollUpdates();
+        }, { rootMargin: "100px 0px" })
+      : null;
+    if (observer) observer.observe(section);
+    else startScrollUpdates();
+
+    return () => {
+      observer?.disconnect();
+      if (scrollListenerAttached) {
+        window.removeEventListener("scroll", scheduleUpdate);
+        window.removeEventListener("resize", scheduleUpdate);
+      }
+      if (frame !== null) window.cancelAnimationFrame(frame);
     };
   }, [pathRef]);
 

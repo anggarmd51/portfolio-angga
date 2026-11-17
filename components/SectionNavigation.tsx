@@ -11,6 +11,7 @@ export default function SectionNavigation() {
   const [activeSection, setActiveSection] = useState<string>("home");
   const [theme, setTheme] = useState<Theme>("dark");
   const navScrollRef = useRef<HTMLElement | null>(null);
+  const activeSectionRef = useRef("home");
 
   useEffect(() => {
     let storedTheme: Theme = "dark";
@@ -24,16 +25,19 @@ export default function SectionNavigation() {
     document.documentElement.classList.toggle("light", storedTheme === "light");
     const themeFrame = window.requestAnimationFrame(() => setTheme(storedTheme));
 
-    let scheduledFrame = 0;
+    let scheduledFrame: number | null = null;
     const updateActiveSection = () => {
-      window.cancelAnimationFrame(scheduledFrame);
+      if (scheduledFrame !== null) return;
       scheduledFrame = window.requestAnimationFrame(() => {
+        scheduledFrame = null;
         let current: string = NAVIGATION_SECTIONS[0]?.id ?? "home";
         const activationLine = Math.max(90, window.innerHeight * 0.3);
         for (const section of NAVIGATION_SECTIONS) {
           const element = document.getElementById(section.id);
           if (element && element.getBoundingClientRect().top <= activationLine) current = section.id;
         }
+        if (current === activeSectionRef.current) return;
+        activeSectionRef.current = current;
         setActiveSection(current);
       });
     };
@@ -43,7 +47,7 @@ export default function SectionNavigation() {
     window.addEventListener("resize", updateActiveSection);
     return () => {
       window.cancelAnimationFrame(themeFrame);
-      window.cancelAnimationFrame(scheduledFrame);
+      if (scheduledFrame !== null) window.cancelAnimationFrame(scheduledFrame);
       window.removeEventListener("scroll", updateActiveSection);
       window.removeEventListener("resize", updateActiveSection);
     };

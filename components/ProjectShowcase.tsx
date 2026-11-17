@@ -135,14 +135,12 @@ export default function ProjectShowcase() {
   );
 
   useEffect(() => {
-    let frame = 0;
+    let frame: number | null = null;
+    const desktopViewport = window.matchMedia("(min-width: 768px)");
     const updateStack = () => {
-      window.cancelAnimationFrame(frame);
+      if (frame !== null) return;
       frame = window.requestAnimationFrame(() => {
-        if (window.innerWidth < 768) {
-          setActiveStackIndex(0);
-          return;
-        }
+        frame = null;
         let nextActiveIndex = 0;
         projectCardRefs.current.forEach((card, index) => {
           if (card && card.getBoundingClientRect().top <= 116 + index * 16) nextActiveIndex = index;
@@ -150,12 +148,27 @@ export default function ProjectShowcase() {
         setActiveStackIndex((current) => current === nextActiveIndex ? current : nextActiveIndex);
       });
     };
+    const syncStackListeners = () => {
+      if (desktopViewport.matches) {
+        updateStack();
+        window.addEventListener("scroll", updateStack, { passive: true });
+        window.addEventListener("resize", updateStack);
+        return;
+      }
+      window.removeEventListener("scroll", updateStack);
+      window.removeEventListener("resize", updateStack);
+      if (frame !== null) {
+        window.cancelAnimationFrame(frame);
+        frame = null;
+      }
+      setActiveStackIndex(0);
+    };
 
-    updateStack();
-    window.addEventListener("scroll", updateStack, { passive: true });
-    window.addEventListener("resize", updateStack);
+    syncStackListeners();
+    desktopViewport.addEventListener("change", syncStackListeners);
     return () => {
-      window.cancelAnimationFrame(frame);
+      desktopViewport.removeEventListener("change", syncStackListeners);
+      if (frame !== null) window.cancelAnimationFrame(frame);
       window.removeEventListener("scroll", updateStack);
       window.removeEventListener("resize", updateStack);
     };

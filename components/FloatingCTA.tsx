@@ -7,18 +7,28 @@ export default function FloatingCTA() {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
+    let frame: number | null = null;
+    let lastVisibility: boolean | null = null;
     const updateVisibility = () => {
+      frame = null;
       const isMobile = window.matchMedia("(max-width: 767px)").matches;
-      setIsVisible(isMobile && window.scrollY > 300);
+      const nextVisibility = isMobile && window.scrollY > 300;
+      if (nextVisibility === lastVisibility) return;
+      lastVisibility = nextVisibility;
+      setIsVisible(nextVisibility);
+    };
+    const scheduleVisibilityUpdate = () => {
+      if (frame === null) frame = window.requestAnimationFrame(updateVisibility);
     };
 
-    updateVisibility();
-    window.addEventListener("scroll", updateVisibility, { passive: true });
-    window.addEventListener("resize", updateVisibility);
+    scheduleVisibilityUpdate();
+    window.addEventListener("scroll", scheduleVisibilityUpdate, { passive: true });
+    window.addEventListener("resize", scheduleVisibilityUpdate);
 
     return () => {
-      window.removeEventListener("scroll", updateVisibility);
-      window.removeEventListener("resize", updateVisibility);
+      if (frame !== null) window.cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", scheduleVisibilityUpdate);
+      window.removeEventListener("resize", scheduleVisibilityUpdate);
     };
   }, []);
 
