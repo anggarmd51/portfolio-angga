@@ -137,6 +137,7 @@ html {
   pointer-events: none;
   background: var(--signature-teal);
   box-shadow: 0 0 12px rgba(25, 198, 154, 0.42);
+  will-change: transform;
   transform: scaleX(var(--scroll-progress, 0));
   transform-origin: left center;
   transition: transform 100ms linear;
@@ -800,7 +801,7 @@ main section[id]::before {
 }
 
 .contact-secondary-grid {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .contact-action-link {
@@ -875,6 +876,10 @@ main section[id]::before {
 
 @media (min-width: 640px) {
   .contact-primary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .contact-secondary-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

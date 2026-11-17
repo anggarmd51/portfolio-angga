@@ -44,7 +44,7 @@ function ContactLink({ channel }: { channel: ContactChannel }) {
       <Icon aria-hidden="true" className="w-5 h-5 text-emerald-400 shrink-0" />
       <span className="min-w-0 flex-1 text-left">
         <span className="block text-sm font-semibold leading-snug">{channel.label}</span>
-        <span className="block text-xs text-muted-foreground leading-snug break-words">
+        <span className="block min-w-0 truncate text-xs text-muted-foreground leading-snug">
           {channel.sublabel}
         </span>
       </span>
@@ -117,7 +117,7 @@ function ContactEmailCard({ channel }: { channel: ContactChannel }) {
 
   const StatusIcon = copied ? Check : Copy;
   return (
-    <div className="contact-email-card min-h-[72px] w-full grid grid-cols-[minmax(0,1fr)_auto] rounded-xl border transition">
+    <div className="contact-email-card min-h-[76px] w-full grid grid-cols-[minmax(0,1fr)_auto] rounded-xl border transition">
       <a
         href={`mailto:${email}`}
         className="contact-email-link min-w-0 inline-flex items-center gap-3 px-4 py-3 rounded-l-xl text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-emerald-400"
@@ -125,7 +125,7 @@ function ContactEmailCard({ channel }: { channel: ContactChannel }) {
         <Mail aria-hidden="true" className="w-5 h-5 text-emerald-400 shrink-0" />
         <span className="min-w-0 flex-1 text-left">
           <span className="block text-sm font-semibold leading-snug">{channel.label}</span>
-          <span className="block text-xs text-muted-foreground leading-snug break-words">
+          <span className="block min-w-0 overflow-hidden text-ellipsis whitespace-nowrap text-xs text-muted-foreground leading-snug">
             {channel.sublabel}
           </span>
         </span>

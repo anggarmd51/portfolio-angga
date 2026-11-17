@@ -262,7 +262,11 @@ export default function ProjectShowcase() {
                 key={project.id}
                 ref={(element) => { projectCardRefs.current[projectIndex] = element; }}
                 className="project-deck-card project-deck-surface group/project relative grid grid-cols-1 overflow-visible rounded-3xl p-4 sm:p-6 lg:grid-cols-12 lg:p-7 md:sticky"
-                style={{ top: `calc(6rem + ${projectIndex}rem)`, zIndex: 10 + projectIndex }}
+                style={{
+                  top: `calc(6rem + ${projectIndex}rem)`,
+                  zIndex: 10 + projectIndex,
+                  willChange: projectIndex < activeStackIndex ? "transform, opacity" : "auto",
+                }}
                 animate={{
                   scale: projectIndex < activeStackIndex ? Math.max(0.96, 1 - 0.02 * (activeStackIndex - projectIndex)) : 1,
                   opacity: projectIndex < activeStackIndex ? Math.max(0.72, 1 - 0.16 * (activeStackIndex - projectIndex)) : 1,

@@ -80,7 +80,7 @@ export default function SectionNavigation() {
   const ThemeIcon = theme === "dark" ? Sun : Moon;
 
   return (
-    <header className="fixed left-1/2 top-5 z-50 w-max max-w-[calc(100vw-1.25rem)] -translate-x-1/2">
+    <header className="fixed left-1/2 top-5 z-50 w-max max-w-[calc(100vw-1.25rem)] -translate-x-1/2 will-change-transform">
       <div className="floating-capsule flex items-center gap-1 rounded-full p-1.5">
         <nav
           ref={navScrollRef}

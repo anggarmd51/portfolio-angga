@@ -35,7 +35,7 @@ export default function FloatingCTA() {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 16, scale: 0.96 }}
           transition={{ duration: 0.22, ease: "easeOut" }}
-          className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-[#08210F] shadow-xl shadow-black/30 transition-colors hover:bg-[#20C760] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#0B0F19] md:hidden"
+          className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-[#08210F] shadow-xl shadow-black/30 transition-colors hover:bg-[#20C760] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#0B0F19] will-change-transform md:hidden"
         >
           <svg
             aria-hidden="true"

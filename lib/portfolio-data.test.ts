@@ -336,7 +336,9 @@ test("copy-email control keeps its approved address and touch-sized accessible f
   assert.match(contactSource, /Tersalin!/);
   assert.match(contactSource, /\}, 2000\)/);
   assert.match(contactSource, /aria-live="polite"/);
-  assert.match(contactSource, /<div className="contact-email-card min-h-\[72px\] w-full grid/);
+  assert.match(contactSource, /<div className="contact-email-card min-h-\[76px\] w-full grid/);
+  assert.match(contactSource, /overflow-hidden text-ellipsis whitespace-nowrap/);
+  assert.match(contactSource, /className="block min-w-0 truncate text-xs/);
   assert.match(contactSource, /className="contact-email-copy min-h-\[44px\]/);
   assert.match(contactSource, /<button[\s\S]*?Salin alamat email/);
   assert.doesNotMatch(contactSource, /prefers-reduced-motion/);
