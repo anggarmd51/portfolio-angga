@@ -329,6 +329,7 @@ test("contact presents six actions in the approved order and career positioning"
 
 test("copy-email control keeps its approved address and touch-sized accessible feedback", () => {
   const contactSource = readFileSync(join(projectRoot, "components/ContactSection.tsx"), "utf8");
+  const contactCss = readFileSync(join(projectRoot, "app/globals.css"), "utf8");
   assert.match(contactSource, /const email = "anggaramadhan538@gmail\.com"/);
   assert.match(contactSource, /navigator\.clipboard\.writeText\(email\)/);
   assert.match(contactSource, /document\.execCommand\("copy"\)/);
@@ -339,8 +340,9 @@ test("copy-email control keeps its approved address and touch-sized accessible f
   assert.match(contactSource, /<div className="contact-email-card min-h-\[76px\] w-full grid/);
   assert.match(contactSource, /overflow-hidden text-ellipsis whitespace-nowrap/);
   assert.match(contactSource, /className="block min-w-0 truncate text-xs/);
-  assert.match(contactSource, /className="contact-email-copy min-h-\[44px\]/);
+  assert.match(contactSource, /contact-email-copy min-h-\[44px\] min-w-\[48px\]/);
   assert.match(contactSource, /<button[\s\S]*?Salin alamat email/);
+  assert.match(contactCss, /@media \(max-width: 639px\)[\s\S]*?\.contact-secondary-grid \.contact-action-link \{\s*gap: 0\.25rem;\s*padding: 0\.375rem;/);
   assert.doesNotMatch(contactSource, /prefers-reduced-motion/);
   assert.match(contactSource, /min-h-\[44px\]/);
 });

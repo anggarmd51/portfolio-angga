@@ -120,22 +120,22 @@ function ContactEmailCard({ channel }: { channel: ContactChannel }) {
     <div className="contact-email-card min-h-[76px] w-full grid grid-cols-[minmax(0,1fr)_auto] rounded-xl border transition">
       <a
         href={`mailto:${email}`}
-        className="contact-email-link min-w-0 inline-flex items-center gap-3 px-4 py-3 rounded-l-xl text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-emerald-400"
+        className="contact-email-link min-w-0 inline-flex items-center gap-1 px-1 py-3 rounded-l-xl text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-emerald-400 sm:gap-3 sm:px-4"
       >
-        <Mail aria-hidden="true" className="w-5 h-5 text-emerald-400 shrink-0" />
+        <Mail aria-hidden="true" className="w-4 h-4 text-emerald-400 shrink-0 sm:w-5 sm:h-5" />
         <span className="min-w-0 flex-1 text-left">
           <span className="block text-sm font-semibold leading-snug">{channel.label}</span>
           <span className="block min-w-0 overflow-hidden text-ellipsis whitespace-nowrap text-xs text-muted-foreground leading-snug">
             {channel.sublabel}
           </span>
         </span>
-        <ArrowUpRight aria-hidden="true" className="w-4 h-4 text-muted-foreground shrink-0" />
+        <ArrowUpRight aria-hidden="true" className="hidden w-4 h-4 text-muted-foreground shrink-0 sm:block" />
       </a>
       <button
         type="button"
         onClick={() => void copyEmail()}
         aria-label={copied ? "Alamat email berhasil disalin" : "Salin alamat email"}
-        className="contact-email-copy min-h-[44px] min-w-[76px] self-center mr-2 inline-flex flex-col items-center justify-center gap-1 rounded-lg px-2 text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+        className="contact-email-copy min-h-[44px] min-w-[48px] self-center mr-0 inline-flex flex-row items-center justify-center gap-0.5 rounded-lg px-1 text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 sm:min-w-[76px] sm:mr-2 sm:flex-col sm:gap-1 sm:px-2"
       >
         <AnimatePresence mode="wait" initial={false}>
           <motion.span
@@ -146,7 +146,7 @@ function ContactEmailCard({ channel }: { channel: ContactChannel }) {
             transition={{ duration: 0.18, ease: "easeOut" }}
             className="inline-flex"
           >
-            <StatusIcon aria-hidden="true" className="w-5 h-5 text-emerald-400" />
+            <StatusIcon aria-hidden="true" className="w-4 h-4 text-emerald-400 sm:w-5 sm:h-5" />
           </motion.span>
         </AnimatePresence>
         <span aria-live="polite" className={`text-[10px] font-semibold ${copied ? "text-emerald-400" : "text-muted-foreground"}`}>
